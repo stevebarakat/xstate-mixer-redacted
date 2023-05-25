@@ -29,7 +29,12 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
 
   const [fx1, setFx1] = useState<JSX.Element | null>(null);
   const [fx2, setFx2] = useState<JSX.Element | null>(null);
-  const [trackFx, setTrackFx] = useState(["nofx", "nofx", "nofx", "nofx"]);
+  const [trackFx, setTrackFx] = useState([
+    ["nofx", "nofx"],
+    ["nofx", "nofx"],
+    ["nofx", "nofx"],
+    ["nofx", "nofx"],
+  ]);
   const [position, setPosition] = useState([
     { x: 0, y: 0 },
     { x: 0, y: 0 },
@@ -45,9 +50,9 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const [active, setActive] = useState([false, false, false, false]);
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
-    trackFx[trackIndex] = e.currentTarget.value;
-    setTrackFx([...trackFx]);
     const id = parseInt(e.currentTarget.id.at(-1), 10);
+    trackFx[trackIndex][id] = e.currentTarget.value;
+    setTrackFx([...trackFx]);
     switch (e.currentTarget.value) {
       case "nofx":
         channel.disconnect();
