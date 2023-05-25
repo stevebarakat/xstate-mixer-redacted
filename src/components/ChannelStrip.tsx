@@ -87,7 +87,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     { width: "325px", height: "auto" },
     { width: "325px", height: "auto" },
   ]);
-  const [active, setActive] = useState([false, false, false, false]);
+  const [active, setActive] = useState([true, true, true, true]);
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
     const id = parseInt(e.currentTarget.id.at(-1)!, 10);
