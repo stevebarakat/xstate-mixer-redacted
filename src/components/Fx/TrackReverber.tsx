@@ -22,7 +22,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
         <h3>Reverb</h3>
         <div className="power-button">
           <input
-            id={`bus${trackIndex}reverbBypass`}
+            id={`track${trackIndex}reverbBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               bypass[trackIndex] = e.currentTarget.checked;
@@ -35,7 +35,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
             }}
             checked={bypass[trackIndex]}
           />
-          <label htmlFor={`bus${trackIndex}delayBypass`}>{powerIcon}</label>
+          <label htmlFor={`track${trackIndex}reverbBypass`}>{powerIcon}</label>
         </div>
       </div>
       <div className="flex-y">

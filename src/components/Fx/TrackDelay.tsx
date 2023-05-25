@@ -22,7 +22,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
         <h3>Delay</h3>
         <div className="power-button">
           <input
-            id={`bus${trackIndex}delayBypass`}
+            id={`track${trackIndex}delayBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               bypass[trackIndex] = e.currentTarget.checked;
@@ -35,7 +35,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
             }}
             checked={bypass[trackIndex]}
           />
-          <label htmlFor={`bus${trackIndex}delayBypass`}>{powerIcon}</label>
+          <label htmlFor={`track${trackIndex}delayBypass`}>{powerIcon}</label>
         </div>
       </div>
       <div className="flex-y">

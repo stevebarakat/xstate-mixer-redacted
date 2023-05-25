@@ -1,4 +1,5 @@
-import { MixerMachineContext } from "../../App";
+import { useState } from "react";
+import { Destination } from "tone";
 import { powerIcon } from "../../assets/icons";
 import type { FeedbackDelay } from "tone";
 
@@ -9,9 +10,24 @@ type Props = {
 };
 
 export default function Delay({ delay, busIndex, fxIndex }: Props) {
-  const [state, send] = MixerMachineContext.useActor();
+  const [bypass, setBypass] = useState([
+    [false, false],
+    [false, false],
+  ]);
+  const [mix, setMix] = useState([
+    [0.5, 0.5],
+    [0.5, 0.5],
+  ]);
+  const [delayTime, setDelayTime] = useState([
+    [0.5, 0.5],
+    [0.5, 0.5],
+  ]);
+  const [feedback, setFeedback] = useState([
+    [0.5, 0.5],
+    [0.5, 0.5],
+  ]);
 
-  const disabled = state.context.busFxData.delaysBypass[busIndex];
+  const disabled = bypass[busIndex][fxIndex];
 
   return (
     <div>
@@ -21,17 +37,16 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
           <input
             id={`bus${busIndex}delayBypass`}
             type="checkbox"
-            value={state.context.busFxData.delaysBypass[busIndex]}
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              send({
-                type: "BYPASS_BUS_DELAY",
-                checked: e.currentTarget.checked,
-                delay,
-                busIndex,
-                fxIndex,
-              });
+              bypass[busIndex][fxIndex] = e.currentTarget.checked;
+              if (e.currentTarget.checked) {
+                delay.disconnect();
+              } else {
+                delay.connect(Destination);
+              }
+              setBypass([...bypass]);
             }}
-            checked={state.context.busFxData.delaysBypass[busIndex][fxIndex]}
+            checked={bypass[busIndex][fxIndex]}
           />
           <label htmlFor={`bus${busIndex}delayBypass`}>{powerIcon}</label>
         </div>
@@ -46,15 +61,11 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
           max={1}
           step={0.01}
           disabled={disabled}
-          value={state.context.busFxData.delaysMix[busIndex][fxIndex]}
+          value={mix[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_BUS_DELAY_MIX",
-              value: parseFloat(e.currentTarget.value),
-              delay,
-              busIndex,
-              fxIndex,
-            });
+            delay.wet.value = parseFloat(e.currentTarget.value);
+            mix[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            setMix([...mix]);
           }}
         />
       </div>
@@ -68,15 +79,11 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
           max={1}
           step={0.01}
           disabled={disabled}
-          value={state.context.busFxData.delaysTime[busIndex][fxIndex]}
+          value={delayTime[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_BUS_DELAY_TIME",
-              value: parseFloat(e.currentTarget.value),
-              delay,
-              busIndex,
-              fxIndex,
-            });
+            delay.delayTime.value = parseFloat(e.currentTarget.value);
+            delayTime[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            setDelayTime([...delayTime]);
           }}
         />
       </div>
@@ -90,15 +97,11 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
           max={1}
           step={0.01}
           disabled={disabled}
-          value={state.context.busFxData.delaysFeedback[busIndex][fxIndex]}
+          value={feedback[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_BUS_DELAY_FEEDBACK",
-              value: parseFloat(e.currentTarget.value),
-              delay,
-              busIndex,
-              fxIndex,
-            });
+            delay.feedback.value = parseFloat(e.currentTarget.value);
+            feedback[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            setFeedback([...feedback]);
           }}
         />
       </div>

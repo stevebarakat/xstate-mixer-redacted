@@ -1,4 +1,5 @@
-import { MixerMachineContext } from "../../App";
+import { useState } from "react";
+import { Destination } from "tone";
 import { powerIcon } from "../../assets/icons";
 import type { Reverb } from "tone";
 
@@ -9,9 +10,24 @@ type Props = {
 };
 
 export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
-  const [state, send] = MixerMachineContext.useActor();
+  const [bypass, setBypass] = useState([
+    [false, false],
+    [false, false],
+  ]);
+  const [mix, setMix] = useState([
+    [0.5, 0.5],
+    [0.5, 0.5],
+  ]);
+  const [preDelay, setPreDelay] = useState([
+    [0.5, 0.5],
+    [0.5, 0.5],
+  ]);
+  const [decay, setDecay] = useState([
+    [0.5, 0.5],
+    [0.5, 0.5],
+  ]);
 
-  const disabled = state.context.busFxData.reverbsBypass[busIndex];
+  const disabled = bypass[busIndex][fxIndex];
 
   return (
     <div>
@@ -21,18 +37,16 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           <input
             id={`bus${busIndex}reverbBypass`}
             type="checkbox"
-            className="power-btn"
-            value={state.context.busFxData.reverbsBypass[busIndex]}
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              send({
-                type: "BYPASS_BUS_REVERB",
-                checked: e.currentTarget.checked,
-                reverb,
-                busIndex,
-                fxIndex,
-              });
+              bypass[busIndex][fxIndex] = e.currentTarget.checked;
+              if (e.currentTarget.checked) {
+                reverb.disconnect();
+              } else {
+                reverb.connect(Destination);
+              }
+              setBypass([...bypass]);
             }}
-            checked={state.context.busFxData.reverbsBypass[busIndex][fxIndex]}
+            checked={bypass[busIndex][fxIndex]}
           />
           <label htmlFor={`bus${busIndex}reverbBypass`}>{powerIcon}</label>
         </div>
@@ -46,16 +60,12 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          value={state.context.busFxData.reverbsMix[busIndex][fxIndex]}
+          value={mix[busIndex][fxIndex]}
           disabled={disabled}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_BUS_REVERB_MIX",
-              value: parseFloat(e.currentTarget.value),
-              reverb,
-              busIndex,
-              fxIndex,
-            });
+            reverb.wet.value = parseFloat(e.currentTarget.value);
+            mix[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            setMix([...mix]);
           }}
         />
       </div>
@@ -68,16 +78,12 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          value={state.context.busFxData.reverbsPreDelay[busIndex][fxIndex]}
+          value={preDelay[busIndex][fxIndex]}
           disabled={disabled}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_BUS_REVERB_PREDELAY",
-              value: parseFloat(e.currentTarget.value),
-              reverb,
-              busIndex,
-              fxIndex,
-            });
+            reverb.preDelay = parseFloat(e.currentTarget.value);
+            preDelay[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            setPreDelay([...preDelay]);
           }}
         />
       </div>
@@ -90,16 +96,12 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           min={0.1}
           max={20}
           step={0.1}
-          value={state.context.busFxData.reverbsDecay[busIndex][fxIndex]}
+          value={decay[busIndex][fxIndex]}
           disabled={disabled}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_BUS_REVERB_DECAY",
-              value: parseFloat(e.currentTarget.value),
-              reverb,
-              busIndex,
-              fxIndex,
-            });
+            reverb.decay = parseFloat(e.currentTarget.value);
+            decay[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            setDecay([...decay]);
           }}
         />
       </div>
