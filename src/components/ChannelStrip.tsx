@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Reverb, FeedbackDelay, PitchShift, Destination } from "tone";
 import TrackReverber from "./Fx/TrackReverber";
 import TrackDelay from "./Fx/TrackDelay";
@@ -30,11 +30,15 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
+  useEffect(() => {
+    console.log(" currentTracks[trackIndex].fx", currentTracks[trackIndex].fx);
+  });
+
   console.log(
     JSON.parse(localStorage.getItem("currentTracks")!)[trackIndex].fx
   );
   const [fx1, setFx1] = useState<JSX.Element | null>(() => {
-    const currentFx = localStorage.getItem("fx1") ?? null;
+    const currentFx = currentTracks[trackIndex].fx[0] ?? null;
     switch (currentFx) {
       case "reverb":
         return <TrackReverber reverb={reverb.current} trackIndex={0} />;
@@ -48,7 +52,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   });
 
   const [fx2, setFx2] = useState<JSX.Element | null>(() => {
-    const currentFx = localStorage.getItem("fx2") ?? null;
+    const currentFx = currentTracks[trackIndex].fx[1] ?? null;
     switch (currentFx) {
       case "reverb":
         return <TrackReverber reverb={reverb.current} trackIndex={1} />;
