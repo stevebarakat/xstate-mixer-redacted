@@ -70,7 +70,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             reverb.preDelay = parseFloat(e.currentTarget.value);
             preDelay[trackIndex] = parseFloat(e.currentTarget.value);
-            setPreDelay([...mix]);
+            setPreDelay([...preDelay]);
           }}
         />
       </div>
@@ -88,7 +88,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             reverb.decay = parseFloat(e.currentTarget.value);
             decay[trackIndex] = parseFloat(e.currentTarget.value);
-            setDecay([...mix]);
+            setDecay([...decay]);
           }}
         />
       </div>

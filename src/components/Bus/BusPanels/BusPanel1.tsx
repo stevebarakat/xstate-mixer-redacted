@@ -1,9 +1,9 @@
+import { useState } from "react";
 import { array } from "../../../utils";
 import { Rnd as BusFxPanel } from "react-rnd";
 import CloseButton from "../../Buttons/CloseButton";
 import Reverber from "../../Fx/Reverber";
 import Delay from "../../Fx/Delay";
-import { MixerMachineContext } from "../../../App";
 import type { FeedbackDelay, Reverb } from "tone";
 
 type Props = {
@@ -23,51 +23,30 @@ type Props = {
 };
 
 function BusPanel1({ currentBusFx, fx, disabled }: Props) {
-  const { send } = MixerMachineContext.useActorRef();
-
-  const bpOpen0 = MixerMachineContext.useSelector(
-    (state) => state.context.busPanelActive
-  );
-
-  const bpPos0 = MixerMachineContext.useSelector(
-    (state) => state.context.busPanelPosition[0]
-  );
-
-  const bpSize0 = MixerMachineContext.useSelector(
-    (state) => state.context.busPanelSize[0]
-  );
+  const [active, setActive] = useState(true);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [size, setSize] = useState({ width: "325px", height: "auto" });
 
   return (
     <div>
-      {bpOpen0 && !disabled.panel1 && (
+      {active && !disabled.panel1 && (
         <BusFxPanel
           className="fx-panel"
-          position={bpPos0}
+          position={position}
           onDragStop={(_, d) => {
-            send({
-              type: "SAVE_BUS_PANELS_POSITION",
-              busIndex: 0,
-              position: { x: d.x, y: d.y },
-            });
+            setPosition({ x: d.x, y: d.y });
           }}
-          size={bpSize0}
+          size={size}
           minWidth="200px"
           onResizeStop={(_, __, ref) => {
-            send({
-              type: "SAVE_BUS_PANELS_SIZE",
-              busIndex: 0,
-              size: { width: ref.style.width, height: ref.style.height },
-            });
+            setSize({ width: ref.style.width, height: ref.style.height });
           }}
           cancel="input"
         >
           <CloseButton
             id="bus-panel-1"
             onClick={() => {
-              send({
-                type: "TOGGLE_BUS_PANEL",
-                busIndex: 0,
-              });
+              setActive(!active);
             }}
           >
             X
