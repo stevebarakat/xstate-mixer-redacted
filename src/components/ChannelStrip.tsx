@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Reverb, FeedbackDelay, PitchShift, Destination } from "tone";
 import TrackReverber from "./Fx/TrackReverber";
+import TrackPanel from "./TrackPanel";
 import TrackDelay from "./Fx/TrackDelay";
-import CloseButton from "./Buttons/CloseButton";
 import ChannelButton from "./Buttons/ChannelButton";
 import PitchShifter from "./Fx/PitchShifter";
 import Pan from "./Pan";
@@ -13,7 +13,6 @@ import TrackLabel from "./TrackLabel";
 import type { Track } from "../types/global";
 import type { Channel } from "tone";
 import { array as fx } from "../utils";
-import { Rnd as TrackFxPanel } from "react-rnd";
 
 type Props = {
   track: Track;
@@ -30,13 +29,6 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  useEffect(() => {
-    console.log(" currentTracks[trackIndex].fx", currentTracks[trackIndex].fx);
-  });
-
-  console.log(
-    JSON.parse(localStorage.getItem("currentTracks")!)[trackIndex].fx
-  );
   const [fx1, setFx1] = useState<JSX.Element | null>(() => {
     const currentFx = currentTracks[trackIndex].fx[0] ?? null;
     switch (currentFx) {
@@ -75,18 +67,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
       ]
     );
   });
-  const [position, setPosition] = useState([
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-  ]);
-  const [size, setSize] = useState([
-    { width: "325px", height: "auto" },
-    { width: "325px", height: "auto" },
-    { width: "325px", height: "auto" },
-    { width: "325px", height: "auto" },
-  ]);
+
   const [active, setActive] = useState([true, true, true, true]);
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
@@ -154,10 +135,6 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     }
   }
 
-  console.log("trackFx", trackFx);
-
-  console.log("currentTracks[trackIndex].fx", currentTracks[trackIndex]);
-
   const disabled = currentTracks[trackIndex].fx.every(
     (item: string) => item === "nofx"
   );
@@ -167,35 +144,14 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
       return null;
     } else {
       return (
-        <TrackFxPanel
-          className="fx-panel"
-          position={position[trackIndex]}
-          onDragStop={(_, d) => {
-            position[trackIndex] = { x: d.x, y: d.y };
-            setPosition([...position]);
-          }}
-          size={size[trackIndex]}
-          minWidth="200px"
-          onResizeStop={(_, __, ref) => {
-            size[trackIndex] = {
-              width: ref.style.width,
-              height: ref.style.height,
-            };
-            setSize([...size]);
-          }}
-          cancel="input"
+        <TrackPanel
+          trackIndex={trackIndex}
+          active={active}
+          setActive={setActive}
         >
-          <CloseButton
-            onClick={() => {
-              active[trackIndex] = !active[trackIndex];
-              setActive([...active]);
-            }}
-          >
-            X
-          </CloseButton>
           {fx1}
           {fx2}
-        </TrackFxPanel>
+        </TrackPanel>
       );
     }
   }
@@ -204,6 +160,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     <div className="flex-y gap2">
       <ChannelButton
         className="fx-select"
+        disabled={disabled}
         onClick={() => {
           active[trackIndex] = !active[trackIndex];
           setActive([...active]);
