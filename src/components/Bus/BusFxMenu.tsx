@@ -15,6 +15,7 @@ function BusFxMenu({ busIndex, disabled }: Props) {
       <ChannelButton
         className="fx-select"
         id={`bus-panel-${busIndex}`}
+        disabled={disabled[`panel${busIndex + 1}` as keyof typeof disabled]}
         onClick={() => {
           send({
             type: "TOGGLE_BUS_PANEL",
@@ -24,7 +25,7 @@ function BusFxMenu({ busIndex, disabled }: Props) {
       >
         {disabled[`panel${busIndex + 1}` as keyof typeof disabled]
           ? "No"
-          : state.context.busPanelActive[busIndex]
+          : state.context.busPanelActive
           ? "Close"
           : "Open"}
         FX
