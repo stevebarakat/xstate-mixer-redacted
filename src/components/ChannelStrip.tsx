@@ -111,7 +111,13 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     }
   }
 
-  console.log("trackPanelPosition", position[trackIndex]);
+  console.log("trackFx", trackFx);
+
+  console.log("currentTracks[trackIndex].fx", currentTracks[trackIndex].fx);
+
+  const disabled = currentTracks[trackIndex].fx.every(
+    (item: string) => item === "nofx"
+  );
 
   function getTrackPanels() {
     if (!fx1 && !fx2) {
@@ -160,7 +166,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
           setActive([...active]);
         }}
       >
-        {active[trackIndex] ? "Close" : "Open"}
+        {disabled ? "No" : active[trackIndex] ? "Close" : "Open"}
         FX
       </ChannelButton>
       {fx(2).map((_, fxIndex) => (
