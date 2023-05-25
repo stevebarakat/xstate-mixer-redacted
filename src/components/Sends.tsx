@@ -30,7 +30,7 @@ function Sends({ trackIndex, channels }: Props) {
             channels[trackIndex].connect(Destination);
             activeBusses[0] = false;
             setActiveBusses([...activeBusses]);
-          }
+          } 
           currentTracks[0].activeBusses = [...activeBusses];
           localStorage.setItem(
             "currentTracks",

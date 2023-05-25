@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { MixerMachineContext } from "../../App";
 import BusFxMenu from "./BusFxMenu";
 import type { Channel } from "tone";
@@ -10,6 +11,7 @@ type Props = {
 
 function BusChannel({ busChannels, busIndex, disabled }: Props) {
   const [state, send] = MixerMachineContext.useActor();
+  const [isMuted, setIsMuted] = useState(false);
 
   return (
     <div>
@@ -36,6 +38,19 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
               });
             }}
           />
+          <>
+            <input
+              id={`trackMute${busIndex}`}
+              type="checkbox"
+              className="check"
+              onChange={(): void => {
+                setIsMuted(!isMuted);
+                busChannels.current[busIndex].mute = isMuted;
+              }}
+              checked={isMuted}
+            />
+            <label htmlFor={`trackMute${busIndex}`}>M</label>
+          </>
           <label htmlFor={`busVol${busIndex}`}>{`Bus ${busIndex + 1}`}</label>
         </div>
       </div>

@@ -59,7 +59,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
 
   const [trackFx, setTrackFx] = useState(() => {
     return (
-      JSON.parse(localStorage.getItem("currentTracks")!).fx ?? [
+      currentTracks.fx ?? [
         ["nofx", "nofx"],
         ["nofx", "nofx"],
         ["nofx", "nofx"],
@@ -71,6 +71,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const [active, setActive] = useState([true, true, true, true]);
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
+    console.log("e.currentTarget.id.at(-1)", e.currentTarget.id.at(-1));
     const id = parseInt(e.currentTarget.id.at(-1)!, 10);
     trackFx[trackIndex][id] = e.currentTarget.value;
     setTrackFx([...trackFx]);
@@ -175,11 +176,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
           id={`track${trackIndex}fx${fxIndex}`}
           className="fx-select"
           onChange={saveTrackFx}
-          value={
-            JSON.parse(localStorage.getItem("currentTracks")!)[trackIndex].fx[
-              fxIndex
-            ]
-          }
+          value={currentTracks[trackIndex].fx[fxIndex]}
         >
           <option value={"nofx"}>{`FX ${fxIndex + 1}`}</option>
           <option value={"reverb"}>Reverb</option>
