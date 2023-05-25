@@ -24,6 +24,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Drums 2",
@@ -40,6 +41,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Drums 3",
@@ -56,6 +58,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "SynthBass",
@@ -72,6 +75,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Bass Gtr",
@@ -88,6 +92,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Synths 1",
@@ -104,6 +109,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Synths 2",
@@ -120,6 +126,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Vocals",
@@ -136,6 +143,7 @@ export const blueMonday = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
   ],
 };

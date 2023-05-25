@@ -33,8 +33,34 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   console.log(
     JSON.parse(localStorage.getItem("currentTracks")!)[trackIndex].fx
   );
-  const [fx1, setFx1] = useState<JSX.Element | null>(null);
-  const [fx2, setFx2] = useState<JSX.Element | null>(null);
+  const [fx1, setFx1] = useState<JSX.Element | null>(() => {
+    const currentFx = localStorage.getItem("fx1") ?? null;
+    switch (currentFx) {
+      case "reverb":
+        return <TrackReverber reverb={reverb.current} trackIndex={0} />;
+      case "delay":
+        return <TrackDelay delay={delay.current} trackIndex={0} />;
+      case "pitchShift":
+        return <PitchShifter pitchShift={pitchShift.current} trackIndex={0} />;
+      default:
+        break;
+    }
+  });
+
+  const [fx2, setFx2] = useState<JSX.Element | null>(() => {
+    const currentFx = localStorage.getItem("fx2") ?? null;
+    switch (currentFx) {
+      case "reverb":
+        return <TrackReverber reverb={reverb.current} trackIndex={1} />;
+      case "delay":
+        return <TrackDelay delay={delay.current} trackIndex={1} />;
+      case "pitchShift":
+        return <PitchShifter pitchShift={pitchShift.current} trackIndex={1} />;
+      default:
+        break;
+    }
+  });
+
   const [trackFx, setTrackFx] = useState(() => {
     return (
       JSON.parse(localStorage.getItem("currentTracks")!).fx ?? [
@@ -79,31 +105,44 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
         channel.disconnect();
         channel.connect(reverb.current).toDestination();
 
-        id === 0
-          ? setFx1(<TrackReverber reverb={reverb.current} trackIndex={0} />)
-          : setFx2(<TrackReverber reverb={reverb.current} trackIndex={1} />);
+        if (id === 0) {
+          setFx1(<TrackReverber reverb={reverb.current} trackIndex={0} />);
+          localStorage.setItem("fx1", "reverb");
+        } else {
+          setFx2(<TrackReverber reverb={reverb.current} trackIndex={1} />);
+          localStorage.setItem("fx2", "reverb");
+        }
+
         break;
 
       case "delay":
         channel.disconnect();
         channel.connect(delay.current).toDestination();
 
-        id === 0
-          ? setFx1(<TrackDelay delay={delay.current} trackIndex={0} />)
-          : setFx2(<TrackDelay delay={delay.current} trackIndex={1} />);
+        if (id === 0) {
+          setFx1(<TrackDelay delay={delay.current} trackIndex={0} />);
+          localStorage.setItem("fx1", "delay");
+        } else {
+          setFx2(<TrackDelay delay={delay.current} trackIndex={1} />);
+          localStorage.setItem("fx2", "delay");
+        }
         break;
 
       case "pitchShift":
         channel.disconnect();
         channel.connect(pitchShift.current).toDestination();
 
-        id === 0
-          ? setFx1(
-              <PitchShifter pitchShift={pitchShift.current} trackIndex={0} />
-            )
-          : setFx2(
-              <PitchShifter pitchShift={pitchShift.current} trackIndex={1} />
-            );
+        if (id === 0) {
+          setFx1(
+            <PitchShifter pitchShift={pitchShift.current} trackIndex={0} />
+          );
+          localStorage.setItem("fx1", "pitchShift");
+        } else {
+          setFx2(
+            <PitchShifter pitchShift={pitchShift.current} trackIndex={1} />
+          );
+          localStorage.setItem("fx2", "pitchShift");
+        }
         break;
 
       default:
@@ -113,7 +152,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
 
   console.log("trackFx", trackFx);
 
-  console.log("currentTracks[trackIndex].fx", currentTracks[trackIndex].fx);
+  console.log("currentTracks[trackIndex].fx", currentTracks[trackIndex]);
 
   const disabled = currentTracks[trackIndex].fx.every(
     (item: string) => item === "nofx"

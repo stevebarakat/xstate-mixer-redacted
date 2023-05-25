@@ -24,6 +24,7 @@ export const aDayInTheLife = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Instruments",
@@ -40,6 +41,7 @@ export const aDayInTheLife = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Orchestra",
@@ -56,6 +58,7 @@ export const aDayInTheLife = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
     {
       name: "Vocals",
@@ -72,6 +75,7 @@ export const aDayInTheLife = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      fx: ["nofx", "nofx"],
     },
   ],
 };
