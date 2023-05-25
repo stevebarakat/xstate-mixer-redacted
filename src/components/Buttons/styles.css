@@ -1,0 +1,90 @@
+.button {
+  position: relative;
+  display: flex;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: black;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.button:hover {
+  border-color: var(--primary-color-8);
+}
+.button:focus,
+.button:focus-visible {
+  outline: 4px auto var(--primary-color);
+}
+.button svg,
+.button:focus-visible svg {
+  stroke: var(--primary-color-8);
+  fill: var(--primary-color-8);
+}
+.disabled svg {
+  stroke: hsl(0, 0%, 46%);
+}
+.button:hover svg {
+  stroke: var(--primary-color-8);
+}
+
+.fx-panel button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.bus-btn,
+.chan-strip-btn {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.power-button label,
+.bus-btn label,
+.chan-strip-btn label {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: black;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+  color: var(--primary-color);
+  padding: 4px 8px;
+  font-weight: 900;
+}
+
+.bus-btn label {
+  width: 50%;
+}
+
+.power-button input[type="checkbox"],
+.bus-btn input[type="checkbox"],
+.chan-strip-btn input[type="checkbox"] {
+  position: absolute;
+  appearance: none;
+}
+
+.bus-btn input[type="checkbox"]:checked + label,
+.chan-strip-btn input[type="checkbox"]:checked + label {
+  background: var(--primary-color);
+  color: black;
+  transition: all 0.2s;
+}
+
+.power-button input[type="checkbox"]:checked + label {
+  color: hsl(0, 0%, 46%);
+  transition: all 0.2s;
+}
+
+.bus-btn input[type="checkbox"]:hover + label,
+.chan-strip-btn input[type="checkbox"]:hover + label {
+  border: 1px solid var(--primary-color);
+  transition: all 0.2s;
+}
