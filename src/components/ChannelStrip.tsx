@@ -27,14 +27,24 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const delay = useRef<FeedbackDelay>(new FeedbackDelay().toDestination());
   const pitchShift = useRef<PitchShift>(new PitchShift().toDestination());
 
+  const currentTracksString = localStorage.getItem("currentTracks");
+  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+
+  console.log(
+    JSON.parse(localStorage.getItem("currentTracks")!)[trackIndex].fx
+  );
   const [fx1, setFx1] = useState<JSX.Element | null>(null);
   const [fx2, setFx2] = useState<JSX.Element | null>(null);
-  const [trackFx, setTrackFx] = useState([
-    ["nofx", "nofx"],
-    ["nofx", "nofx"],
-    ["nofx", "nofx"],
-    ["nofx", "nofx"],
-  ]);
+  const [trackFx, setTrackFx] = useState(() => {
+    return (
+      JSON.parse(localStorage.getItem("currentTracks")!).fx ?? [
+        ["nofx", "nofx"],
+        ["nofx", "nofx"],
+        ["nofx", "nofx"],
+        ["nofx", "nofx"],
+      ]
+    );
+  });
   const [position, setPosition] = useState([
     { x: 0, y: 0 },
     { x: 0, y: 0 },
@@ -50,9 +60,13 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const [active, setActive] = useState([false, false, false, false]);
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
-    const id = parseInt(e.currentTarget.id.at(-1), 10);
+    const id = parseInt(e.currentTarget.id.at(-1)!, 10);
     trackFx[trackIndex][id] = e.currentTarget.value;
     setTrackFx([...trackFx]);
+
+    currentTracks[trackIndex].fx[id] = e.currentTarget.value;
+    localStorage.setItem("currentTracks", JSON.stringify([...currentTracks]));
+
     switch (e.currentTarget.value) {
       case "nofx":
         channel.disconnect();
@@ -155,7 +169,11 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
           id={`track${trackIndex}fx${fxIndex}`}
           className="fx-select"
           onChange={saveTrackFx}
-          value={trackFx[trackIndex][fxIndex]}
+          value={
+            JSON.parse(localStorage.getItem("currentTracks")!)[trackIndex].fx[
+              fxIndex
+            ]
+          }
         >
           <option value={"nofx"}>{`FX ${fxIndex + 1}`}</option>
           <option value={"reverb"}>Reverb</option>

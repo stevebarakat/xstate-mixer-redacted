@@ -1,12 +1,11 @@
 import { MixerMachineContext } from "../../App";
 import BusFxMenu from "./BusFxMenu";
-import ChannelButton from "../Buttons/ChannelButton";
 import type { Channel } from "tone";
 
 type Props = {
   busChannels: React.MutableRefObject<Channel[]>;
   busIndex: number;
-  disabled: { panel1: boolean; panel2: boolean };
+  disabled: boolean;
 };
 
 function BusChannel({ busChannels, busIndex, disabled }: Props) {
