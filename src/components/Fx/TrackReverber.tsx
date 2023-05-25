@@ -1,4 +1,5 @@
-import { MixerMachineContext } from "../../App";
+import { useState } from "react";
+import { Destination } from "tone";
 import { powerIcon } from "../../assets/icons";
 import type { Reverb } from "tone";
 
@@ -8,10 +9,12 @@ type Props = {
 };
 
 export default function TrackReverber({ reverb, trackIndex }: Props) {
-  const [state] = MixerMachineContext.useActor();
-  const { send } = MixerMachineContext.useActorRef();
+  const [bypass, setBypass] = useState([false, false, false, false]);
+  const [mix, setMix] = useState([0.5, 0.5, 0.5, 0.5]);
+  const [preDelay, setPreDelay] = useState([0.5, 0.5, 0.5, 0.5]);
+  const [decay, setDecay] = useState([0.5, 0.5, 0.5, 0.5]);
 
-  const disabled = state.context.reverbsBypass[trackIndex];
+  const disabled = bypass[trackIndex];
 
   return (
     <div>
@@ -19,21 +22,20 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
         <h3>Reverb</h3>
         <div className="power-button">
           <input
-            id={`track${trackIndex}reverbBypass`}
+            id={`bus${trackIndex}reverbBypass`}
             type="checkbox"
-            className="power-btn"
-            value={state.context.reverbsBypass[trackIndex]}
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              send({
-                type: "BYPASS_TRACK_REVERB",
-                checked: e.currentTarget.checked,
-                reverb,
-                trackIndex,
-              });
+              bypass[trackIndex] = e.currentTarget.checked;
+              if (e.currentTarget.checked) {
+                reverb.disconnect();
+              } else {
+                reverb.connect(Destination);
+              }
+              setBypass([...bypass]);
             }}
-            checked={state.context.reverbsBypass[trackIndex]}
+            checked={bypass[trackIndex]}
           />
-          <label htmlFor={`track${trackIndex}reverbBypass`}>{powerIcon}</label>
+          <label htmlFor={`bus${trackIndex}delayBypass`}>{powerIcon}</label>
         </div>
       </div>
       <div className="flex-y">
@@ -45,15 +47,12 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          value={state.context.reverbsMix[trackIndex]}
           disabled={disabled}
+          value={mix[trackIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_TRACK_REVERB_MIX",
-              value: parseFloat(e.currentTarget.value),
-              reverb,
-              trackIndex,
-            });
+            reverb.wet.value = parseFloat(e.currentTarget.value);
+            mix[trackIndex] = parseFloat(e.currentTarget.value);
+            setMix([...mix]);
           }}
         />
       </div>
@@ -66,15 +65,12 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          value={state.context.reverbsPreDelay[trackIndex]}
           disabled={disabled}
+          value={preDelay[trackIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_TRACK_REVERB_PREDELAY",
-              value: parseFloat(e.currentTarget.value),
-              reverb,
-              trackIndex,
-            });
+            reverb.preDelay = parseFloat(e.currentTarget.value);
+            preDelay[trackIndex] = parseFloat(e.currentTarget.value);
+            setPreDelay([...mix]);
           }}
         />
       </div>
@@ -84,18 +80,15 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           type="range"
           className="simple-range"
           name="decay"
-          min={0.1}
-          max={20}
-          step={0.1}
-          value={state.context.reverbsDecay[trackIndex]}
+          min={0}
+          max={1}
+          step={0.01}
           disabled={disabled}
+          value={decay[trackIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_TRACK_REVERB_DECAY",
-              value: parseFloat(e.currentTarget.value),
-              reverb,
-              trackIndex,
-            });
+            reverb.decay = parseFloat(e.currentTarget.value);
+            decay[trackIndex] = parseFloat(e.currentTarget.value);
+            setDecay([...mix]);
           }}
         />
       </div>

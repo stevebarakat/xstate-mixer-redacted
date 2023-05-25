@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { Destination } from "tone";
 import { powerIcon } from "../../assets/icons";
 import type { FeedbackDelay } from "tone";
-import { Destination } from "tone";
 
 type Props = {
   delay: FeedbackDelay;

@@ -1,4 +1,5 @@
-import { MixerMachineContext } from "../../App";
+import { useState } from "react";
+import { Destination } from "tone";
 import { powerIcon } from "../../assets/icons";
 import type { PitchShift } from "tone";
 
@@ -8,10 +9,11 @@ type Props = {
 };
 
 export default function PitchShifter({ pitchShift, trackIndex }: Props) {
-  const [state] = MixerMachineContext.useActor();
-  const { send } = MixerMachineContext.useActorRef();
+  const [bypass, setBypass] = useState([false, false, false, false]);
+  const [mix, setMix] = useState([0.5, 0.5, 0.5, 0.5]);
+  const [pitch, setPitch] = useState([0.5, 0.5, 0.5, 0.5]);
 
-  const disabled = state.context.pitchShiftsBypass[trackIndex];
+  const disabled = bypass[trackIndex];
 
   return (
     <div>
@@ -21,16 +23,16 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
           <input
             id={`bus${trackIndex}pitchShiftBypass`}
             type="checkbox"
-            value={state.context.pitchShiftsBypass[trackIndex]}
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              send({
-                type: "BYPASS_TRACK_PITCHSHIFT",
-                checked: e.currentTarget.checked,
-                pitchShift,
-                trackIndex,
-              });
+              bypass[trackIndex] = e.currentTarget.checked;
+              if (e.currentTarget.checked) {
+                pitchShift.disconnect();
+              } else {
+                pitchShift.connect(Destination);
+              }
+              setBypass([...bypass]);
             }}
-            checked={state.context.pitchShiftsBypass[trackIndex]}
+            checked={bypass[trackIndex]}
           />
           <label htmlFor={`bus${trackIndex}pitchShiftBypass`}>
             {powerIcon}
@@ -47,35 +49,29 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
           max={1}
           step={0.01}
           disabled={disabled}
-          value={state.context.pitchShiftsMix[trackIndex]}
+          value={mix[trackIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_TRACK_PITCHSHIFT_MIX",
-              value: parseFloat(e.currentTarget.value),
-              pitchShift,
-              trackIndex,
-            });
+            pitchShift.wet.value = parseFloat(e.currentTarget.value);
+            mix[trackIndex] = parseFloat(e.currentTarget.value);
+            setMix([...mix]);
           }}
         />
       </div>
       <div className="flex-y">
-        <label htmlFor="mix">Pitch:</label>
+        <label htmlFor="pitch">Delay Time:</label>
         <input
           type="range"
           className="simple-range"
-          name="pitch"
-          min={-48}
-          max={48}
-          step={1}
+          id="pitch"
+          min={-24}
+          max={24}
+          step={0.1}
           disabled={disabled}
-          value={state.context.pitchShiftsPitch[trackIndex]}
+          value={pitch[trackIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            send({
-              type: "CHANGE_TRACK_PITCHSHIFT_PITCH",
-              value: parseFloat(e.currentTarget.value),
-              pitchShift,
-              trackIndex,
-            });
+            pitchShift.pitch = parseFloat(e.currentTarget.value);
+            pitch[trackIndex] = parseFloat(e.currentTarget.value);
+            setPitch([...pitch]);
           }}
         />
       </div>
