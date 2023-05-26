@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MixerMachineContext } from "../../App";
 import BusFxMenu from "./BusFxMenu";
 import type { Channel } from "tone";
 
@@ -10,17 +9,17 @@ type Props = {
 };
 
 function BusChannel({ busChannels, busIndex, disabled }: Props) {
-  const [state, send] = MixerMachineContext.useActor();
   const [isMuted, setIsMuted] = useState(false);
+  const [busVolumes, setBusVolumes] = useState([-32, -32]);
 
   return (
     <div>
       <BusFxMenu busIndex={busIndex} disabled={disabled} />
       <div className="channel">
         <div className="flex-y center">
-          <div className="window">{`${state.context.busVolumes[
-            busIndex
-          ].toFixed(0)} dB`}</div>
+          <div className="window">{`${busVolumes[busIndex].toFixed(
+            0
+          )} dB`}</div>
           <input
             type="range"
             id={`busVol${busIndex}`}
@@ -28,14 +27,13 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
             min={-100}
             max={12}
             step={0.1}
-            value={state.context.busVolumes[busIndex]}
+            value={busVolumes[busIndex]}
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              send({
-                type: "CHANGE_BUS_VOLUME",
-                value: parseFloat(e.currentTarget.value),
-                channel: busChannels.current[busIndex],
-                busIndex,
-              });
+              busChannels.current[busIndex].volume.value = parseFloat(
+                e.currentTarget.value
+              );
+              busVolumes[busIndex] = parseFloat(e.currentTarget.value);
+              setBusVolumes([...busVolumes]);
             }}
           />
           <>
