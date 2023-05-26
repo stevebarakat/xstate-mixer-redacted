@@ -10,10 +10,10 @@ type Props = {
     delay2: FeedbackDelay;
   }>;
   currentBusFx: {
-    reverb1: Reverb;
-    reverb2: Reverb;
-    delay1: FeedbackDelay;
-    delay2: FeedbackDelay;
+    reverb1: string;
+    reverb2: string;
+    delay1: string;
+    delay2: string;
   };
   disabled: { panel1: boolean; panel2: boolean };
 };

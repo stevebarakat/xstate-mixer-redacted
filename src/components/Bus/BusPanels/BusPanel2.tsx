@@ -9,10 +9,10 @@ import type { FeedbackDelay, Reverb } from "tone";
 type Props = {
   disabled: { panel1: boolean; panel2: boolean };
   currentBusFx: {
-    reverb1: Reverb;
-    reverb2: Reverb;
-    delay1: FeedbackDelay;
-    delay2: FeedbackDelay;
+    reverb1: string;
+    reverb2: string;
+    delay1: string;
+    delay2: string;
   };
   fx: React.MutableRefObject<{
     reverb1: Reverb;
