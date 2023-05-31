@@ -27,7 +27,7 @@ const initialSolos = currentTracks.map(
   (currentTrack: TrackSettings) => currentTrack.solo
 );
 const initialTrackFx = currentTracks.map(
-  (currentTrack: TrackSettings) => currentTrack.fx
+  (currentTrack: TrackSettings) => currentTrack.currentTrackFx
 );
 
 const initialTrackPanelActive = currentTracks.map(

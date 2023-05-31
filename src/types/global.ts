@@ -91,4 +91,11 @@ export type TrackSettings = {
   compressorsKnee: number;
   compressorsAttack: number;
   compressorsRelease: number;
+  currentTrackFx: string[];
+  trackPanelActive: boolean[];
+  trackPanelPosition: { x: number; y: number };
+  trackPanelSize: { width: string; height: string };
+  reverbsBypass: boolean;
+  delaysBypass: boolean;
+  pitchShiftsBypass: boolean;
 };
