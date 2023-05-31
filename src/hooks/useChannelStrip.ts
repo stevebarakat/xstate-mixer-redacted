@@ -38,7 +38,7 @@ function useChannelStrip({ tracks }: Props) {
     };
   }, [tracks]);
 
-  return [channels];
+  return { channels: channels.current };
 }
 
 export default useChannelStrip;

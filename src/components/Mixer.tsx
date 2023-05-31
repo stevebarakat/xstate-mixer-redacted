@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { Reverb, FeedbackDelay } from "tone";
+import { useRef, useEffect } from "react";
+import { Destination, Reverb, FeedbackDelay } from "tone";
 import useChannelStrip from "../hooks/useChannelStrip";
 import useBusFx from "../hooks/useBusFx";
 import Transport from "./Transport";
@@ -10,18 +10,25 @@ import ChannelStrip from "./ChannelStrip";
 import Main from "./Main";
 import BusChannel from "./Bus/BusChannel";
 import { MixerMachineContext } from "../App";
-import type { Song } from "../types/global";
+import type { Song, TrackSettings } from "../types/global";
+import { scale, dBToPercent } from "../utils/scale";
 
 type Props = {
   song: Song;
 };
 
 export const Mixer = ({ song }: Props) => {
+  const currentTracksString = localStorage.getItem("currentTracks");
+  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+
+  const currentMixString = localStorage.getItem("currentMix");
+  const currentMix = currentMixString && JSON.parse(currentMixString);
+
   const isLoading = MixerMachineContext.useSelector(
     (state) => state.value === "loading"
   );
   const tracks = song.tracks;
-  const [channels] = useChannelStrip({ tracks });
+  const { channels } = useChannelStrip({ tracks });
 
   const busFx = useRef({
     reverb1: new Reverb().toDestination(),
@@ -31,6 +38,48 @@ export const Mixer = ({ song }: Props) => {
   });
 
   const [busChannels, currentBusFx, disabled] = useBusFx({ busFx });
+
+  useEffect(() => {
+    const volume = currentMix.mainVolume;
+    const scaled = scale(volume);
+    const transposed = dBToPercent(scaled);
+    Destination.volume.value = transposed;
+
+    currentTracks.forEach((currentTrack: TrackSettings, trackIndex: number) => {
+      const value = currentTrack.volume;
+      const transposed = dBToPercent(scale(value));
+
+      channels[trackIndex] &&
+        console.log("channels[trackIndex]", channels[trackIndex]);
+
+      if (channels[trackIndex]) {
+        channels[trackIndex].set({ pan: currentTrack.pan });
+        channels[trackIndex].set({ volume: transposed });
+      }
+
+      currentTrack.activeBusses.forEach((activeBus) => {
+        const currentBusFx = Object.keys(busFx.current);
+        if (activeBus === true) {
+          currentBusFx.forEach((_, i) => {
+            if (channels[trackIndex]) {
+              if (i === 0) {
+                channels[trackIndex].send("reverb1");
+                channels[trackIndex].send("delay1");
+              } else {
+                channels[trackIndex].send("reverb2");
+                channels[trackIndex].send("delay2");
+              }
+              channels[trackIndex].connect(
+                busFx.current[
+                  `${currentBusFx[i]}` as keyof typeof busFx.current
+                ]
+              );
+            }
+          });
+        }
+      });
+    });
+  }, [channels, currentMix, currentTracks]);
 
   return isLoading ? (
     <Loader song={song} />
@@ -49,7 +98,7 @@ export const Mixer = ({ song }: Props) => {
               key={track.path}
               track={track}
               trackIndex={i}
-              channels={channels.current}
+              channels={channels}
             />
           ))}
         </div>

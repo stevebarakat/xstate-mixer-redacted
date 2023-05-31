@@ -67,7 +67,7 @@ export type TrackSettings = {
   solo: boolean;
   mute: boolean;
   pan: number;
-  activeBusses: boolean;
+  activeBusses: boolean[];
   eqHi: number;
   eqMid: number;
   eqLow: number;
@@ -91,4 +91,11 @@ export type TrackSettings = {
   compressorsKnee: number;
   compressorsAttack: number;
   compressorsRelease: number;
+  currentTrackFx: string[];
+  trackPanelActive: boolean[];
+  trackPanelPosition: { x: number; y: number };
+  trackPanelSize: { width: string; height: string };
+  reverbsBypass: boolean;
+  delaysBypass: boolean;
+  pitchShiftsBypass: boolean;
 };
