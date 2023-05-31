@@ -58,7 +58,7 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
         />
       </div>
       <div className="flex-y">
-        <label htmlFor="pitch">Delay Time:</label>
+        <label htmlFor="pitch">Pitch:</label>
         <input
           type="range"
           className="simple-range"
