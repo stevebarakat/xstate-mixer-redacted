@@ -665,7 +665,6 @@ export const mixerMachine = createMachine(
 
       saveTrackPanelPosition: pure((context, { trackIndex, position }) => {
         const tempTrackPanelPosition = context.trackPanelPosition;
-        console.log("tempTrackPanelPosition", tempTrackPanelPosition);
         tempTrackPanelPosition[trackIndex] = position;
         currentTracks[trackIndex].trackPanelPosition = position;
         localStorage.setItem("currentTracks", JSON.stringify(currentTracks));

@@ -71,7 +71,6 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const [active, setActive] = useState([true, true, true, true]);
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
-    console.log("e.currentTarget.id.at(-1)", e.currentTarget.id.at(-1));
     const id = parseInt(e.currentTarget.id.at(-1)!, 10);
     trackFx[trackIndex][id] = e.currentTarget.value;
     setTrackFx([...trackFx]);
@@ -79,17 +78,15 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     currentTracks[trackIndex].fx[id] = e.currentTarget.value;
     localStorage.setItem("currentTracks", JSON.stringify([...currentTracks]));
 
+    channel.disconnect();
     switch (e.currentTarget.value) {
       case "nofx":
-        channel.disconnect();
-        channel.connect(Destination);
+        channel.toDestination();
         id === 0 ? setFx1(null) : setFx2(null);
-
         break;
 
       case "reverb":
-        channel.disconnect();
-        channel.connect(reverb.current).toDestination();
+        channel.connect(reverb.current);
 
         if (id === 0) {
           setFx1(<TrackReverber reverb={reverb.current} trackIndex={0} />);
@@ -98,12 +95,11 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
           setFx2(<TrackReverber reverb={reverb.current} trackIndex={1} />);
           localStorage.setItem("fx2", "reverb");
         }
-
         break;
 
       case "delay":
-        channel.disconnect();
-        channel.connect(delay.current).toDestination();
+        // channel.disconnect();
+        channel.connect(delay.current);
 
         if (id === 0) {
           setFx1(<TrackDelay delay={delay.current} trackIndex={0} />);
@@ -115,8 +111,8 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
         break;
 
       case "pitchShift":
-        channel.disconnect();
-        channel.connect(pitchShift.current).toDestination();
+        // channel.disconnect();
+        channel.connect(pitchShift.current);
 
         if (id === 0) {
           setFx1(

@@ -50,8 +50,8 @@ function Sends({ trackIndex, channels }: Props) {
             activeBusses[1] = true;
             setActiveBusses([...activeBusses]);
           } else {
-            channels[trackIndex].disconnect();
-            channels[trackIndex].connect(Destination);
+            // channels[trackIndex].disconnect();
+            // channels[trackIndex].connect(Destination);
             activeBusses[1] = false;
             setActiveBusses([...activeBusses]);
           }

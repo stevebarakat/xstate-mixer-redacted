@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BusFxMenu from "./BusFxMenu";
 import type { Channel } from "tone";
+import { dBToPercent, scale } from "../../utils/scale";
 
 type Props = {
   busChannels: React.MutableRefObject<Channel[]>;
@@ -28,10 +29,10 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
             step={0.1}
             value={busVolumes[busIndex]}
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              busChannels.current[busIndex].volume.value = parseFloat(
-                e.currentTarget.value
-              );
-              busVolumes[busIndex] = parseFloat(e.currentTarget.value);
+              const value = parseFloat(e.currentTarget.value);
+              const scaled = dBToPercent(scale(value));
+              busChannels.current[busIndex].volume.value = scaled;
+              busVolumes[busIndex] = value;
               setBusVolumes([...busVolumes]);
             }}
           />

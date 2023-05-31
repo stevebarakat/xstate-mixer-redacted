@@ -67,7 +67,7 @@ export type TrackSettings = {
   solo: boolean;
   mute: boolean;
   pan: number;
-  activeBusses: boolean;
+  activeBusses: boolean[];
   eqHi: number;
   eqMid: number;
   eqLow: number;

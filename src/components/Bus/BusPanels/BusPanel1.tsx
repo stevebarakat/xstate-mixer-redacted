@@ -27,9 +27,6 @@ function BusPanel1({ currentBusFx, fx, disabled }: Props) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "325px", height: "auto" });
 
-  console.log("fx", fx.current);
-  console.log("currentBusFx", currentBusFx);
-
   return (
     <div>
       {active && !disabled.panel1 && (
