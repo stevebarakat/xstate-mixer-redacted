@@ -9,7 +9,6 @@ type Props = {
 };
 
 function BusChannel({ busChannels, busIndex, disabled }: Props) {
-  const [isMuted, setIsMuted] = useState(false);
   const [busVolumes, setBusVolumes] = useState([-32, -32]);
 
   return (
@@ -36,19 +35,7 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
               setBusVolumes([...busVolumes]);
             }}
           />
-          <>
-            <input
-              id={`trackMute${busIndex}`}
-              type="checkbox"
-              className="check"
-              onChange={(): void => {
-                setIsMuted(!isMuted);
-                busChannels.current[busIndex].mute = isMuted;
-              }}
-              checked={isMuted}
-            />
-            <label htmlFor={`trackMute${busIndex}`}>M</label>
-          </>
+
           <label htmlFor={`busVol${busIndex}`}>{`Bus ${busIndex + 1}`}</label>
         </div>
       </div>
