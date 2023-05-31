@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { Reverb, FeedbackDelay, Destination } from "tone";
+import { useRef, useEffect } from "react";
+import { Destination, Reverb, FeedbackDelay } from "tone";
 import useChannelStrip from "../hooks/useChannelStrip";
 import useBusFx from "../hooks/useBusFx";
 import Transport from "./Transport";
@@ -10,15 +10,20 @@ import ChannelStrip from "./ChannelStrip";
 import Main from "./Main";
 import BusChannel from "./Bus/BusChannel";
 import { MixerMachineContext } from "../App";
-import type { Song } from "../types/global";
+import type { Song, TrackSettings } from "../types/global";
 import { scale, dBToPercent } from "../utils/scale";
-import type { TrackSettings } from "../types/global";
 
 type Props = {
   song: Song;
 };
 
 export const Mixer = ({ song }: Props) => {
+  const currentTracksString = localStorage.getItem("currentTracks");
+  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+
+  const currentMixString = localStorage.getItem("currentMix");
+  const currentMix = currentMixString && JSON.parse(currentMixString);
+
   const isLoading = MixerMachineContext.useSelector(
     (state) => state.value === "loading"
   );
@@ -33,11 +38,6 @@ export const Mixer = ({ song }: Props) => {
   });
 
   const [busChannels, currentBusFx, disabled] = useBusFx({ busFx });
-
-  const currentMixString = localStorage.getItem("currentMix");
-  const currentMix = currentMixString && JSON.parse(currentMixString);
-  const currentTracksString = localStorage.getItem("currentTracks");
-  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
   useEffect(() => {
     const volume = currentMix.mainVolume;

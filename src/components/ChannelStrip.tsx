@@ -71,6 +71,11 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const [active, setActive] = useState([true, true, true, true]);
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
+    const currentTracksString = localStorage.getItem("currentTracks");
+    const currentTracks =
+      currentTracksString && JSON.parse(currentTracksString);
+
+    console.log("e.currentTarget.id.at(-1)", e.currentTarget.id.at(-1));
     const id = parseInt(e.currentTarget.id.at(-1)!, 10);
     trackFx[trackIndex][id] = e.currentTarget.value;
     setTrackFx([...trackFx]);
