@@ -30,8 +30,8 @@ function Sends({ trackIndex, channels }: Props) {
             channels[trackIndex].connect(Destination);
             activeBusses[0] = false;
             setActiveBusses([...activeBusses]);
-          } 
-          currentTracks[0].activeBusses = [...activeBusses];
+          }
+          currentTracks[trackIndex].activeBusses = [...activeBusses];
           localStorage.setItem(
             "currentTracks",
             JSON.stringify([...currentTracks])
@@ -45,17 +45,17 @@ function Sends({ trackIndex, channels }: Props) {
         type="checkbox"
         onChange={(e: React.FormEvent<HTMLInputElement>): void => {
           if (e.currentTarget.checked) {
-            channels[1].send("reverb2");
-            channels[1].send("delay2");
+            channels[trackIndex].send("reverb2");
+            channels[trackIndex].send("delay2");
             activeBusses[1] = true;
             setActiveBusses([...activeBusses]);
           } else {
-            channels[1].disconnect();
-            channels[1].connect(Destination);
+            channels[trackIndex].disconnect();
+            channels[trackIndex].connect(Destination);
             activeBusses[1] = false;
             setActiveBusses([...activeBusses]);
           }
-          currentTracks[1].activeBusses = [...activeBusses];
+          currentTracks[trackIndex].activeBusses = [...activeBusses];
           localStorage.setItem(
             "currentTracks",
             JSON.stringify([...currentTracks])
