@@ -10,22 +10,38 @@ type Props = {
 };
 
 export default function Delay({ delay, busIndex, fxIndex }: Props) {
-  const [bypass, setBypass] = useState([
-    [false, false],
-    [false, false],
-  ]);
-  const [mix, setMix] = useState([
-    [0.5, 0.5],
-    [0.5, 0.5],
-  ]);
-  const [delayTime, setDelayTime] = useState([
-    [0.5, 0.5],
-    [0.5, 0.5],
-  ]);
-  const [feedback, setFeedback] = useState([
-    [0.5, 0.5],
-    [0.5, 0.5],
-  ]);
+  const currentTracksString = localStorage.getItem("currentTracks");
+  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+
+  const currentMixString = localStorage.getItem("currentMix");
+  const currentMix = currentMixString && JSON.parse(currentMixString);
+
+  console.log("currentMix", currentMix.busFxData.delaysMix[0][0]);
+
+  const [bypass, setBypass] = useState(
+    currentMix.busFxData.delaysBypass || [
+      [false, false],
+      [false, false],
+    ]
+  );
+  const [mix, setMix] = useState(
+    currentMix.busFxData.delaysMix || [
+      [0.5, 0.5],
+      [0.5, 0.5],
+    ]
+  );
+  const [delayTime, setDelayTime] = useState(
+    currentMix.busFxData.delaysTime || [
+      [0.5, 0.5],
+      [0.5, 0.5],
+    ]
+  );
+  const [feedback, setFeedback] = useState(
+    currentMix.busFxData.delaysFeedback || [
+      [0.5, 0.5],
+      [0.5, 0.5],
+    ]
+  );
 
   const disabled = bypass[busIndex][fxIndex];
 
@@ -63,9 +79,12 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
           disabled={disabled}
           value={mix[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            delay.wet.value = parseFloat(e.currentTarget.value);
-            mix[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            const value = parseFloat(e.currentTarget.value);
+            delay.wet.value = value;
+            mix[busIndex][fxIndex] = value;
             setMix([...mix]);
+            currentMix.busFxData.delaysMix[busIndex][fxIndex] = value;
+            localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>
@@ -81,9 +100,12 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
           disabled={disabled}
           value={delayTime[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const value = parseFloat(e.currentTarget.value);
             delay.delayTime.value = parseFloat(e.currentTarget.value);
             delayTime[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
             setDelayTime([...delayTime]);
+            currentMix.busFxData.delaysTime[busIndex][fxIndex] = value;
+            localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>
@@ -99,9 +121,12 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
           disabled={disabled}
           value={feedback[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const value = parseFloat(e.currentTarget.value);
             delay.feedback.value = parseFloat(e.currentTarget.value);
             feedback[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
             setFeedback([...feedback]);
+            currentMix.busFxData.delaysFeedback[busIndex][fxIndex] = value;
+            localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>
