@@ -53,10 +53,13 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           name="mix"
           min={0}
           max={1}
-          step={0.01}
+          step={0.001}
           disabled={disabled}
           value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const currentTracksString = localStorage.getItem("currentTracks");
+            const currentTracks =
+              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             reverb.wet.value = value;
             setMix(value);
@@ -76,10 +79,13 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           name="pre-delay"
           min={0}
           max={1}
-          step={0.01}
+          step={0.001}
           disabled={disabled}
           value={preDelay}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const currentTracksString = localStorage.getItem("currentTracks");
+            const currentTracks =
+              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             reverb.preDelay = value;
             setPreDelay(value);
@@ -99,10 +105,13 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           name="decay"
           min={0}
           max={1}
-          step={0.01}
+          step={0.001}
           disabled={disabled}
           value={decay}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const currentTracksString = localStorage.getItem("currentTracks");
+            const currentTracks =
+              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             reverb.decay = value;
             setDecay(value);

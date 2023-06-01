@@ -98,4 +98,5 @@ export type TrackSettings = {
   reverbsBypass: boolean;
   delaysBypass: boolean;
   pitchShiftsBypass: boolean;
+  fx: string[];
 };

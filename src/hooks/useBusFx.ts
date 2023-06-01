@@ -52,10 +52,10 @@ function useBusFx({ busFx }: any) {
       }
     });
 
-    return () => {
-      busChannels.current.forEach((busChannel) => busChannel?.dispose());
-      busChannels.current = [null, null];
-    };
+    // return () => {
+    //   busChannels.current.forEach((busChannel) => busChannel?.dispose());
+    //   busChannels.current = [null, null];
+    // };
   }, [currentBusFx, busFx]);
 
   return [busChannels, currentBusFx, disabled];

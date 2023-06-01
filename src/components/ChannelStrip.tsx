@@ -18,13 +18,20 @@ type Props = {
   track: Track;
   trackIndex: number;
   channels: Channel[];
+  reverb: Reverb;
+  delay: FeedbackDelay;
+  pitchShift: PitchShift;
 };
 
-function ChannelStrip({ track, trackIndex, channels }: Props) {
+function ChannelStrip({
+  track,
+  trackIndex,
+  channels,
+  reverb,
+  delay,
+  pitchShift,
+}: Props) {
   const channel = channels[trackIndex];
-  const reverb = useRef<Reverb>(new Reverb(8).toDestination());
-  const delay = useRef<FeedbackDelay>(new FeedbackDelay().toDestination());
-  const pitchShift = useRef<PitchShift>(new PitchShift().toDestination());
 
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
@@ -33,11 +40,11 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     const currentFx = currentTracks[trackIndex].fx[0] ?? null;
     switch (currentFx) {
       case "reverb":
-        return <TrackReverber reverb={reverb.current} trackIndex={0} />;
+        return <TrackReverber reverb={reverb} trackIndex={trackIndex} />;
       case "delay":
-        return <TrackDelay delay={delay.current} trackIndex={0} />;
+        return <TrackDelay delay={delay} trackIndex={trackIndex} />;
       case "pitchShift":
-        return <PitchShifter pitchShift={pitchShift.current} trackIndex={0} />;
+        return <PitchShifter pitchShift={pitchShift} trackIndex={0} />;
       default:
         break;
     }
@@ -47,18 +54,11 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     const currentFx = currentTracks[trackIndex].fx[1] ?? null;
     switch (currentFx) {
       case "reverb":
-        return (
-          <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
-        );
+        return <TrackReverber reverb={reverb} trackIndex={trackIndex} />;
       case "delay":
-        return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
+        return <TrackDelay delay={delay} trackIndex={trackIndex} />;
       case "pitchShift":
-        return (
-          <PitchShifter
-            pitchShift={pitchShift.current}
-            trackIndex={trackIndex}
-          />
-        );
+        return <PitchShifter pitchShift={pitchShift} trackIndex={trackIndex} />;
       default:
         break;
     }
@@ -83,7 +83,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
       currentTracksString && JSON.parse(currentTracksString);
 
     console.log("e.currentTarget.id.at(-1)", e.currentTarget.id.at(-1));
-    const id = parseInt(e.currentTarget.id.at(-1)!, 10);
+    const id = e.currentTarget.id.at(-1) ?? 0;
     trackFx[trackIndex][id] = e.currentTarget.value;
     setTrackFx([...trackFx]);
 
@@ -98,52 +98,38 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
         break;
 
       case "reverb":
-        channel.connect(reverb.current);
+        channel.connect(reverb);
 
         if (id === 0) {
-          setFx1(
-            <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
-          );
-          localStorage.setItem("fx1", "reverb");
+          setFx1(<TrackReverber reverb={reverb} trackIndex={trackIndex} />);
         } else {
-          setFx2(
-            <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
-          );
-          localStorage.setItem("fx2", "reverb");
+          setFx2(<TrackReverber reverb={reverb} trackIndex={trackIndex} />);
         }
         break;
 
       case "delay":
-        // channel.disconnect();
-        channel.connect(delay.current);
+        channel.connect(delay);
 
         if (id === 0) {
-          setFx1(<TrackDelay delay={delay.current} trackIndex={trackIndex} />);
+          setFx1(<TrackDelay delay={delay} trackIndex={trackIndex} />);
           localStorage.setItem("fx1", "delay");
         } else {
-          setFx2(<TrackDelay delay={delay.current} trackIndex={trackIndex} />);
+          setFx2(<TrackDelay delay={delay} trackIndex={trackIndex} />);
           localStorage.setItem("fx2", "delay");
         }
         break;
 
       case "pitchShift":
-        // channel.disconnect();
-        channel.connect(pitchShift.current);
+        channel.connect(pitchShift);
 
         if (id === 0) {
           setFx1(
-            <PitchShifter
-              pitchShift={pitchShift.current}
-              trackIndex={trackIndex}
-            />
+            <PitchShifter pitchShift={pitchShift} trackIndex={trackIndex} />
           );
           localStorage.setItem("fx1", "pitchShift");
         } else {
           setFx2(
-            <PitchShifter
-              pitchShift={pitchShift.current}
-              trackIndex={trackIndex}
-            />
+            <PitchShifter pitchShift={pitchShift} trackIndex={trackIndex} />
           );
           localStorage.setItem("fx2", "pitchShift");
         }

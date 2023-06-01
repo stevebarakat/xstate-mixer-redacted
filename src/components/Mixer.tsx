@@ -1,10 +1,13 @@
 import { useRef, useEffect } from "react";
-import { Destination, Reverb, FeedbackDelay } from "tone";
+import { Destination, Reverb, FeedbackDelay, PitchShift } from "tone";
 import useChannelStrip from "../hooks/useChannelStrip";
 import useBusFx from "../hooks/useBusFx";
 import Transport from "./Transport";
 import BusPanels from "./Bus/BusPanels";
 import Loader from "./Loader";
+import TrackDelay from "./Fx/TrackDelay";
+import TrackReverber from "./Fx/TrackReverber";
+import PitchShifter from "./Fx/PitchShifter";
 import SongInfo from "./SongInfo";
 import ChannelStrip from "./ChannelStrip";
 import Main from "./Main";
@@ -36,7 +39,9 @@ export const Mixer = ({ song }: Props) => {
     reverb2: new Reverb().toDestination(),
     delay2: new FeedbackDelay().toDestination(),
   });
-
+  const reverb = useRef<Reverb>(new Reverb(8).toDestination());
+  const delay = useRef<FeedbackDelay>(new FeedbackDelay().toDestination());
+  const pitchShift = useRef<PitchShift>(new PitchShift().toDestination());
   const [busChannels, currentBusFx, disabled] = useBusFx({ busFx });
 
   useEffect(() => {
