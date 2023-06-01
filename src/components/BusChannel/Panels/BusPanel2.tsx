@@ -2,8 +2,8 @@ import { useState } from "react";
 import { array } from "../../../utils";
 import { Rnd as BusFxPanel } from "react-rnd";
 import CloseButton from "../../Buttons/CloseButton";
-import Reverber from "../../Fx/Reverber";
-import Delay from "../../Fx/Delay";
+import Reverber from "../Fx/Reverber";
+import Delay from "../Fx/Delay";
 import type { FeedbackDelay, Reverb } from "tone";
 
 type Props = {

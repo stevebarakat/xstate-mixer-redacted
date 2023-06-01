@@ -8,7 +8,7 @@ import {
 } from "tone";
 import { dBToPercent, scale } from "../utils/scale";
 import { getSong } from "../utils/getSong";
-import { roxanne } from "../songs";
+import { roxanne } from "../assets/songs";
 import type { TrackSettings } from "../types/global";
 
 const actx = getAudioContext();

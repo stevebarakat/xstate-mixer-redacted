@@ -1,4 +1,4 @@
-import { MixerMachineContext } from "../../App";
+import { MixerMachineContext } from "../../../App";
 import type { Channel } from "tone";
 
 type Props = {

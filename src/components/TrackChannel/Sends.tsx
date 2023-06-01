@@ -12,7 +12,7 @@ function Sends({ trackIndex, channels }: Props) {
   const currentTracks = currentTrackString && JSON.parse(currentTrackString);
 
   const [activeBusses, setActiveBusses] = useState(
-    currentTracks[trackIndex].activeBusses ?? [false, false, false, false]
+    currentTracks[trackIndex]?.activeBusses ?? [false, false, false, false]
   );
   return (
     <div className="bus-btn">

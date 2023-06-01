@@ -1,4 +1,4 @@
-import { MixerMachineContext } from "../App";
+import { MixerMachineContext } from "../../App";
 import type { Channel } from "tone";
 
 type Props = {
@@ -23,7 +23,7 @@ function Pan({ trackIndex, channel }: Props) {
         onChange={(e: React.FormEvent<HTMLInputElement>): void => {
           send({
             type: "CHANGE_PAN",
-            value: parseFloat(e.target.value),
+            value: parseFloat(e.currentTarget.value),
             trackIndex,
             channel,
           });

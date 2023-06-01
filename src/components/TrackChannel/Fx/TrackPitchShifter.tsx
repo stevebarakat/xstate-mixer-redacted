@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Destination } from "tone";
-import { powerIcon } from "../../assets/icons";
+import { powerIcon } from "../../../assets/icons";
 import type { PitchShift } from "tone";
 
 type Props = {

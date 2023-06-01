@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Mixer } from "./components/Mixer";
-import { justDance, roxanne, aDayInTheLife, blueMonday } from "./songs";
+import { justDance, roxanne, aDayInTheLife, blueMonday } from "./assets/songs";
 import { createActorContext } from "@xstate/react";
 import { mixerMachine } from "./machines/mixerMachine";
 import { defaultCurrentMix as currentMix } from "./utils/getSong";

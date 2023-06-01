@@ -1,38 +1,39 @@
 import { useState } from "react";
 import { Destination } from "tone";
-import { powerIcon } from "../../assets/icons";
-import type { FeedbackDelay } from "tone";
+import { powerIcon } from "../../../assets/icons";
+import type { Reverb } from "tone";
 
 type Props = {
-  delay: FeedbackDelay;
+  reverb: Reverb;
   busIndex: number;
   fxIndex: number;
 };
 
-export default function Delay({ delay, busIndex, fxIndex }: Props) {
+export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
   const currentMixString = localStorage.getItem("currentMix");
   const currentMix = currentMixString && JSON.parse(currentMixString);
 
   const [bypass, setBypass] = useState(
-    currentMix.busFxData.delaysBypass || [
+    currentMix.busFxData.reverbsBypass || [
       [false, false],
       [false, false],
     ]
   );
   const [mix, setMix] = useState(
-    currentMix.busFxData.delaysMix || [
+    currentMix.busFxData.reverbsMix || [
       [0.5, 0.5],
       [0.5, 0.5],
     ]
   );
-  const [delayTime, setDelayTime] = useState(
-    currentMix.busFxData.delaysTime || [
+
+  const [preDelay, setPreDelay] = useState(
+    currentMix.busFxData.reverbsPreDelay || [
       [0.5, 0.5],
       [0.5, 0.5],
     ]
   );
-  const [feedback, setFeedback] = useState(
-    currentMix.busFxData.delaysFeedback || [
+  const [decay, setDecay] = useState(
+    currentMix.busFxData.reverbsDecay || [
       [0.5, 0.5],
       [0.5, 0.5],
     ]
@@ -43,26 +44,26 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
   return (
     <div>
       <div className="flex gap12">
-        <h3>Delay</h3>
+        <h3>Reverb</h3>
         <div className="power-button">
           <input
-            id={`bus${busIndex}delayBypass`}
+            id={`bus${busIndex}reverbBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               const checked = e.currentTarget.checked;
               bypass[busIndex] = checked;
               if (checked) {
-                delay.disconnect();
+                reverb.disconnect();
               } else {
-                delay.connect(Destination);
+                reverb.connect(Destination);
               }
               setBypass([...bypass]);
-              currentMix.busFxData.delaysBypass[busIndex] = checked;
+              currentMix.busFxData.reverbsBypass[busIndex] = checked;
               localStorage.setItem("currentMix", JSON.stringify(currentMix));
             }}
             checked={bypass[busIndex]}
           />
-          <label htmlFor={`bus${busIndex}delayBypass`}>{powerIcon}</label>
+          <label htmlFor={`bus${busIndex}reverbBypass`}>{powerIcon}</label>
         </div>
       </div>
       <div className="flex-y">
@@ -70,60 +71,60 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
         <input
           type="range"
           className="simple-range"
-          id="mix"
+          name="mix"
           min={0}
           max={1}
           step={0.01}
-          disabled={disabled}
           value={mix[busIndex][fxIndex]}
+          disabled={disabled}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const value = parseFloat(e.currentTarget.value);
-            delay.wet.value = value;
+            reverb.wet.value = value;
             mix[busIndex][fxIndex] = value;
             setMix([...mix]);
-            currentMix.busFxData.delaysMix[busIndex][fxIndex] = value;
+            currentMix.busFxData.reverbsMix[busIndex][fxIndex] = value;
             localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>
       <div className="flex-y">
-        <label htmlFor="delay-time">Delay Time:</label>
+        <label htmlFor="pre-delay">Pre Delay:</label>
         <input
           type="range"
           className="simple-range"
-          id="delay-time"
+          name="pre-delay"
           min={0}
           max={1}
           step={0.01}
+          value={preDelay[busIndex][fxIndex]}
           disabled={disabled}
-          value={delayTime[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const value = parseFloat(e.currentTarget.value);
-            delay.delayTime.value = parseFloat(e.currentTarget.value);
-            delayTime[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
-            setDelayTime([...delayTime]);
-            currentMix.busFxData.delaysTime[busIndex][fxIndex] = value;
+            reverb.preDelay = value;
+            preDelay[busIndex][fxIndex] = value;
+            setPreDelay([...preDelay]);
+            currentMix.busFxData.reverbsPreDelay[busIndex][fxIndex] = value;
             localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>
       <div className="flex-y">
-        <label htmlFor="feedback">Feedback:</label>
+        <label htmlFor="decay">Decay:</label>
         <input
           type="range"
           className="simple-range"
-          name="feedback"
-          min={0}
-          max={1}
-          step={0.01}
+          name="decay"
+          min={0.1}
+          max={20}
+          step={0.1}
+          value={decay[busIndex][fxIndex]}
           disabled={disabled}
-          value={feedback[busIndex][fxIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const value = parseFloat(e.currentTarget.value);
-            delay.feedback.value = parseFloat(e.currentTarget.value);
-            feedback[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
-            setFeedback([...feedback]);
-            currentMix.busFxData.delaysFeedback[busIndex][fxIndex] = value;
+            reverb.decay = value;
+            decay[busIndex][fxIndex] = value;
+            setDecay([...decay]);
+            currentMix.busFxData.reverbsDecay[busIndex][fxIndex] = value;
             localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />

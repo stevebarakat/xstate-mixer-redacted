@@ -1,18 +1,18 @@
 import { useRef, useState } from "react";
-import { Reverb, FeedbackDelay, PitchShift, Destination } from "tone";
+import { Reverb, FeedbackDelay, PitchShift } from "tone";
 import TrackReverber from "./Fx/TrackReverber";
 import TrackPanel from "./TrackPanel";
 import TrackDelay from "./Fx/TrackDelay";
-import ChannelButton from "./Buttons/ChannelButton";
+import ChannelButton from "../Buttons/ChannelButton";
 import TrackPitchShifter from "./Fx/TrackPitchShifter";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Sends from "./Sends";
 import Fader from "./Fader";
 import TrackLabel from "./TrackLabel";
-import type { Track } from "../types/global";
+import type { Track } from "../../types/global";
 import type { Channel } from "tone";
-import { array as fx } from "../utils";
+import { array as fx } from "../../utils";
 
 type Props = {
   track: Track;
@@ -20,7 +20,7 @@ type Props = {
   channels: Channel[];
 };
 
-function ChannelStrip({ track, trackIndex, channels }: Props) {
+function TrackChannel({ track, trackIndex, channels }: Props) {
   const channel = channels[trackIndex];
   const reverb = useRef<Reverb>(new Reverb(8).toDestination());
   const delay = useRef<FeedbackDelay>(new FeedbackDelay().toDestination());
@@ -30,7 +30,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
   const [fx1, setFx1] = useState<JSX.Element | null>(() => {
-    const currentFx = currentTracks[trackIndex].fx[0] ?? null;
+    const currentFx = currentTracks[trackIndex]?.fx ?? null;
     switch (currentFx) {
       case "reverb":
         return (
@@ -51,7 +51,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   });
 
   const [fx2, setFx2] = useState<JSX.Element | null>(() => {
-    const currentFx = currentTracks[trackIndex].fx[1] ?? null;
+    const currentFx = currentTracks[trackIndex]?.fx ?? null;
     switch (currentFx) {
       case "reverb":
         return (
@@ -73,12 +73,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
 
   const [trackFx, setTrackFx] = useState(() => {
     return (
-      currentTracks.fx ?? [
-        ["nofx", "nofx"],
-        ["nofx", "nofx"],
-        ["nofx", "nofx"],
-        ["nofx", "nofx"],
-      ]
+      currentTracks.fx ?? Array(currentTracks.length).fill(["nofx", "nofx"])
     );
   });
 
@@ -157,9 +152,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
     }
   }
 
-  const disabled = currentTracks[trackIndex].fx.every(
-    (item: string) => item === "nofx"
-  );
+  const disabled = currentTracks?.fx?.every((item: string) => item === "nofx");
 
   function getTrackPanels() {
     if (!fx1 && !fx2) {
@@ -197,7 +190,7 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
           id={`track${trackIndex}fx${fxIndex}`}
           className="fx-select"
           onChange={saveTrackFx}
-          value={currentTracks[trackIndex].fx[fxIndex]}
+          // value={currentTracks[trackIndex]?.fx[fxIndex]}
         >
           <option value={"nofx"}>{`FX ${fxIndex + 1}`}</option>
           <option value={"reverb"}>Reverb</option>
@@ -217,4 +210,4 @@ function ChannelStrip({ track, trackIndex, channels }: Props) {
   );
 }
 
-export default ChannelStrip;
+export default TrackChannel;

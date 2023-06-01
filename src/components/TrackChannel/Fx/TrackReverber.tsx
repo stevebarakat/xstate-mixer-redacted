@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { Destination } from "tone";
-import { powerIcon } from "../../assets/icons";
-import type { FeedbackDelay } from "tone";
+import { powerIcon } from "../../../assets/icons";
+import type { Reverb } from "tone";
 
 type Props = {
-  delay: FeedbackDelay;
+  reverb: Reverb;
   trackIndex: number;
 };
 
-export default function TrackDelay({ delay, trackIndex }: Props) {
+export default function TrackReverber({ reverb, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
   const [bypass, setBypass] = useState(
-    currentTracks[trackIndex].delaysBypass || false
+    currentTracks[trackIndex].reverbsBypass || false
   );
-  const [mix, setMix] = useState(currentTracks[trackIndex].delaysMix || 0.5);
-  const [delayTime, setDelayTime] = useState(
-    currentTracks[trackIndex].delaysTime || 0.5
+  const [mix, setMix] = useState(currentTracks[trackIndex].reverbsMix || 0.5);
+  const [preDelay, setPreDelay] = useState(
+    currentTracks[trackIndex].reverbsPreDelay || 0.5
   );
-  const [feedback, setFeedback] = useState(
-    currentTracks[trackIndex].delaysFeedback || 0.5
+  const [decay, setDecay] = useState(
+    currentTracks[trackIndex].reverbsDecay || 0.5
   );
 
   const disabled = bypass;
@@ -28,20 +28,20 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
   return (
     <div>
       <div className="flex gap12">
-        <h3>Delay</h3>
+        <h3>Reverb</h3>
         <div className="power-button">
           <input
-            id={`track${trackIndex}delayBypass`}
+            id={`track${trackIndex}reverbBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               const checked = e.currentTarget.checked;
               setBypass(checked);
               if (checked) {
-                delay.disconnect();
+                reverb.disconnect();
               } else {
-                delay.connect(Destination);
+                reverb.connect(Destination);
               }
-              currentTracks[trackIndex].delaysBypass = checked;
+              currentTracks[trackIndex].reverbsBypass = checked;
               localStorage.setItem(
                 "currentTracks",
                 JSON.stringify(currentTracks)
@@ -49,25 +49,28 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
             }}
             checked={bypass}
           />
-          <label htmlFor={`track${trackIndex}delayBypass`}>{powerIcon}</label>
+          <label htmlFor={`track${trackIndex}reverbBypass`}>{powerIcon}</label>
         </div>
       </div>
       <div className="flex-y">
-        <label htmlFor={`mix${trackIndex}`}>Mix:</label>
+        <label htmlFor="mix">Mix:</label>
         <input
           type="range"
           className="simple-range"
-          id={`mix${trackIndex}`}
+          name="mix"
           min={0}
           max={1}
-          step={0.01}
+          step={0.001}
           disabled={disabled}
           value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const currentTracksString = localStorage.getItem("currentTracks");
+            const currentTracks =
+              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
-            delay.wet.value = value;
+            reverb.wet.value = value;
             setMix(value);
-            currentTracks[trackIndex].delaysMix = value;
+            currentTracks[trackIndex].reverbsMix = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify(currentTracks)
@@ -76,21 +79,24 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
         />
       </div>
       <div className="flex-y">
-        <label htmlFor="delay-time">Delay Time:</label>
+        <label htmlFor="pre-delay">Pre Delay:</label>
         <input
           type="range"
           className="simple-range"
-          id="delay-time"
+          name="pre-delay"
           min={0}
           max={1}
-          step={0.01}
+          step={0.001}
           disabled={disabled}
-          value={delayTime}
+          value={preDelay}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const currentTracksString = localStorage.getItem("currentTracks");
+            const currentTracks =
+              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
-            delay.delayTime.value = value;
-            setDelayTime(value);
-            currentTracks[trackIndex].delaysTime = value;
+            reverb.preDelay = value;
+            setPreDelay(value);
+            currentTracks[trackIndex].reverbsPreDelay = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify([...currentTracks])
@@ -99,21 +105,24 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
         />
       </div>
       <div className="flex-y">
-        <label htmlFor="feedback">Feedback:</label>
+        <label htmlFor="decay">Decay:</label>
         <input
           type="range"
           className="simple-range"
-          name="feedback"
+          name="decay"
           min={0}
           max={1}
-          step={0.01}
+          step={0.001}
           disabled={disabled}
-          value={feedback[trackIndex]}
+          value={decay}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const currentTracksString = localStorage.getItem("currentTracks");
+            const currentTracks =
+              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
-            delay.feedback.value = value;
-            setFeedback(value);
-            currentTracks[trackIndex].delaysFeedback = value;
+            reverb.decay = value;
+            setDecay(value);
+            currentTracks[trackIndex].reverbsDecay = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify([...currentTracks])
