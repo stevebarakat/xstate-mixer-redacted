@@ -26,7 +26,6 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
             <VuMeter meterValue={meterVal} height={150} width={12} />
           </div>
           <div className="vol-wrap">
-            {" "}
             <input
               type="range"
               id={`busVol${busIndex}`}
