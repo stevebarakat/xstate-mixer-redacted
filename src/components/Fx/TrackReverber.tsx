@@ -24,7 +24,6 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
   );
 
   const disabled = bypass;
-  console.log("disabled", disabled);
 
   return (
     <div>

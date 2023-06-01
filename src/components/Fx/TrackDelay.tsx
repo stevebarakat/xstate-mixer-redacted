@@ -23,7 +23,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
     currentTracks[trackIndex].delaysFeedback || 0.5
   );
 
-  const disabled = bypass[trackIndex];
+  const disabled = bypass;
 
   return (
     <div>
@@ -34,16 +34,20 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
             id={`track${trackIndex}delayBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              console.log("e.currentTarget.checked", e.currentTarget.checked);
-              bypass[trackIndex] = e.currentTarget.checked;
-              if (e.currentTarget.checked) {
+              const checked = e.currentTarget.checked;
+              setBypass(checked);
+              if (checked) {
                 delay.disconnect();
               } else {
                 delay.connect(Destination);
               }
-              setBypass([...bypass]);
+              currentTracks[trackIndex].delaysBypass = checked;
+              localStorage.setItem(
+                "currentTracks",
+                JSON.stringify(currentTracks)
+              );
             }}
-            checked={bypass[trackIndex]}
+            checked={bypass}
           />
           <label htmlFor={`track${trackIndex}delayBypass`}>{powerIcon}</label>
         </div>
