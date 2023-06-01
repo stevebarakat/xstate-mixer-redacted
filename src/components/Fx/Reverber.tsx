@@ -10,22 +10,34 @@ type Props = {
 };
 
 export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
-  const [bypass, setBypass] = useState([
-    [false, false],
-    [false, false],
-  ]);
-  const [mix, setMix] = useState([
-    [0.5, 0.5],
-    [0.5, 0.5],
-  ]);
-  const [preDelay, setPreDelay] = useState([
-    [0.5, 0.5],
-    [0.5, 0.5],
-  ]);
-  const [decay, setDecay] = useState([
-    [0.5, 0.5],
-    [0.5, 0.5],
-  ]);
+  const currentMixString = localStorage.getItem("currentMix");
+  const currentMix = currentMixString && JSON.parse(currentMixString);
+
+  const [bypass, setBypass] = useState(
+    currentMix.busFxData.reverbsBypass || [
+      [false, false],
+      [false, false],
+    ]
+  );
+  const [mix, setMix] = useState(
+    currentMix.busFxData.reverbsMix || [
+      [0.5, 0.5],
+      [0.5, 0.5],
+    ]
+  );
+
+  const [preDelay, setPreDelay] = useState(
+    currentMix.busFxData.reverbsPreDelay || [
+      [0.5, 0.5],
+      [0.5, 0.5],
+    ]
+  );
+  const [decay, setDecay] = useState(
+    currentMix.busFxData.reverbsDecay || [
+      [0.5, 0.5],
+      [0.5, 0.5],
+    ]
+  );
 
   const disabled = bypass[busIndex][fxIndex];
 
@@ -63,9 +75,12 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           value={mix[busIndex][fxIndex]}
           disabled={disabled}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            reverb.wet.value = parseFloat(e.currentTarget.value);
-            mix[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            const value = parseFloat(e.currentTarget.value);
+            reverb.wet.value = value;
+            mix[busIndex][fxIndex] = value;
             setMix([...mix]);
+            currentMix.busFxData.reverbsMix[busIndex][fxIndex] = value;
+            localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>
@@ -81,9 +96,12 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           value={preDelay[busIndex][fxIndex]}
           disabled={disabled}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            reverb.preDelay = parseFloat(e.currentTarget.value);
-            preDelay[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            const value = parseFloat(e.currentTarget.value);
+            reverb.preDelay = value;
+            preDelay[busIndex][fxIndex] = value;
             setPreDelay([...preDelay]);
+            currentMix.busFxData.reverbsPreDelay[busIndex][fxIndex] = value;
+            localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>
@@ -99,9 +117,12 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           value={decay[busIndex][fxIndex]}
           disabled={disabled}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            reverb.decay = parseFloat(e.currentTarget.value);
-            decay[busIndex][fxIndex] = parseFloat(e.currentTarget.value);
+            const value = parseFloat(e.currentTarget.value);
+            reverb.decay = value;
+            decay[busIndex][fxIndex] = value;
             setDecay([...decay]);
+            currentMix.busFxData.reverbsDecay[busIndex][fxIndex] = value;
+            localStorage.setItem("currentMix", JSON.stringify(currentMix));
           }}
         />
       </div>

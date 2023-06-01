@@ -53,7 +53,9 @@ function BusPanel1({ currentBusFx, fx, disabled }: Props) {
           </CloseButton>
 
           {array(2).map((_, i) => {
-            switch (currentBusFx[`bus1fx${i + 1}`]) {
+            switch (
+              currentBusFx[`bus1fx${i + 1}` as keyof typeof currentBusFx]
+            ) {
               case "reverb1":
                 return (
                   <Reverber

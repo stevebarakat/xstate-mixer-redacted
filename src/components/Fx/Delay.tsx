@@ -10,13 +10,8 @@ type Props = {
 };
 
 export default function Delay({ delay, busIndex, fxIndex }: Props) {
-  const currentTracksString = localStorage.getItem("currentTracks");
-  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
-
   const currentMixString = localStorage.getItem("currentMix");
   const currentMix = currentMixString && JSON.parse(currentMixString);
-
-  console.log("currentMix", currentMix.busFxData.delaysMix[0][0]);
 
   const [bypass, setBypass] = useState(
     currentMix.busFxData.delaysBypass || [
