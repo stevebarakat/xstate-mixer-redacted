@@ -26,7 +26,7 @@ export default function useVuMeter(channels: (Channel | Gain | Destination)[]) {
   useEffect(() => {
     channels.map((channel, i) => {
       meters.current[i] = new Meter();
-      return channel.connect(meters.current[i]);
+      return channel?.connect(meters.current[i]);
     });
     requestAnimationFrame(animateMeter);
     return () => {

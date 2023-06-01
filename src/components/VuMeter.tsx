@@ -6,14 +6,14 @@ let curVal = 0;
 const max = 100;
 const boxCount = 20;
 const boxCountRed = 5;
-const boxCountYellow = 15;
-const boxGapFraction = 0;
+const boxCountYellow = 10;
+const boxGapFraction = 0.1;
 
 // Colors
-const redOn = "hsla(330, 100%, 70%, 0.9)";
-const redOff = "hsla(330, 100%, 70%, 0.5)";
-const yellowOn = "hsla(330, 100%, 70%, 0.9)";
-const yellowOff = "hsla(330, 100%, 70%, 0.5)";
+const redOn = "hsla(250, 80%, 70%, 0.9)";
+const redOff = "hsla(250, 80%, 70%, 0.5)";
+const yellowOn = "hsla(285, 90%, 70%, 0.9)";
+const yellowOff = "hsla(285, 90%, 70%, 0.5)";
 const greenOn = "hsla(330, 100%, 70%, 0.9)";
 const greenOff = "hsla(330, 100%, 70%, 0.5)";
 
@@ -49,10 +49,6 @@ function VuMeter({ meterValue, height, width }: MeterProps) {
     invariant(stage.current, "canvas not initiated");
     const c = stage.current.getContext("2d");
     if (c == null) throw new Error("Could not get context");
-    c.fillStyle = "green";
-    c.strokeStyle = "black";
-
-    c.shadowBlur = 5;
 
     const draw = function () {
       invariant(stage.current, "canvas not initiated");
