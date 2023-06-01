@@ -12,7 +12,9 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  const [bypass, setBypass] = useState([false, false, false, false]);
+  const [bypass, setBypass] = useState(
+    currentTracks[trackIndex].reverbsBypass || false
+  );
   const [mix, setMix] = useState(currentTracks[trackIndex].reverbsMix || 0.5);
   const [preDelay, setPreDelay] = useState(
     currentTracks[trackIndex].reverbsPreDelay || 0.5
@@ -21,7 +23,8 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
     currentTracks[trackIndex].reverbsDecay || 0.5
   );
 
-  const disabled = bypass[trackIndex];
+  const disabled = bypass;
+  console.log("disabled", disabled);
 
   return (
     <div>
@@ -32,13 +35,18 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
             id={`track${trackIndex}reverbBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              bypass[trackIndex] = e.currentTarget.checked;
-              if (e.currentTarget.checked) {
+              const checked = e.currentTarget.checked;
+              if (checked) {
                 reverb.disconnect();
               } else {
                 reverb.connect(Destination);
               }
-              setBypass([...bypass]);
+              setBypass(checked);
+              currentTracks[trackIndex].reverbsBypass = checked;
+              localStorage.setItem(
+                "currentTracks",
+                JSON.stringify(currentTracks)
+              );
             }}
             checked={bypass[trackIndex]}
           />

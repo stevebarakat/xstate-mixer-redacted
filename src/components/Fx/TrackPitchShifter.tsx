@@ -8,10 +8,19 @@ type Props = {
   trackIndex: number;
 };
 
-export default function PitchShifter({ pitchShift, trackIndex }: Props) {
-  const [bypass, setBypass] = useState([false, false, false, false]);
-  const [mix, setMix] = useState([0.5, 0.5, 0.5, 0.5]);
-  const [pitch, setPitch] = useState([0.5, 0.5, 0.5, 0.5]);
+export default function TrackPitchShifter({ pitchShift, trackIndex }: Props) {
+  const currentTracksString = localStorage.getItem("currentTracks");
+  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+
+  const [bypass, setBypass] = useState(
+    currentTracks[trackIndex].delaysBypass || false
+  );
+  const [mix, setMix] = useState(
+    currentTracks[trackIndex].pitchShiftsMix || 0.5
+  );
+  const [pitch, setPitch] = useState(
+    currentTracks[trackIndex].pitchShiftsPitch || 5
+  );
 
   const disabled = bypass[trackIndex];
 
@@ -40,20 +49,25 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <label htmlFor="mix">Mix:</label>
+        <label htmlFor={`mix${trackIndex}`}>Mix:</label>
         <input
           type="range"
           className="simple-range"
-          id="mix"
+          id={`mix${trackIndex}`}
           min={0}
           max={1}
           step={0.01}
           disabled={disabled}
-          value={mix[trackIndex]}
+          value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            pitchShift.wet.value = parseFloat(e.currentTarget.value);
-            mix[trackIndex] = parseFloat(e.currentTarget.value);
-            setMix([...mix]);
+            const value = parseFloat(e.currentTarget.value);
+            pitchShift.wet.value = value;
+            setMix(value);
+            currentTracks[trackIndex].pitchShiftsMix = value;
+            localStorage.setItem(
+              "currentTracks",
+              JSON.stringify(currentTracks)
+            );
           }}
         />
       </div>
@@ -67,11 +81,16 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
           max={24}
           step={0.1}
           disabled={disabled}
-          value={pitch[trackIndex]}
+          value={pitch}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            pitchShift.pitch = parseFloat(e.currentTarget.value);
-            pitch[trackIndex] = parseFloat(e.currentTarget.value);
-            setPitch([...pitch]);
+            const value = parseFloat(e.currentTarget.value);
+            pitchShift.pitch = value;
+            setPitch(value);
+            currentTracks[trackIndex].pitchShiftsPitch = value;
+            localStorage.setItem(
+              "currentTracks",
+              JSON.stringify(currentTracks)
+            );
           }}
         />
       </div>

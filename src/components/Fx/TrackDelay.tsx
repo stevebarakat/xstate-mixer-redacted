@@ -12,7 +12,9 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  const [bypass, setBypass] = useState([false, false, false, false]);
+  const [bypass, setBypass] = useState(
+    currentTracks[trackIndex].delaysBypass || false
+  );
   const [mix, setMix] = useState(currentTracks[trackIndex].delaysMix || 0.5);
   const [delayTime, setDelayTime] = useState(
     currentTracks[trackIndex].delaysTime || 0.5
@@ -32,6 +34,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
             id={`track${trackIndex}delayBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+              console.log("e.currentTarget.checked", e.currentTarget.checked);
               bypass[trackIndex] = e.currentTarget.checked;
               if (e.currentTarget.checked) {
                 delay.disconnect();
