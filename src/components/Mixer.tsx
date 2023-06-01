@@ -48,9 +48,6 @@ export const Mixer = ({ song }: Props) => {
       const value = currentTrack.volume;
       const transposed = dBToPercent(scale(value));
 
-      channels[trackIndex] &&
-        console.log("channels[trackIndex]", channels[trackIndex]);
-
       if (channels[trackIndex]) {
         channels[trackIndex].set({ pan: currentTrack.pan });
         channels[trackIndex].set({ volume: transposed });
@@ -104,7 +101,7 @@ export const Mixer = ({ song }: Props) => {
         {busChannels.current.map((_: void, i: number) => (
           <BusChannel
             key={i}
-            busChannels={busChannels}
+            busChannels={busChannels.current}
             busIndex={i}
             disabled={disabled}
           />

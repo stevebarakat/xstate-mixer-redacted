@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { Transport as t } from "tone";
+import { MixerMachineContext } from "../../App";
 import { formatMilliseconds } from "../../utils";
 import type { Song } from "../../types/global";
 import "./style.css";
@@ -11,6 +12,9 @@ type Props = {
 function Clock({ song }: Props) {
   const requestRef = useRef<number | null>(null);
   const [clock, setClock] = useState(formatMilliseconds(0));
+  const [state] = MixerMachineContext.useActor();
+
+  console.log('state.matches("playing")', state.matches("playing"));
 
   // make sure song starts at begining and stops at end
   if (song.end !== null && song.start !== null) {

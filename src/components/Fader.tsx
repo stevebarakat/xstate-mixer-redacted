@@ -22,7 +22,6 @@ function Fader({ trackIndex, channel }: Props) {
   );
   const meterVal = useVuMeter([channel]);
 
-  console.log("volume", volume);
   return (
     <div className="fader-wrap">
       <div className="window">{`${volume.toFixed(0)} dB`}</div>
