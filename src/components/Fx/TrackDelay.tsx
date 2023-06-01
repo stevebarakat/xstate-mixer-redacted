@@ -9,10 +9,17 @@ type Props = {
 };
 
 export default function TrackDelay({ delay, trackIndex }: Props) {
+  const currentTracksString = localStorage.getItem("currentTracks");
+  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+
   const [bypass, setBypass] = useState([false, false, false, false]);
-  const [mix, setMix] = useState([0.5, 0.5, 0.5, 0.5]);
-  const [delayTime, setDelayTime] = useState([0.5, 0.5, 0.5, 0.5]);
-  const [feedback, setFeedback] = useState([0.5, 0.5, 0.5, 0.5]);
+  const [mix, setMix] = useState(currentTracks[trackIndex].delaysMix || 0.5);
+  const [delayTime, setDelayTime] = useState(
+    currentTracks[trackIndex].delaysTime || 0.5
+  );
+  const [feedback, setFeedback] = useState(
+    currentTracks[trackIndex].delaysFeedback || 0.5
+  );
 
   const disabled = bypass[trackIndex];
 
@@ -39,20 +46,25 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <label htmlFor="mix">Mix:</label>
+        <label htmlFor={`mix${trackIndex}`}>Mix:</label>
         <input
           type="range"
           className="simple-range"
-          id="mix"
+          id={`mix${trackIndex}`}
           min={0}
           max={1}
           step={0.01}
           disabled={disabled}
-          value={mix[trackIndex]}
+          value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            delay.wet.value = parseFloat(e.currentTarget.value);
-            mix[trackIndex] = parseFloat(e.currentTarget.value);
-            setMix([...mix]);
+            const value = parseFloat(e.currentTarget.value);
+            delay.wet.value = value;
+            setMix(value);
+            currentTracks[trackIndex].delaysMix = value;
+            localStorage.setItem(
+              "currentTracks",
+              JSON.stringify(currentTracks)
+            );
           }}
         />
       </div>
@@ -66,11 +78,16 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
           max={1}
           step={0.01}
           disabled={disabled}
-          value={delayTime[trackIndex]}
+          value={delayTime}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            delay.delayTime.value = parseFloat(e.currentTarget.value);
-            delayTime[trackIndex] = parseFloat(e.currentTarget.value);
-            setDelayTime([...delayTime]);
+            const value = parseFloat(e.currentTarget.value);
+            delay.delayTime.value = value;
+            setDelayTime(value);
+            currentTracks[trackIndex].delaysTime = value;
+            localStorage.setItem(
+              "currentTracks",
+              JSON.stringify([...currentTracks])
+            );
           }}
         />
       </div>
@@ -86,9 +103,14 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
           disabled={disabled}
           value={feedback[trackIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            delay.feedback.value = parseFloat(e.currentTarget.value);
-            feedback[trackIndex] = parseFloat(e.currentTarget.value);
-            setFeedback([...feedback]);
+            const value = parseFloat(e.currentTarget.value);
+            delay.feedback.value = value;
+            setFeedback(value);
+            currentTracks[trackIndex].delaysFeedback = value;
+            localStorage.setItem(
+              "currentTracks",
+              JSON.stringify([...currentTracks])
+            );
           }}
         />
       </div>
