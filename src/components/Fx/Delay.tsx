@@ -38,7 +38,7 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
     ]
   );
 
-  const disabled = bypass[busIndex][fxIndex];
+  const disabled = bypass[busIndex];
 
   return (
     <div>
@@ -49,15 +49,18 @@ export default function Delay({ delay, busIndex, fxIndex }: Props) {
             id={`bus${busIndex}delayBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              bypass[busIndex][fxIndex] = e.currentTarget.checked;
-              if (e.currentTarget.checked) {
+              const checked = e.currentTarget.checked;
+              bypass[busIndex] = checked;
+              if (checked) {
                 delay.disconnect();
               } else {
                 delay.connect(Destination);
               }
               setBypass([...bypass]);
+              currentMix.busFxData.delaysBypass[busIndex] = checked;
+              localStorage.setItem("currentMix", JSON.stringify(currentMix));
             }}
-            checked={bypass[busIndex][fxIndex]}
+            checked={bypass[busIndex]}
           />
           <label htmlFor={`bus${busIndex}delayBypass`}>{powerIcon}</label>
         </div>
