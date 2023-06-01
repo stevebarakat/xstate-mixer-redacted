@@ -13,7 +13,7 @@ export default function TrackPitchShifter({ pitchShift, trackIndex }: Props) {
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
   const [bypass, setBypass] = useState(
-    currentTracks[trackIndex].delaysBypass || false
+    currentTracks[trackIndex].pitchShiftsBypass || false
   );
   const [mix, setMix] = useState(
     currentTracks[trackIndex].pitchShiftsMix || 0.5
@@ -22,7 +22,7 @@ export default function TrackPitchShifter({ pitchShift, trackIndex }: Props) {
     currentTracks[trackIndex].pitchShiftsPitch || 5
   );
 
-  const disabled = bypass[trackIndex];
+  const disabled = bypass;
 
   return (
     <div>
@@ -33,15 +33,20 @@ export default function TrackPitchShifter({ pitchShift, trackIndex }: Props) {
             id={`bus${trackIndex}pitchShiftBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              bypass[trackIndex] = e.currentTarget.checked;
-              if (e.currentTarget.checked) {
+              const checked = e.currentTarget.checked;
+              setBypass(checked);
+              if (checked) {
                 pitchShift.disconnect();
               } else {
                 pitchShift.connect(Destination);
               }
-              setBypass([...bypass]);
+              currentTracks[trackIndex].pitchShiftsBypass = checked;
+              localStorage.setItem(
+                "currentTracks",
+                JSON.stringify(currentTracks)
+              );
             }}
-            checked={bypass[trackIndex]}
+            checked={bypass}
           />
           <label htmlFor={`bus${trackIndex}pitchShiftBypass`}>
             {powerIcon}
