@@ -9,7 +9,7 @@ import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Sends from "./Sends";
 import Fader from "./Fader";
-import TrackLabel from "./TrackLabel";
+import ChannelLabel from "../ChannelLabel";
 import type { Track } from "../../types/global";
 import type { Channel } from "tone";
 import { array as fx } from "../../utils";
@@ -204,7 +204,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         <Pan trackIndex={trackIndex} channel={channel} />
         <Fader trackIndex={trackIndex} channel={channel} />
         <SoloMute trackIndex={trackIndex} channel={channel} />
-        <TrackLabel trackName={track.name} />
+        <ChannelLabel channelName={track.name} />
       </div>
     </div>
   );

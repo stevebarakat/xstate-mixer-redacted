@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BusFxMenu from "./BusFxMenu";
 import type { Channel } from "tone";
+import ChannelLabel from "../ChannelLabel";
 import { dBToPercent, scale } from "../../utils/scale";
 import VuMeter from "../VuMeter";
 import useVuMeter from "../../hooks/useVuMeter";
@@ -44,7 +45,7 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
             />
           </div>
 
-          <label htmlFor={`busVol${busIndex}`}>{`Bus ${busIndex + 1}`}</label>
+          <ChannelLabel channelName={`Bus ${busIndex + 1}`} />
         </div>
       </div>
     </div>
