@@ -1,8 +1,8 @@
 import { MixerMachineContext } from "../App";
-import { dBToPercent, scale } from "../../utils/scale";
 import VuMeter from "./VuMeter";
 import useVuMeter from "./../hooks/useVuMeter";
 import { Destination } from "tone";
+import ChannelLabel from "./ChannelLabel";
 
 function Main() {
   const [state, send] = MixerMachineContext.useActor();
@@ -36,7 +36,7 @@ function Main() {
             onChange={changeMainVolume}
           />
         </div>
-        <label htmlFor="main">Main</label>
+        <ChannelLabel channelName="Main" />
       </div>
     </div>
   );
