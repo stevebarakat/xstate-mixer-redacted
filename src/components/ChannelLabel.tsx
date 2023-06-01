@@ -3,5 +3,5 @@ type Props = {
 };
 
 export default function ChannelLabel({ channelName }: Props) {
-  return <div className="track-label">{channelName}</div>;
+  return <div className="channel-label">{channelName}</div>;
 }

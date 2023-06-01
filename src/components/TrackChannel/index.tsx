@@ -190,7 +190,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
           id={`track${trackIndex}fx${fxIndex}`}
           className="fx-select"
           onChange={saveTrackFx}
-          // value={currentTracks[trackIndex]?.fx[fxIndex]}
+          value={currentTracks[trackIndex]?.fx[fxIndex]}
         >
           <option value={"nofx"}>{`FX ${fxIndex + 1}`}</option>
           <option value={"reverb"}>Reverb</option>

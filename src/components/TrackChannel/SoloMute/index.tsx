@@ -9,7 +9,7 @@ type Props = {
 
 function index({ trackIndex, channel }: Props) {
   return (
-    <div className="chan-strip-btn">
+    <div className="chan-strip-btn solo-mute">
       <Solo trackIndex={trackIndex} channel={channel} />
       <Mute trackIndex={trackIndex} channel={channel} />
     </div>

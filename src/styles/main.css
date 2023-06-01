@@ -46,6 +46,7 @@
 }
 
 .channel {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: black;
@@ -56,6 +57,7 @@
   border-radius: 8px;
   height: 100%;
   overflow: hidden;
+  justify-content: flex-end;
 }
 
 .channels > div:nth-last-of-type(1),
@@ -63,36 +65,30 @@
 .channels > div:nth-last-of-type(3) {
   display: flex;
   flex-direction: column;
-  /* border: 1px solid var(--primary-color); */
   border-radius: 8px;
   margin-left: 8px;
   padding: 0;
-}
-
-.channel:nth-last-of-type(1) {
-  /* border: 1px dashed var(--primary-color); */
+  justify-content: space-evenly;
 }
 
 .channels > div:last-of-type input[type="range"] {
   height: 100%;
 }
 
-.channels > div:nth-last-of-type(2),
-.channels > div:nth-last-of-type(3) {
-  background: #222;
-}
-
-.track-label {
-  color: var(--primary-color-8);
+.channel-label {
+  color: var(--primary-color);
+  font-weight: 400;
   user-select: none;
-  padding: 12px 4px;
-  /* background: #111; */
-  display: block;
+  padding: 16px 4px 0;
   width: 120px;
   border-radius: 0 0 8px 8px;
-  bottom: -20px;
   position: relative;
   border-top: 1px solid var(--primary-color-3);
+  bottom: 0px;
+}
+
+.solo-mute {
+  padding-bottom: 12px;
 }
 
 .range-x {
@@ -147,11 +143,12 @@
   padding: 10px;
 }
 
-.range-y .window {
+.window {
   border: 1px solid hsl(120, 0%, 52%);
   padding: 8px;
   border-radius: 8px;
   width: 8ch;
+  color: var(--primary-color);
 }
 
 .fx-select {

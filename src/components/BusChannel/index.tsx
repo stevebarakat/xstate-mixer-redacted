@@ -19,7 +19,7 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
     <div>
       <BusFxMenu busIndex={busIndex} disabled={disabled} />
       <div className="channel">
-        <div className="flex-y center fader-wrap">
+        <div className="flex-y fader-wrap">
           <div className="window">{`${busVolumes[busIndex].toFixed(
             0
           )} dB`}</div>
@@ -44,7 +44,6 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
               }}
             />
           </div>
-
           <ChannelLabel channelName={`Bus ${busIndex + 1}`} />
         </div>
       </div>

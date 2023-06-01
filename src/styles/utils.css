@@ -16,6 +16,10 @@
   align-items: center;
 }
 
+.space-between: {
+  justify-content: space-between;
+}
+
 .gap2 {
   gap: 2px;
 }
