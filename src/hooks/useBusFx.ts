@@ -3,8 +3,18 @@ import { Channel } from "tone";
 import { array } from "../utils";
 import { shallowEqual } from "@xstate/react";
 import { MixerMachineContext } from "../App";
+import type { Reverb, FeedbackDelay } from "tone";
 
-function useBusFx({ busFx }: any) {
+type Props = {
+  busFx: React.MutableRefObject<{
+    reverb1: Reverb;
+    delay1: FeedbackDelay;
+    reverb2: Reverb;
+    delay2: FeedbackDelay;
+  }>;
+};
+
+function useBusFx({ busFx }: Props) {
   const busChannels = useRef<Channel[] | null[]>([null, null]);
   const currentBusFx = MixerMachineContext.useSelector((state) => {
     const { currentBusFx } = state.context;
