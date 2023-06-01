@@ -14,9 +14,7 @@ type Props = {
 function Fader({ trackIndex, channel }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
-  const initialVolume = currentTracks.map(
-    (currentTrack: TrackSettings) => currentTrack.volume
-  );
+
   const [volume, setVolume] = useState(
     () => currentTracks[trackIndex].volume ?? -32
   );

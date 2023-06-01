@@ -6,7 +6,7 @@ import VuMeter from "../VuMeter";
 import useVuMeter from "../../hooks/useVuMeter";
 
 type Props = {
-  busChannels: React.MutableRefObject<Channel[]>;
+  busChannels: Channel[];
   busIndex: number;
   disabled: boolean;
 };
