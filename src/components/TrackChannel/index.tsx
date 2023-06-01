@@ -152,7 +152,9 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     }
   }
 
-  const disabled = currentTracks?.fx?.every((item: string) => item === "nofx");
+  const disabled = currentTracks[trackIndex].fx.every(
+    (item: string) => item === "nofx"
+  );
 
   function getTrackPanels() {
     if (!fx1 && !fx2) {
@@ -198,8 +200,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
           <option value={"pitchShift"}>Pitch Shift</option>
         </select>
       ))}
+      <>{active[trackIndex] && getTrackPanels()}</>
       <div className="channel">
-        <>{active[trackIndex] && getTrackPanels()}</>
         <Sends trackIndex={trackIndex} channels={channels} />
         <Pan trackIndex={trackIndex} channel={channel} />
         <Fader trackIndex={trackIndex} channel={channel} />
