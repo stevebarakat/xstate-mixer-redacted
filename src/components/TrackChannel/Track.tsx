@@ -29,47 +29,51 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  const [fx1, setFx1] = useState<JSX.Element | null>(() => {
-    const currentFx = currentTracks[trackIndex]?.fx ?? null;
-    switch (currentFx) {
-      case "reverb":
-        return (
-          <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
-        );
-      case "delay":
-        return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
-      case "pitchShift":
-        return (
-          <TrackPitchShifter
-            pitchShift={pitchShift.current}
-            trackIndex={trackIndex}
-          />
-        );
-      default:
-        break;
-    }
-  });
+  const fx1 = useRef<JSX.Element | undefined>(
+    (() => {
+      const currentFx = currentTracks[trackIndex]?.fx ?? null;
+      switch (currentFx) {
+        case "reverb":
+          return (
+            <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
+          );
+        case "delay":
+          return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
+        case "pitchShift":
+          return (
+            <TrackPitchShifter
+              pitchShift={pitchShift.current}
+              trackIndex={trackIndex}
+            />
+          );
+        default:
+          break;
+      }
+    })()
+  );
 
-  const [fx2, setFx2] = useState<JSX.Element | null>(() => {
-    const currentFx = currentTracks[trackIndex]?.fx ?? null;
-    switch (currentFx) {
-      case "reverb":
-        return (
-          <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
-        );
-      case "delay":
-        return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
-      case "pitchShift":
-        return (
-          <TrackPitchShifter
-            pitchShift={pitchShift.current}
-            trackIndex={trackIndex}
-          />
-        );
-      default:
-        break;
-    }
-  });
+  const fx2 = useRef<JSX.Element | undefined>(
+    (() => {
+      const currentFx = currentTracks[trackIndex]?.fx ?? null;
+      switch (currentFx) {
+        case "reverb":
+          return (
+            <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
+          );
+        case "delay":
+          return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
+        case "pitchShift":
+          return (
+            <TrackPitchShifter
+              pitchShift={pitchShift.current}
+              trackIndex={trackIndex}
+            />
+          );
+        default:
+          break;
+      }
+    })()
+  );
 
   const [trackFx, setTrackFx] = useState(() => {
     return (
@@ -96,18 +100,18 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     switch (e.currentTarget.value) {
       case "nofx":
         channel.toDestination();
-        id === 0 ? setFx1(null) : setFx2(null);
+        id === 0 ? (fx1.current = undefined) : (fx2.current = undefined);
         break;
 
       case "reverb":
         channel.connect(reverb.current);
 
         if (id === 0) {
-          setFx1(
+          fx1.current = (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
           );
         } else {
-          setFx2(
+          fx2.current = (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
           );
         }
@@ -117,11 +121,15 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         channel.connect(delay.current);
 
         if (id === 0) {
-          setFx1(<TrackDelay delay={delay.current} trackIndex={trackIndex} />);
-          localStorage.setItem("fx1", "delay");
+          fx1.current = (
+            <TrackDelay delay={delay.current} trackIndex={trackIndex} />
+          );
+          localStorage.setItem("fx1.current", "delay");
         } else {
-          setFx2(<TrackDelay delay={delay.current} trackIndex={trackIndex} />);
-          localStorage.setItem("fx2", "delay");
+          fx2.current = (
+            <TrackDelay delay={delay.current} trackIndex={trackIndex} />
+          );
+          localStorage.setItem("fx2.current", "delay");
         }
         break;
 
@@ -129,21 +137,21 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         channel.connect(pitchShift.current);
 
         if (id === 0) {
-          setFx1(
+          fx1.current = (
             <TrackPitchShifter
               pitchShift={pitchShift.current}
               trackIndex={trackIndex}
             />
           );
-          localStorage.setItem("fx1", "pitchShift");
+          localStorage.setItem("fx1.current", "pitchShift");
         } else {
-          setFx2(
+          fx2.current = (
             <TrackPitchShifter
               pitchShift={pitchShift.current}
               trackIndex={trackIndex}
             />
           );
-          localStorage.setItem("fx2", "pitchShift");
+          localStorage.setItem("fx2.current", "pitchShift");
         }
         break;
 
@@ -156,8 +164,10 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     (item: string) => item === "nofx"
   );
 
+  console.log("fx1.current", fx1.current);
+
   function getTrackPanels() {
-    if (!fx1 && !fx2) {
+    if (!fx1.current && !fx2.current) {
       return null;
     } else {
       return (
@@ -166,8 +176,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
           active={active}
           setActive={setActive}
         >
-          {fx1}
-          {fx2}
+          {fx1.current}
+          {fx2.current}
         </TrackPanel>
       );
     }

@@ -110,9 +110,9 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           type="range"
           className="simple-range"
           name="decay"
-          min={0}
-          max={1}
-          step={0.001}
+          min={0.5}
+          max={12.5}
+          step={0.1}
           disabled={disabled}
           value={decay}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {

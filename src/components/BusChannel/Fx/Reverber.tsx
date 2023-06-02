@@ -114,8 +114,8 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
           type="range"
           className="simple-range"
           name="decay"
-          min={0.1}
-          max={20}
+          min={0.5}
+          max={12.5}
           step={0.1}
           value={decay[busIndex][fxIndex]}
           disabled={disabled}
