@@ -9,7 +9,7 @@ export type Song = {
   bpm: number;
   start: number;
   end: number;
-  tracks: Track[];
+  tracks: SourceTrack[];
 };
 
 export type BusFxPanels = {
@@ -25,7 +25,7 @@ export type BusFxPanels = {
   };
 };
 
-export type Track = {
+export type SourceTrack = {
   id: string;
   name: string;
   path: string;

@@ -10,12 +10,12 @@ import SoloMute from "./SoloMute";
 import Sends from "./Sends";
 import Fader from "./Fader";
 import ChannelLabel from "../ChannelLabel";
-import type { Track } from "../../types/global";
+import type { SourceTrack } from "../../types/global";
 import type { Channel } from "tone";
 import { array as fx } from "../../utils";
 
 type Props = {
-  track: Track;
+  track: SourceTrack;
   trackIndex: number;
   channels: Channel[];
 };

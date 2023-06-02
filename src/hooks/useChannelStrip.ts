@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import { Channel, Player, Transport as t, Destination } from "tone";
-import type { Track } from "../types/global";
+import type { SourceTrack } from "../types/global";
 
 type Props = {
-  tracks: Track[];
+  tracks: SourceTrack[];
 };
 
 function useChannelStrip({ tracks }: Props) {
