@@ -9,7 +9,10 @@ import useVuMeter from "../../hooks/useVuMeter";
 type Props = {
   busChannels: Channel[];
   busIndex: number;
-  disabled: boolean;
+  disabled: {
+    panel1: boolean;
+    panel2: boolean;
+  };
 };
 
 function BusChannel({ busChannels, busIndex, disabled }: Props) {

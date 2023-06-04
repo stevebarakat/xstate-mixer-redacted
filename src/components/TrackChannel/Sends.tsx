@@ -11,8 +11,8 @@ function Sends({ trackIndex, channels }: Props) {
   const currentTrackString = localStorage.getItem("currentTracks");
   const currentTracks = currentTrackString && JSON.parse(currentTrackString);
 
-  const [activeBusses, setActiveBusses] = useState(
-    currentTracks[trackIndex]?.activeBusses ?? [false, false, false, false]
+  const [sends, setSends] = useState(
+    currentTracks[trackIndex]?.sends ?? [false, false, false, false]
   );
   return (
     <div className="bus-btn">
@@ -23,21 +23,21 @@ function Sends({ trackIndex, channels }: Props) {
           if (e.currentTarget.checked) {
             channels[trackIndex].send("reverb1");
             channels[trackIndex].send("delay1");
-            activeBusses[0] = true;
-            setActiveBusses([...activeBusses]);
+            sends[0] = true;
+            setSends([...sends]);
           } else {
             channels[trackIndex].disconnect();
             channels[trackIndex].connect(Destination);
-            activeBusses[0] = false;
-            setActiveBusses([...activeBusses]);
+            sends[0] = false;
+            setSends([...sends]);
           }
-          currentTracks[trackIndex].activeBusses = [...activeBusses];
+          currentTracks[trackIndex].sends = [...sends];
           localStorage.setItem(
             "currentTracks",
             JSON.stringify([...currentTracks])
           );
         }}
-        checked={activeBusses[0]}
+        checked={sends[0]}
       />
       <label htmlFor={`bus1${trackIndex}`}>1</label>
       <input
@@ -47,21 +47,21 @@ function Sends({ trackIndex, channels }: Props) {
           if (e.currentTarget.checked) {
             channels[trackIndex].send("reverb2");
             channels[trackIndex].send("delay2");
-            activeBusses[1] = true;
-            setActiveBusses([...activeBusses]);
+            sends[1] = true;
+            setSends([...sends]);
           } else {
             // channels[trackIndex].disconnect();
             // channels[trackIndex].connect(Destination);
-            activeBusses[1] = false;
-            setActiveBusses([...activeBusses]);
+            sends[1] = false;
+            setSends([...sends]);
           }
-          currentTracks[trackIndex].activeBusses = [...activeBusses];
+          currentTracks[trackIndex].sends = [...sends];
           localStorage.setItem(
             "currentTracks",
             JSON.stringify([...currentTracks])
           );
         }}
-        checked={activeBusses[1]}
+        checked={sends[1]}
       />
       <label htmlFor={`bus2${trackIndex}`}>2</label>
     </div>

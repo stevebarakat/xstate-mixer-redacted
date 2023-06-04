@@ -30,8 +30,8 @@ function useChannelStrip({ tracks }: Props) {
     return () => {
       t.stop();
       players.current?.forEach((player, i) => {
-        player.disconnect();
-        channels.current && channels.current[i].disconnect();
+        player.dispose();
+        channels.current && channels.current[i].dispose();
       });
       players.current = [];
       channels.current = [];

@@ -43,7 +43,6 @@ export const Mixer = ({ song }: Props) => {
     const scaled = dBToPercent(scale(volume));
     Destination.volume.value = scaled;
 
-    console.log("message");
     currentTracks?.forEach(
       (currentTrack: TrackSettings, trackIndex: number) => {
         const value = currentTrack.volume;
@@ -54,23 +53,20 @@ export const Mixer = ({ song }: Props) => {
           channels[trackIndex].set({ volume: scaled });
         }
 
-        currentTrack.activeBusses?.forEach((activeBus) => {
-          const currentBusFx = Object.keys(busFx.current);
-          if (activeBus === true) {
-            currentBusFx.forEach((_, i) => {
-              if (channels[trackIndex]) {
-                if (i === 0) {
-                  channels[trackIndex].send("reverb1");
-                  channels[trackIndex].send("delay1");
-                } else {
-                  channels[trackIndex].send("reverb2");
-                  channels[trackIndex].send("delay2");
-                }
-                // channels[trackIndex].connect(
-                //   busFx.current[
-                //     `${currentBusFx[i]}` as keyof typeof busFx.current
-                //   ]
-                // );
+        currentTrack.sends?.forEach((sendToBus) => {
+          if (sendToBus === true) {
+            channels.forEach((_, i) => {
+              if (i === 0) {
+                console.log("reverb1");
+                console.log("delay1");
+                channels[trackIndex].send("reverb1");
+                channels[trackIndex].send("delay1");
+              }
+              if (i === 1) {
+                console.log("reverb2");
+                console.log("delay2");
+                channels[trackIndex].send("reverb2");
+                channels[trackIndex].send("delay2");
               }
             });
           }
@@ -79,39 +75,41 @@ export const Mixer = ({ song }: Props) => {
     );
   }
 
-  if (isLoading) init();
-  return isLoading ? (
-    <Loader song={song} />
-  ) : (
-    <div className="mixer">
-      <SongInfo song={song} />
-      <BusPanels
-        busFx={busFx}
-        currentBusFx={currentBusFx}
-        disabled={disabled}
-      />
-      <div className="channels">
-        <div>
-          {tracks.map((track, i) => (
-            <TrackChannel
-              key={track.path}
-              track={track}
-              trackIndex={i}
-              channels={channels}
+  if (isLoading) {
+    init();
+    return <Loader song={song} />;
+  } else {
+    return (
+      <div className="mixer">
+        <SongInfo song={song} />
+        <BusPanels
+          busFx={busFx}
+          currentBusFx={currentBusFx}
+          disabled={disabled}
+        />
+        <div className="channels">
+          <div>
+            {tracks.map((track, i) => (
+              <TrackChannel
+                key={track.path}
+                track={track}
+                trackIndex={i}
+                channels={channels}
+              />
+            ))}
+          </div>
+          {busChannels.current.map((_: void, i: number) => (
+            <BusChannel
+              key={i}
+              busChannels={busChannels.current}
+              busIndex={i}
+              disabled={disabled}
             />
           ))}
+          <Main />
         </div>
-        {busChannels.current.map((_: void, i: number) => (
-          <BusChannel
-            key={i}
-            busChannels={busChannels.current}
-            busIndex={i}
-            disabled={disabled}
-          />
-        ))}
-        <Main />
+        <Transport song={song} />
       </div>
-      <Transport song={song} />
-    </div>
-  );
+    );
+  }
 };

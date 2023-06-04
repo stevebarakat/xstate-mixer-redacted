@@ -56,7 +56,7 @@ export function getSong(defaultSong: Song) {
     mute: false,
     solo: false,
     fx: ["nofx", "nofx"],
-    activeBusses: [false, false],
+    sends: [false, false],
     trackPanelActive: true,
     trackPanelPosition: { x: 0, y: 0 },
     trackPanelSize: { width: "325px", height: "auto" },
