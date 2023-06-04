@@ -70,8 +70,8 @@ function BusPanel2({ currentBusFx, fx, disabled }: Props) {
                   <Reverber
                     key={`bus2reverb${i}`}
                     reverb={fx.current.reverb2}
-                    busIndex={0}
-                    fxIndex={0}
+                    busIndex={1}
+                    fxIndex={i}
                   />
                 );
               case "delay2":
@@ -79,8 +79,8 @@ function BusPanel2({ currentBusFx, fx, disabled }: Props) {
                   <Delay
                     key={`bus2delay${i}`}
                     delay={fx.current.delay2}
-                    busIndex={0}
-                    fxIndex={0}
+                    busIndex={1}
+                    fxIndex={i}
                   />
                 );
               default:

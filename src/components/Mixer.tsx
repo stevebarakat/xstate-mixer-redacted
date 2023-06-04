@@ -36,7 +36,9 @@ export const Mixer = ({ song }: Props) => {
     reverb2: new Reverb().toDestination(),
     delay2: new FeedbackDelay().toDestination(),
   });
-  const [busChannels, currentBusFx, disabled] = useBusFx({ busFx });
+  const [busChannels, currentBusFx, disabled] = useBusFx({
+    busFx: busFx.current,
+  });
 
   function init() {
     const volume = currentMix.mainVolume;

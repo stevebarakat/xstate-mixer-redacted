@@ -30,7 +30,6 @@ function BusPanel1({ currentBusFx, fx, disabled }: Props) {
     const { busPanelActive } = state.context;
     return busPanelActive;
   }, shallowEqual);
-  // const [active, setActive] = useState(true);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "325px", height: "auto" });
 
@@ -67,21 +66,23 @@ function BusPanel1({ currentBusFx, fx, disabled }: Props) {
               currentBusFx[`bus1fx${i + 1}` as keyof typeof currentBusFx]
             ) {
               case "reverb1":
+                console.log("bp: reverb1");
                 return (
                   <Reverber
                     key={`bus1reverb${i}`}
                     reverb={fx.current.reverb1}
                     busIndex={0}
-                    fxIndex={0}
+                    fxIndex={i}
                   />
                 );
               case "delay1":
+                console.log("bp: delay1");
                 return (
                   <Delay
                     key={`bus1delay${i}`}
                     delay={fx.current.delay1}
                     busIndex={0}
-                    fxIndex={0}
+                    fxIndex={i}
                   />
                 );
               default:
