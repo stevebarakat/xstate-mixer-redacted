@@ -164,8 +164,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     (item: string) => item === "nofx"
   );
 
-  console.log("fx1.current", fx1.current);
-
   function getTrackPanels() {
     if (!fx1.current && !fx2.current) {
       return null;

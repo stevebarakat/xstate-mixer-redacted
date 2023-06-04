@@ -24,8 +24,8 @@ export const Mixer = ({ song }: Props) => {
   const currentMixString = localStorage.getItem("currentMix");
   const currentMix = currentMixString && JSON.parse(currentMixString);
 
-  const isLoading = MixerMachineContext.useSelector(
-    (state) => state.value === "loading"
+  const isLoading = MixerMachineContext.useSelector((state) =>
+    state.matches("loading")
   );
   const tracks = song.tracks;
   const { channels } = useChannelStrip({ tracks });
@@ -38,20 +38,20 @@ export const Mixer = ({ song }: Props) => {
   });
   const [busChannels, currentBusFx, disabled] = useBusFx({ busFx });
 
-  useEffect(() => {
+  function init() {
     const volume = currentMix.mainVolume;
-    const scaled = scale(volume);
-    const transposed = dBToPercent(scaled);
-    Destination.volume.value = transposed;
+    const scaled = dBToPercent(scale(volume));
+    Destination.volume.value = scaled;
 
+    console.log("message");
     currentTracks?.forEach(
       (currentTrack: TrackSettings, trackIndex: number) => {
         const value = currentTrack.volume;
-        const transposed = dBToPercent(scale(value));
+        const scaled = dBToPercent(scale(value));
 
         if (channels[trackIndex]) {
           channels[trackIndex].set({ pan: currentTrack.pan });
-          channels[trackIndex].set({ volume: transposed });
+          channels[trackIndex].set({ volume: scaled });
         }
 
         currentTrack.activeBusses?.forEach((activeBus) => {
@@ -66,19 +66,20 @@ export const Mixer = ({ song }: Props) => {
                   channels[trackIndex].send("reverb2");
                   channels[trackIndex].send("delay2");
                 }
-                channels[trackIndex].connect(
-                  busFx.current[
-                    `${currentBusFx[i]}` as keyof typeof busFx.current
-                  ]
-                );
+                // channels[trackIndex].connect(
+                //   busFx.current[
+                //     `${currentBusFx[i]}` as keyof typeof busFx.current
+                //   ]
+                // );
               }
             });
           }
         });
       }
     );
-  }, [channels, currentMix.mainVolume, currentTracks]);
+  }
 
+  if (isLoading) init();
   return isLoading ? (
     <Loader song={song} />
   ) : (
