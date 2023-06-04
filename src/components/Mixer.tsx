@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { Destination, Reverb, FeedbackDelay } from "tone";
 import useChannelStrip from "../hooks/useChannelStrip";
 import useBusFx from "../hooks/useBusFx";
@@ -52,8 +52,8 @@ export const Mixer = ({ song }: Props) => {
         channels[trackIndex].set({ volume: scaled });
       }
 
-      currentTrack.sends?.forEach((sendToBus) => {
-        if (sendToBus === true) {
+      currentTrack.sends?.forEach((send) => {
+        if (send === true) {
           channels.forEach((_, i) => {
             if (i === 0) {
               console.log("reverb1");

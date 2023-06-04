@@ -1,7 +1,7 @@
 import { MixerMachineContext } from "../../App";
+import { shallowEqual } from "@xstate/react";
 import { array as fx } from "../../utils";
 import ChannelButton from "../Buttons/ChannelButton";
-import { shallowEqual } from "@xstate/react";
 
 type Props = {
   busIndex: number;
@@ -12,7 +12,7 @@ type Props = {
 };
 
 function BusFxMenu({ busIndex, disabled }: Props) {
-  const { send } = MixerMachineContext.useActorRef();
+  const [, send] = MixerMachineContext.useActor();
   const currentBusFx = MixerMachineContext.useSelector((state) => {
     const { currentBusFx } = state.context;
     return currentBusFx;
@@ -38,7 +38,7 @@ function BusFxMenu({ busIndex, disabled }: Props) {
       >
         {disabled[`panel${busIndex + 1}` as keyof typeof disabled]
           ? "No"
-          : busPanelActive
+          : busPanelActive[busIndex]
           ? "Close"
           : "Open"}
         FX

@@ -74,12 +74,66 @@ export const mixerMachine = createMachine(
     states: {
       loading: { on: { LOADED: "stopped" } },
       playing: {
+        initial: "active",
         entry: "play",
+        states: {
+          inactive: {
+            on: {
+              TOGGLE_BUS_PANEL: {
+                target: "active",
+                actions: "toggleBusPanel",
+              },
+              TOGGLE_TRACK_PANEL: {
+                target: "active",
+                actions: "toggleTrackPanel",
+              },
+            },
+          },
+          active: {
+            on: {
+              TOGGLE_BUS_PANEL: {
+                target: "inactive",
+                actions: "toggleBusPanel",
+              },
+              TOGGLE_TRACK_PANEL: {
+                target: "inactive",
+                actions: "toggleTrackPanel",
+              },
+            },
+          },
+        },
         on: {
           PAUSE: { target: "stopped", actions: "pause" },
         },
       },
       stopped: {
+        initial: "active",
+        states: {
+          inactive: {
+            on: {
+              TOGGLE_BUS_PANEL: {
+                target: "active",
+                actions: "toggleBusPanel",
+              },
+              TOGGLE_TRACK_PANEL: {
+                target: "active",
+                actions: "toggleTrackPanel",
+              },
+            },
+          },
+          active: {
+            on: {
+              TOGGLE_BUS_PANEL: {
+                target: "inactive",
+                actions: "toggleBusPanel",
+              },
+              TOGGLE_TRACK_PANEL: {
+                target: "inactive",
+                actions: "toggleTrackPanel",
+              },
+            },
+          },
+        },
         on: {
           PLAY: { target: "playing" },
         },
@@ -223,6 +277,19 @@ export const mixerMachine = createMachine(
             },
           })
         );
+      }),
+
+      toggleBusPanel: pure((context, { busIndex }) => {
+        const tempBusPanelsOpen = context.busPanelActive;
+        tempBusPanelsOpen[busIndex] = !tempBusPanelsOpen[busIndex];
+        localStorage.setItem(
+          "currentMix",
+          JSON.stringify({
+            ...currentMix,
+            busPanelActive: tempBusPanelsOpen,
+          })
+        );
+        return [assign({ busPanelActive: tempBusPanelsOpen })];
       }),
     },
   }

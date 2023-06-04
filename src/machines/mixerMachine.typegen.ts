@@ -7,7 +7,7 @@ export interface Typegen0 {
   };
   invokeSrcNameMap: {};
   missingImplementations: {
-    actions: "setTrackFx";
+    actions: "setTrackFx" | "toggleTrackPanel";
     delays: never;
     guards: never;
     services: never;
@@ -24,12 +24,22 @@ export interface Typegen0 {
     rewind: "REWIND";
     setBusFx: "SET_BUS_FX";
     setTrackFx: "SET_TRACK_FX";
+    toggleBusPanel: "TOGGLE_BUS_PANEL";
     toggleMute: "TOGGLE_MUTE";
     toggleSolo: "TOGGLE_SOLO";
+    toggleTrackPanel: "TOGGLE_TRACK_PANEL";
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};
   eventsCausingServices: {};
-  matchesStates: "loading" | "playing" | "stopped";
+  matchesStates:
+    | "loading"
+    | "playing"
+    | "playing.active"
+    | "playing.inactive"
+    | "stopped"
+    | "stopped.active"
+    | "stopped.inactive"
+    | { playing?: "active" | "inactive"; stopped?: "active" | "inactive" };
   tags: never;
 }

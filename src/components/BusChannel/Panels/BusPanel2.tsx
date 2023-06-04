@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { MixerMachineContext } from "../../../App";
+import { shallowEqual } from "@xstate/react";
 import { array } from "../../../utils";
 import { Rnd as BusFxPanel } from "react-rnd";
 import CloseButton from "../../Buttons/CloseButton";
@@ -23,13 +25,17 @@ type Props = {
 };
 
 function BusPanel2({ currentBusFx, fx, disabled }: Props) {
-  const [active, setActive] = useState(true);
+  const [, send] = MixerMachineContext.useActor();
+  const busPanelActive = MixerMachineContext.useSelector((state) => {
+    const { busPanelActive } = state.context;
+    return busPanelActive;
+  }, shallowEqual);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "325px", height: "auto" });
 
   return (
     <div>
-      {active && !disabled.panel2 && (
+      {busPanelActive[1] && !disabled.panel2 && (
         <BusFxPanel
           className="fx-panel"
           position={position}
@@ -46,7 +52,10 @@ function BusPanel2({ currentBusFx, fx, disabled }: Props) {
           <CloseButton
             id="bus-panel-2"
             onClick={() => {
-              setActive(!active);
+              send({
+                type: "TOGGLE_BUS_PANEL",
+                busIndex: 1,
+              });
             }}
           >
             X
