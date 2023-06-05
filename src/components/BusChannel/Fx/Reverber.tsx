@@ -34,8 +34,8 @@ export default function Reverber({ reverb, busIndex, fxIndex }: Props) {
   );
   const [decay, setDecay] = useState(
     currentMix.busFxData.reverbsDecay || [
-      [0.5, 0.5],
-      [0.5, 0.5],
+      [5, 5],
+      [5, 5],
     ]
   );
 

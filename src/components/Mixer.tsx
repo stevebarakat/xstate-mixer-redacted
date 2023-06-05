@@ -31,9 +31,9 @@ export const Mixer = ({ song }: Props) => {
   const { channels } = useChannelStrip({ tracks });
 
   const busFx = useRef({
-    reverb1: new Reverb().toDestination(),
+    reverb1: new Reverb({ decay: 5 }).toDestination(),
     delay1: new FeedbackDelay().toDestination(),
-    reverb2: new Reverb().toDestination(),
+    reverb2: new Reverb({ decay: 5 }).toDestination(),
     delay2: new FeedbackDelay().toDestination(),
   });
   const [busChannels, currentBusFx, disabled] = useBusFx({
