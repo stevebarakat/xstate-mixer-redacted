@@ -29,52 +29,41 @@ function useBusFx({ busFx }: Props) {
   };
 
   useEffect(() => {
-    array(2).forEach((_, i) => {
-      array(2).forEach((_, j) => {
-        console.log(`bus${i + 1}fx${j + 1}`);
-        console.log(
-          "currentBusFx[`bus${i + 1}fx${j + 1}`]",
-          currentBusFx[`bus${i + 1}fx${j + 1}`]
-        );
-        switch (currentBusFx[`bus${i + 1}fx${i + 1}`]) {
-          case "nofx1":
-            busChannels.current[0] && busChannels.current[0].disconnect();
-            busChannels.current[0] = new Channel().connect(Destination);
-            break;
-          case "nofx2":
-            busChannels.current[1] && busChannels.current[1].disconnect();
-            busChannels.current[1] = new Channel().connect(Destination);
-            break;
-          case "reverb1":
-            busChannels.current[0] && busChannels.current[0].disconnect();
-            busChannels.current[0] = new Channel().connect(busFx.reverb1);
-            busChannels.current[0].receive("reverb1");
-            break;
-          case "reverb2":
-            busChannels.current[1] && busChannels.current[1].disconnect();
-            busChannels.current[1] = new Channel().connect(busFx.reverb2);
-            busChannels.current[1].receive("reverb2");
-            break;
-          case "delay1":
-            busChannels.current[0] && busChannels.current[0].disconnect();
-            busChannels.current[0] = new Channel().connect(busFx.delay1);
-            busChannels.current[0].receive("delay1");
-            break;
-          case "delay2":
-            busChannels.current[1] && busChannels.current[1].disconnect();
-            busChannels.current[1] = new Channel().connect(busFx.delay2);
-            busChannels.current[1].receive("delay2");
-            break;
-          default:
-            break;
-        }
-      });
+    Object.values(currentBusFx).forEach((fx) => {
+      console.log("fx", fx);
+      switch (fx) {
+        case "nofx1":
+          busChannels.current[0] && busChannels.current[0].disconnect();
+          busChannels.current[0] = new Channel().connect(Destination);
+          break;
+        case "nofx2":
+          busChannels.current[1] && busChannels.current[1].disconnect();
+          busChannels.current[1] = new Channel().connect(Destination);
+          break;
+        case "reverb1":
+          busChannels.current[0] && busChannels.current[0].disconnect();
+          busChannels.current[0] = new Channel().connect(busFx.reverb1);
+          busChannels.current[0].receive("reverb1");
+          break;
+        case "reverb2":
+          busChannels.current[1] && busChannels.current[1].disconnect();
+          busChannels.current[1] = new Channel().connect(busFx.reverb2);
+          busChannels.current[1].receive("reverb2");
+          break;
+        case "delay1":
+          busChannels.current[0] && busChannels.current[0].disconnect();
+          busChannels.current[0] = new Channel().connect(busFx.delay1);
+          busChannels.current[0].receive("delay1");
+          break;
+        case "delay2":
+          busChannels.current[1] && busChannels.current[1].disconnect();
+          busChannels.current[1] = new Channel().connect(busFx.delay2);
+          busChannels.current[1].receive("delay2");
+          break;
+        default:
+          break;
+      }
     });
-
-    // return () => {
-    //   busChannels.current.forEach((busChannel) => busChannel?.dispose());
-    //   busChannels.current = [null, null];
-    // };
   }, [currentBusFx, busFx]);
 
   return [busChannels, currentBusFx, disabled];
