@@ -32,6 +32,9 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
             id={`track${trackIndex}reverbBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+              const currentTracksString = localStorage.getItem("currentTracks");
+              const currentTracks =
+                currentTracksString && JSON.parse(currentTracksString);
               const checked = e.currentTarget.checked;
               setBypass(checked);
               if (isBypassed) {
