@@ -32,7 +32,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
   const fx1 = useRef<JSX.Element | undefined>(
     (() => {
       const currentFx = currentTracks[trackIndex]?.fx ?? null;
-      switch (currentFx) {
+      console.log("currentFx", currentFx);
+      switch (currentFx[0]) {
         case "reverb":
           return (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
@@ -55,7 +56,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
   const fx2 = useRef<JSX.Element | undefined>(
     (() => {
       const currentFx = currentTracks[trackIndex]?.fx ?? null;
-      switch (currentFx) {
+      switch (currentFx[1]) {
         case "reverb":
           return (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
@@ -96,9 +97,9 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     currentTracks[trackIndex].fx[id] = e.currentTarget.value;
     localStorage.setItem("currentTracks", JSON.stringify([...currentTracks]));
 
-    channel.disconnect();
     switch (e.currentTarget.value) {
       case "nofx":
+        channel.disconnect();
         channel.toDestination();
         id === 0 ? (fx1.current = undefined) : (fx2.current = undefined);
         break;
@@ -165,6 +166,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
   );
 
   function getTrackPanels() {
+    console.log("fx1.current", fx1.current);
+    console.log("fx2.current", fx2.current);
     if (!fx1.current && !fx2.current) {
       return null;
     } else {
@@ -208,6 +211,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
           <option value={"pitchShift"}>Pitch Shift</option>
         </select>
       ))}
+      {console.log("active[trackIndex]", active[trackIndex])}
       <>{active[trackIndex] && getTrackPanels()}</>
       <div className="channel">
         <Sends trackIndex={trackIndex} channels={channels} />

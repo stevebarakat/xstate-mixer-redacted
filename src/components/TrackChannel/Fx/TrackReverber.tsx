@@ -12,7 +12,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  const [bypass, setBypass] = useState(
+  const [isBypassed, setBypass] = useState(
     currentTracks[trackIndex].reverbsBypass || false
   );
   const [mix, setMix] = useState(currentTracks[trackIndex].reverbsMix || 0.5);
@@ -22,8 +22,6 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
   const [decay, setDecay] = useState(
     currentTracks[trackIndex].reverbsDecay || 0.5
   );
-
-  const disabled = bypass;
 
   return (
     <div>
@@ -36,7 +34,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               const checked = e.currentTarget.checked;
               setBypass(checked);
-              if (checked) {
+              if (isBypassed) {
                 reverb.disconnect();
               } else {
                 reverb.connect(Destination);
@@ -47,7 +45,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
                 JSON.stringify(currentTracks)
               );
             }}
-            checked={bypass}
+            checked={isBypassed}
           />
           <label htmlFor={`track${trackIndex}reverbBypass`}>{powerIcon}</label>
         </div>
@@ -61,7 +59,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.001}
-          disabled={disabled}
+          disabled={isBypassed}
           value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
@@ -87,7 +85,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.001}
-          disabled={disabled}
+          disabled={isBypassed}
           value={preDelay}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
@@ -113,7 +111,7 @@ export default function TrackReverber({ reverb, trackIndex }: Props) {
           min={0.5}
           max={12.5}
           step={0.1}
-          disabled={disabled}
+          disabled={isBypassed}
           value={decay}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");

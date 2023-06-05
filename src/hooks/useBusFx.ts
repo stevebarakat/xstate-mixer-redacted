@@ -30,7 +30,6 @@ function useBusFx({ busFx }: Props) {
 
   useEffect(() => {
     Object.values(currentBusFx).forEach((fx) => {
-      console.log("fx", fx);
       switch (fx) {
         case "nofx1":
           busChannels.current[0] && busChannels.current[0].disconnect();
