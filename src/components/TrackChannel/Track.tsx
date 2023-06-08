@@ -35,14 +35,17 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
       console.log("currentFx", currentFx);
       switch (currentFx[0]) {
         case "reverb":
+          channel.disconnect();
           channel.connect(reverb.current);
           return (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
           );
         case "delay":
+          channel.disconnect();
           channel.connect(delay.current);
           return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
         case "pitchShift":
+          channel.disconnect();
           channel.connect(pitchShift.current);
           return (
             <TrackPitchShifter
