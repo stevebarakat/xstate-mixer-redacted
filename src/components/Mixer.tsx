@@ -44,35 +44,6 @@ export const Mixer = ({ song }: Props) => {
     const volume = currentMix.mainVolume;
     const scaled = dBToPercent(scale(volume));
     Destination.volume.value = scaled;
-
-    currentTracks.forEach((currentTrack: TrackSettings, trackIndex: number) => {
-      const value = currentTrack.volume;
-      const scaled = dBToPercent(scale(value));
-
-      if (channels[trackIndex]) {
-        channels[trackIndex].set({ pan: currentTrack.pan });
-        channels[trackIndex].set({ volume: scaled });
-      }
-
-      currentTrack.sends?.forEach((send) => {
-        if (send === true) {
-          channels.forEach((_, i) => {
-            if (i === 0) {
-              console.log("reverb1");
-              console.log("delay1");
-              channels[trackIndex].send("reverb1");
-              channels[trackIndex].send("delay1");
-            }
-            if (i === 1) {
-              console.log("reverb2");
-              console.log("delay2");
-              channels[trackIndex].send("reverb2");
-              channels[trackIndex].send("delay2");
-            }
-          });
-        }
-      });
-    });
   }
 
   if (isLoading) {

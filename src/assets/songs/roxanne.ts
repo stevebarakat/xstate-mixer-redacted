@@ -26,7 +26,8 @@ export const roxanne = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
+      fxNode: [null, null],
     },
     {
       id: "5kj3lk5j34",
@@ -44,7 +45,8 @@ export const roxanne = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
+      fxNode: [null, null],
     },
     {
       id: "j3lk53llkj32",
@@ -62,7 +64,8 @@ export const roxanne = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
+      fxNode: [null, null],
     },
     {
       id: "rj3lk5j5jk34j5l3k",
@@ -80,7 +83,8 @@ export const roxanne = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
+      fxNode: [null, null],
     },
   ],
 };

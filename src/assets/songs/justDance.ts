@@ -24,7 +24,7 @@ export const justDance = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
     },
     {
       name: "Snare",
@@ -41,7 +41,7 @@ export const justDance = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
     },
     {
       name: "Cymbals",
@@ -66,7 +66,7 @@ export const justDance = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
     },
     {
       name: "Synth 2",
@@ -83,7 +83,7 @@ export const justDance = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
     },
     {
       name: "Extra Synth",
@@ -100,7 +100,7 @@ export const justDance = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
     },
     {
       name: "Vocals",
@@ -117,7 +117,7 @@ export const justDance = {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
-      fx: ["nofx", "nofx"],
+      fxName: ["nofx", "nofx"],
     },
   ],
 };

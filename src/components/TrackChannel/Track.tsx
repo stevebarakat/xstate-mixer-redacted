@@ -31,7 +31,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
 
   const fx1 = useRef<JSX.Element | undefined>(
     (() => {
-      const currentFx = currentTracks[trackIndex]?.fx ?? null;
+      const currentFx = currentTracks[trackIndex]?.fxName ?? null;
       console.log("currentFx", currentFx);
       switch (currentFx[0]) {
         case "reverb":
@@ -55,7 +55,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
 
   const fx2 = useRef<JSX.Element | undefined>(
     (() => {
-      const currentFx = currentTracks[trackIndex]?.fx ?? null;
+      const currentFx = currentTracks[trackIndex]?.fxName ?? null;
       switch (currentFx[1]) {
         case "reverb":
           return (
@@ -78,7 +78,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
 
   const [trackFx, setTrackFx] = useState(() => {
     return (
-      currentTracks.fx ?? Array(currentTracks.length).fill(["nofx", "nofx"])
+      currentTracks.fxName ?? Array(currentTracks.length).fill(["nofx", "nofx"])
     );
   });
 
@@ -94,7 +94,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     trackFx[trackIndex][id] = e.currentTarget.value;
     setTrackFx([...trackFx]);
 
-    currentTracks[trackIndex].fx[id] = e.currentTarget.value;
+    currentTracks[trackIndex].fxName[id] = e.currentTarget.value;
     localStorage.setItem("currentTracks", JSON.stringify([...currentTracks]));
 
     switch (e.currentTarget.value) {
@@ -125,12 +125,10 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
           fx1.current = (
             <TrackDelay delay={delay.current} trackIndex={trackIndex} />
           );
-          localStorage.setItem("fx1.current", "delay");
         } else {
           fx2.current = (
             <TrackDelay delay={delay.current} trackIndex={trackIndex} />
           );
-          localStorage.setItem("fx2.current", "delay");
         }
         break;
 
@@ -144,7 +142,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
               trackIndex={trackIndex}
             />
           );
-          localStorage.setItem("fx1.current", "pitchShift");
         } else {
           fx2.current = (
             <TrackPitchShifter
@@ -152,7 +149,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
               trackIndex={trackIndex}
             />
           );
-          localStorage.setItem("fx2.current", "pitchShift");
         }
         break;
 
@@ -161,7 +157,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     }
   }
 
-  const disabled = currentTracks[trackIndex].fx.every(
+  const disabled = currentTracks[trackIndex].fxName.every(
     (item: string) => item === "nofx"
   );
 
@@ -203,7 +199,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
           id={`track${trackIndex}fx${fxIndex}`}
           className="fx-select"
           onChange={saveTrackFx}
-          value={currentTracks[trackIndex]?.fx[fxIndex]}
+          value={currentTracks[trackIndex]?.fxName[fxIndex]}
         >
           <option value={"nofx"}>{`FX ${fxIndex + 1}`}</option>
           <option value={"reverb"}>Reverb</option>
