@@ -31,9 +31,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
 
   const fx1 = useRef<JSX.Element | undefined>(
     (() => {
-      const currentFx = currentTracks[trackIndex]?.fxName ?? null;
-      console.log("currentFx", currentFx);
-      switch (currentFx[0]) {
+      const currentFx1 = currentTracks[trackIndex]?.fxName[0] ?? null;
+      switch (currentFx1) {
         case "reverb":
           channel.disconnect();
           channel.connect(reverb.current);
@@ -61,17 +60,20 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
 
   const fx2 = useRef<JSX.Element | undefined>(
     (() => {
-      const currentFx = currentTracks[trackIndex]?.fxName ?? null;
-      switch (currentFx[1]) {
+      const currentFx2 = currentTracks[trackIndex]?.fxName[1] ?? null;
+      switch (currentFx2) {
         case "reverb":
+          channel.disconnect();
           channel.connect(reverb.current);
           return (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
           );
         case "delay":
+          channel.disconnect();
           channel.connect(delay.current);
           return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
         case "pitchShift":
+          channel.disconnect();
           channel.connect(pitchShift.current);
           return (
             <TrackPitchShifter
