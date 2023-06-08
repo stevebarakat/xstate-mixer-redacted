@@ -117,7 +117,6 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
           disabled={isBypassed}
           value={feedback}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            console.log("feedback", feedback);
             const currentTracksString = localStorage.getItem("currentTracks");
             const currentTracks =
               currentTracksString && JSON.parse(currentTracksString);

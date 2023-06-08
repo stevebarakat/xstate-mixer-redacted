@@ -21,13 +21,31 @@ type Props = {
 };
 
 function TrackChannel({ track, trackIndex, channels }: Props) {
-  const channel = channels[trackIndex];
-  const reverb = useRef<Reverb>(new Reverb(8).toDestination());
-  const delay = useRef<FeedbackDelay>(new FeedbackDelay().toDestination());
-  const pitchShift = useRef<PitchShift>(new PitchShift().toDestination());
-
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+  const ct = currentTracks[trackIndex];
+  const channel = channels[trackIndex];
+
+  const reverb = useRef<Reverb>(
+    new Reverb({
+      wet: ct.reverbsMix,
+      preDelay: ct.reverbsPreDelay,
+      decay: ct.reverbsDecay,
+    }).toDestination()
+  );
+  const delay = useRef<FeedbackDelay>(
+    new FeedbackDelay({
+      wet: ct.delaysMix,
+      delayTime: ct.delaysTime,
+      feedback: ct.delaysFeedback,
+    }).toDestination()
+  );
+  const pitchShift = useRef<PitchShift>(
+    new PitchShift({
+      wet: ct.pitchShiftsMix,
+      pitch: ct.pitchShiftsPitch,
+    }).toDestination()
+  );
 
   const fx1 = useRef<JSX.Element | undefined>(
     (() => {
@@ -167,8 +185,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
   );
 
   function getTrackPanels() {
-    console.log("fx1.current", fx1.current);
-    console.log("fx2.current", fx2.current);
     if (!fx1.current && !fx2.current) {
       return null;
     } else {
@@ -212,7 +228,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
           <option value={"pitchShift"}>Pitch Shift</option>
         </select>
       ))}
-      {console.log("active[trackIndex]", active[trackIndex])}
       <>{active[trackIndex] && getTrackPanels()}</>
       <div className="channel">
         <Sends trackIndex={trackIndex} channels={channels} />

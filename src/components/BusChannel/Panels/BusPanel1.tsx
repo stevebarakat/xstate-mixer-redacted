@@ -66,7 +66,6 @@ function BusPanel1({ currentBusFx, fx, disabled }: Props) {
               currentBusFx[`bus1fx${i + 1}` as keyof typeof currentBusFx]
             ) {
               case "reverb1":
-                console.log("bp: reverb1");
                 return (
                   <Reverber
                     key={`bus1reverb${i}`}
@@ -76,7 +75,6 @@ function BusPanel1({ currentBusFx, fx, disabled }: Props) {
                   />
                 );
               case "delay1":
-                console.log("bp: delay1");
                 return (
                   <Delay
                     key={`bus1delay${i}`}

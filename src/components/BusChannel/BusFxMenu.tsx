@@ -49,7 +49,6 @@ function BusFxMenu({ busIndex, disabled }: Props) {
           id={`bus${busIndex}fx${fxIndex}`}
           className="fx-select"
           onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-            console.log("e.currentTarget.value", e.currentTarget.value);
             send({
               type: "SET_BUS_FX",
               value: e.currentTarget.value,
