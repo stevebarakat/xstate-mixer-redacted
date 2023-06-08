@@ -35,12 +35,15 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
       console.log("currentFx", currentFx);
       switch (currentFx[0]) {
         case "reverb":
+          channel.connect(reverb.current);
           return (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
           );
         case "delay":
+          channel.connect(delay.current);
           return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
         case "pitchShift":
+          channel.connect(pitchShift.current);
           return (
             <TrackPitchShifter
               pitchShift={pitchShift.current}
@@ -58,12 +61,15 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
       const currentFx = currentTracks[trackIndex]?.fxName ?? null;
       switch (currentFx[1]) {
         case "reverb":
+          channel.connect(reverb.current);
           return (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
           );
         case "delay":
+          channel.connect(delay.current);
           return <TrackDelay delay={delay.current} trackIndex={trackIndex} />;
         case "pitchShift":
+          channel.connect(pitchShift.current);
           return (
             <TrackPitchShifter
               pitchShift={pitchShift.current}
@@ -105,8 +111,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         break;
 
       case "reverb":
-        channel.connect(reverb.current);
-
         if (id === 0) {
           fx1.current = (
             <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
@@ -119,8 +123,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         break;
 
       case "delay":
-        channel.connect(delay.current);
-
         if (id === 0) {
           fx1.current = (
             <TrackDelay delay={delay.current} trackIndex={trackIndex} />
@@ -133,8 +135,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         break;
 
       case "pitchShift":
-        channel.connect(pitchShift.current);
-
         if (id === 0) {
           fx1.current = (
             <TrackPitchShifter
