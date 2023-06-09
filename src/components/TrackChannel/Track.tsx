@@ -61,7 +61,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
       const currentFx = currentTracks[trackIndex]?.fxName ?? null;
       console.log("currentFx", currentFx);
 
-      let ubu = {
+      let fxComponents = {
         1: <TrackSignal gain={gain.current} />,
         2: <TrackSignal gain={gain.current} />,
       };
@@ -69,19 +69,19 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         switch (currentFx[fxIndex]) {
           case "nofx":
             fxIndex === 0
-              ? (ubu = {
-                  ...ubu,
+              ? (fxComponents = {
+                  ...fxComponents,
                   1: <TrackSignal gain={gain.current} />,
                 })
-              : (ubu = {
-                  ...ubu,
+              : (fxComponents = {
+                  ...fxComponents,
                   2: <TrackSignal gain={gain.current} />,
                 });
             break;
           case "reverb":
             fxIndex === 0
-              ? (ubu = {
-                  ...ubu,
+              ? (fxComponents = {
+                  ...fxComponents,
                   1: (
                     <TrackReverber
                       reverb={reverb.current}
@@ -89,8 +89,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
                     />
                   ),
                 })
-              : (ubu = {
-                  ...ubu,
+              : (fxComponents = {
+                  ...fxComponents,
                   2: (
                     <TrackReverber
                       reverb={reverb.current}
@@ -101,14 +101,14 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
             break;
           case "delay":
             fxIndex === 0
-              ? (ubu = {
-                  ...ubu,
+              ? (fxComponents = {
+                  ...fxComponents,
                   1: (
                     <TrackDelay delay={delay.current} trackIndex={trackIndex} />
                   ),
                 })
-              : (ubu = {
-                  ...ubu,
+              : (fxComponents = {
+                  ...fxComponents,
                   2: (
                     <TrackDelay delay={delay.current} trackIndex={trackIndex} />
                   ),
@@ -116,8 +116,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
             break;
           case "pitchShift":
             fxIndex === 0
-              ? (ubu = {
-                  ...ubu,
+              ? (fxComponents = {
+                  ...fxComponents,
                   1: (
                     <TrackPitchShifter
                       pitchShift={pitchShift.current}
@@ -125,8 +125,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
                     />
                   ),
                 })
-              : (ubu = {
-                  ...ubu,
+              : (fxComponents = {
+                  ...fxComponents,
                   2: (
                     <TrackPitchShifter
                       pitchShift={pitchShift.current}
@@ -139,7 +139,13 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
             break;
         }
       });
-      return ubu;
+      const fxProps = Object.values(fxComponents).map((fx) => fx.props);
+      const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
+      channel.disconnect();
+      fxNodes.forEach((node: FxTypes) => {
+        channel.chain(node);
+      });
+      return fxComponents;
     })()
   );
 
@@ -200,12 +206,9 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     }
 
     const fxProps = Object.values(fx.current).map((fx) => fx.props);
-    console.log("fxProps", fxProps);
     const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
-    console.log("fxNodes", fxNodes);
     channel.disconnect();
     fxNodes.forEach((node: FxTypes) => {
-      console.log("node", node);
       channel.chain(node);
     });
   }
