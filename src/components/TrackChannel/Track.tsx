@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
-import { Reverb, FeedbackDelay, PitchShift } from "tone";
-import TrackReverber from "./Fx/TrackReverber";
+import { Reverb, FeedbackDelay, PitchShift, Gain } from "tone";
 import TrackPanel from "./TrackPanel";
+import TrackReverber from "./Fx/TrackReverber";
+import TrackSignal from "./Fx/TrackSignal";
 import TrackDelay from "./Fx/TrackDelay";
-import ChannelButton from "../Buttons/ChannelButton";
 import TrackPitchShifter from "./Fx/TrackPitchShifter";
+import ChannelButton from "../Buttons/ChannelButton";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Sends from "./Sends";
@@ -31,6 +32,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
   const ct = currentTracks[trackIndex];
   const channel = channels[trackIndex];
 
+  const gain = useRef<Gain>(new Gain().toDestination());
   const reverb = useRef<Reverb>(
     new Reverb({
       wet: ct.reverbsMix,
@@ -52,72 +54,84 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     }).toDestination()
   );
 
-  // const fx = useRef<Fx>(
-  //   (() => {
-  //     const currentFx1 = currentTracks[trackIndex]?.fxName ?? null;
-  //     console.log("currentFx1", currentFx1);
-  //     switch (currentFx1) {
-  //       case "reverb":
-  //         // channel.disconnect();
-  //         channel.connect(reverb.current);
-  //         return [
-  //           <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />,
-  //         ];
-  //       case "delay":
-  //         // channel.disconnect();
-  //         channel.connect(delay.current);
-  //         return [<TrackDelay delay={delay.current} trackIndex={trackIndex} />];
-  //       case "pitchShift":
-  //         // channel.disconnect();
-  //         channel.connect(pitchShift.current);
-  //         return [
-  //           <TrackPitchShifter
-  //             pitchShift={pitchShift.current}
-  //             trackIndex={trackIndex}
-  //           />,
-  //         ];
-  //       default:
-  //         return [undefined];
-  //         break;
-  //     }
-  //   })()
-  // );
-
   const fx = useRef<Fx>(
     (() => {
       const currentFx = currentTracks[trackIndex]?.fxName ?? null;
       console.log("currentFx", currentFx);
 
-      let ubu = { 1: <div />, 2: <div /> };
-      array(2).forEach((_, fxIndex) => {
+      let ubu = {
+        1: <TrackSignal gain={gain.current} />,
+        2: <TrackSignal gain={gain.current} />,
+      };
+      array(2).map((_, fxIndex) => {
         switch (currentFx[fxIndex]) {
+          case "nofx":
+            fxIndex === 0
+              ? (ubu = {
+                  ...ubu,
+                  1: <TrackSignal gain={gain.current} />,
+                })
+              : (ubu = {
+                  ...ubu,
+                  2: <TrackSignal gain={gain.current} />,
+                });
+            break;
           case "reverb":
-            ubu = {
-              ...ubu,
-              1: (
-                <TrackReverber
-                  reverb={reverb.current}
-                  trackIndex={trackIndex}
-                />
-              ),
-            };
+            fxIndex === 0
+              ? (ubu = {
+                  ...ubu,
+                  1: (
+                    <TrackReverber
+                      reverb={reverb.current}
+                      trackIndex={trackIndex}
+                    />
+                  ),
+                })
+              : (ubu = {
+                  ...ubu,
+                  2: (
+                    <TrackReverber
+                      reverb={reverb.current}
+                      trackIndex={trackIndex}
+                    />
+                  ),
+                });
             break;
           case "delay":
-            ubu = {
-              ...ubu,
-              1: <TrackDelay delay={delay.current} trackIndex={trackIndex} />,
-            };
+            fxIndex === 0
+              ? (ubu = {
+                  ...ubu,
+                  1: (
+                    <TrackDelay delay={delay.current} trackIndex={trackIndex} />
+                  ),
+                })
+              : (ubu = {
+                  ...ubu,
+                  2: (
+                    <TrackDelay delay={delay.current} trackIndex={trackIndex} />
+                  ),
+                });
             break;
           case "pitchShift":
-            ubu = {
-              ...ubu,
-              1: (
-                <TrackPitchShifter
-                  pitchShift={pitchShift.current}
-                  trackIndex={trackIndex}
-                />
-              ),
-            };
+            fxIndex === 0
+              ? (ubu = {
+                  ...ubu,
+                  1: (
+                    <TrackPitchShifter
+                      pitchShift={pitchShift.current}
+                      trackIndex={trackIndex}
+                    />
+                  ),
+                })
+              : (ubu = {
+                  ...ubu,
+                  2: (
+                    <TrackPitchShifter
+                      pitchShift={pitchShift.current}
+                      trackIndex={trackIndex}
+                    />
+                  ),
+                });
             break;
           default:
             break;
@@ -137,6 +151,8 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
 
   const [active, setActive] = useState([true, true, true, true]);
 
+  const props = useRef<React.MutableRefObject<string[]> | undefined>();
+
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
     const currentTracksString = localStorage.getItem("currentTracks");
     const currentTracks =
@@ -153,9 +169,7 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     console.log("id", id);
     switch (e.currentTarget.value) {
       case "nofx":
-        channel.disconnect();
-        channel.toDestination();
-        fx.current[`${id + 1}`] = undefined;
+        fx.current[`${id + 1}`] = <TrackSignal gain={gain.current} />;
         break;
 
       case "reverb":
@@ -188,15 +202,33 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
       default:
         break;
     }
-    const props = fx.current[`${id + 1}`].props;
-    channel.chain(Object.values(props)[0]);
+
+    const ebu = Object.values(fx.current).map((fx) => fx.props);
+    console.log("ebu", ebu);
+    const abu = ebu.map((item) => Object.values(item)[0]);
+    console.log("abu", abu);
+    channel.disconnect();
+    abu.forEach((item) => {
+      console.log("item", item);
+      channel.chain(item);
+    });
+    // props.current = fx.current[`${id + 1}`]?.props;
+    // console.log("Object.values(props)[0]", Object.values(props.current)[0]);
+    // channel.disconnect();
+    // channel.chain(Object.values(props.current)[0]);
     // console.log("fx.current[id].props", fx.current[`${id + 1}`].props);
-    // console.log("Object.values(props)", Object.values(props)[0]);
   }
 
   const disabled = currentTracks[trackIndex].fxName.every(
     (item: string) => item === "nofx"
   );
+
+  console.log("typeof fx.current", Object.values(fx.current["1"].props));
+
+  props.current = Object.values(fx.current["1"].props);
+  // console.log("props.current[0] === Gain", props.current[0]);
+
+  console.log("fx.current[1] === Gain", props.current[0] === typeof Gain);
 
   function getTrackPanels() {
     if (!fx.current) {

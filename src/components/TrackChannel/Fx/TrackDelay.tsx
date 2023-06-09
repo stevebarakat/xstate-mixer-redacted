@@ -12,7 +12,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  const [isBypassed, setBypass] = useState(
+  const [bypass, setBypass] = useState(
     currentTracks[trackIndex].delaysBypass || false
   );
   const [mix, setMix] = useState(currentTracks[trackIndex].delaysMix || 0.5);
@@ -22,6 +22,8 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
   const [feedback, setFeedback] = useState(
     currentTracks[trackIndex].delaysFeedback || 0.5
   );
+
+  const disabled = bypass;
 
   return (
     <div>
@@ -48,7 +50,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
                 JSON.stringify(currentTracks)
               );
             }}
-            checked={isBypassed}
+            checked={bypass}
           />
           <label htmlFor={`track${trackIndex}delayBypass`}>{powerIcon}</label>
         </div>
@@ -62,7 +64,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={isBypassed}
+          disabled={disabled}
           value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
@@ -88,7 +90,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={isBypassed}
+          disabled={disabled}
           value={delayTime}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
@@ -114,7 +116,7 @@ export default function TrackDelay({ delay, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={isBypassed}
+          disabled={disabled}
           value={feedback}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
