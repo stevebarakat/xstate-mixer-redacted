@@ -44,6 +44,16 @@ export const Mixer = ({ song }: Props) => {
     const volume = currentMix.mainVolume;
     const scaled = dBToPercent(scale(volume));
     Destination.volume.value = scaled;
+
+    currentTracks.forEach((currentTrack: TrackSettings, trackIndex: number) => {
+      const value = currentTrack.volume;
+      const scaled = dBToPercent(scale(value));
+
+      if (channels[trackIndex]) {
+        channels[trackIndex].set({ pan: currentTrack.pan });
+        channels[trackIndex].set({ volume: scaled });
+      }
+    });
   }
 
   if (isLoading) {
