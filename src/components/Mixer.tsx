@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Destination, Reverb, FeedbackDelay } from "tone";
 import useChannelStrip from "../hooks/useChannelStrip";
 import useBusFx from "../hooks/useBusFx";
@@ -40,6 +40,7 @@ export const Mixer = ({ song }: Props) => {
     busFx: busFx.current,
   });
 
+  console.log("busChannels", busChannels);
   function init() {
     const volume = currentMix.mainVolume;
     const scaled = dBToPercent(scale(volume));
@@ -55,6 +56,19 @@ export const Mixer = ({ song }: Props) => {
       }
     });
   }
+
+  useEffect(() => {
+    currentTracks.forEach((currentTrack: TrackSettings, trackIndex: number) => {
+      currentTrack.sends?.forEach((send) => {
+        if (send === true) {
+          channels.forEach((_, i) => {
+            if (busChannels.current[i] === undefined) return;
+            channels[trackIndex].connect(busChannels.current[i]);
+          });
+        }
+      });
+    });
+  }, [busChannels, channels, currentTracks]);
 
   if (isLoading) {
     init();
