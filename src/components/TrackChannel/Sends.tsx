@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Destination } from "tone";
-import type { Channel } from "tone";
+import type { Channel, Gain } from "tone";
 
 type Props = {
   trackIndex: number;
   channels: Channel[];
+  busChannels: Gain[];
 };
 
-function Sends({ trackIndex, channels }: Props) {
+function Sends({ trackIndex, channels, busChannels }: Props) {
   const currentTrackString = localStorage.getItem("currentTracks");
   const currentTracks = currentTrackString && JSON.parse(currentTrackString);
 
@@ -21,8 +22,8 @@ function Sends({ trackIndex, channels }: Props) {
         type="checkbox"
         onChange={(e: React.FormEvent<HTMLInputElement>): void => {
           if (e.currentTarget.checked) {
-            channels[trackIndex].send("reverb1");
-            channels[trackIndex].send("delay1");
+            channels[trackIndex].disconnect();
+            channels[trackIndex].connect(busChannels[0]);
             sends[0] = true;
             setSends([...sends]);
           } else {
@@ -45,8 +46,8 @@ function Sends({ trackIndex, channels }: Props) {
         type="checkbox"
         onChange={(e: React.FormEvent<HTMLInputElement>): void => {
           if (e.currentTarget.checked) {
-            channels[trackIndex].send("reverb2");
-            channels[trackIndex].send("delay2");
+            channels[trackIndex].disconnect();
+            channels[trackIndex].connect(busChannels[1]);
             sends[1] = true;
             setSends([...sends]);
           } else {

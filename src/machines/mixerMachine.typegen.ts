@@ -7,13 +7,12 @@ export interface Typegen0 {
   };
   invokeSrcNameMap: {};
   missingImplementations: {
-    actions: "setTrackFx" | "toggleTrackPanel";
+    actions: never;
     delays: never;
     guards: never;
     services: never;
   };
   eventsCausingActions: {
-    changeBusVolume: "CHANGE_BUS_VOLUME";
     changeMainVolume: "CHANGE_MAIN_VOLUME";
     changePan: "CHANGE_PAN";
     changeTrackVolume: "CHANGE_TRACK_VOLUME";
@@ -22,24 +21,12 @@ export interface Typegen0 {
     play: "PLAY";
     reset: "RESET";
     rewind: "REWIND";
-    setBusFx: "SET_BUS_FX";
-    setTrackFx: "SET_TRACK_FX";
-    toggleBusPanel: "TOGGLE_BUS_PANEL";
     toggleMute: "TOGGLE_MUTE";
     toggleSolo: "TOGGLE_SOLO";
-    toggleTrackPanel: "TOGGLE_TRACK_PANEL";
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};
   eventsCausingServices: {};
-  matchesStates:
-    | "loading"
-    | "playing"
-    | "playing.active"
-    | "playing.inactive"
-    | "stopped"
-    | "stopped.active"
-    | "stopped.inactive"
-    | { playing?: "active" | "inactive"; stopped?: "active" | "inactive" };
+  matchesStates: "loading" | "playing" | "stopped";
   tags: never;
 }

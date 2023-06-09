@@ -2,44 +2,6 @@ import type { Song } from "../types/global";
 
 export const defaultCurrentMix = {
   mainVolume: -32,
-  busVolumes: [-32, -32],
-  currentBusFx: {
-    bus1fx1: "nofx1",
-    bus1fx2: "nofx1",
-    bus2fx1: "nofx2",
-    bus2fx2: "nofx2",
-  },
-  busPanelActive: [true, true],
-  busPanelPosition: { x: 0, y: 0 },
-  busPanelSize: { width: "325px", height: "auto" },
-  busFxData: {
-    reverbsBypass: [false, false],
-    reverbsMix: [
-      [0.5, 0.5],
-      [0.5, 0.5],
-    ],
-    reverbsPreDelay: [
-      [0.5, 0.5],
-      [0.5, 0.5],
-    ],
-    reverbsDecay: [
-      [0.5, 0.5],
-      [0.5, 0.5],
-    ],
-    delaysBypass: [false, false],
-    delaysMix: [
-      [0.5, 0.5],
-      [0.5, 0.5],
-    ],
-    delaysTime: [
-      [0.5, 0.5],
-      [0.5, 0.5],
-    ],
-    delaysFeedback: [
-      [0.5, 0.5],
-      [0.5, 0.5],
-    ],
-  },
 };
 
 export function getSong(defaultSong: Song) {

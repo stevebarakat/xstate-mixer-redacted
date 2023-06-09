@@ -19,6 +19,7 @@ type Props = {
   track: SourceTrack;
   trackIndex: number;
   channels: Channel[];
+  busChannels: Gain[];
 };
 
 type Fx = {
@@ -28,7 +29,7 @@ type Fx = {
 
 type FxTypes = FeedbackDelay | Reverb | PitchShift | Gain;
 
-function TrackChannel({ track, trackIndex, channels }: Props) {
+function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
   const ct = currentTracks[trackIndex];
@@ -265,7 +266,11 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
       ))}
       <>{active[trackIndex] && getTrackPanels()}</>
       <div className="channel">
-        <Sends trackIndex={trackIndex} channels={channels} />
+        <Sends
+          trackIndex={trackIndex}
+          channels={channels}
+          busChannels={busChannels}
+        />
         <Pan trackIndex={trackIndex} channel={channel} />
         <Fader trackIndex={trackIndex} channel={channel} />
         <SoloMute trackIndex={trackIndex} channel={channel} />

@@ -16,7 +16,6 @@ const [song, currentMix, currentTracks] = getSong(roxanne);
 const initialVolumes = currentTracks.map(
   (currentTrack: TrackSettings) => currentTrack.volume
 );
-const initialBusVolumes = currentMix.busVolumes.map((volume: number) => volume);
 const initialPans = currentTracks.map(
   (currentTrack: TrackSettings) => currentTrack.pan
 );
@@ -35,25 +34,10 @@ export const mixerMachine = createMachine(
     tsTypes: {} as import("./mixerMachine.typegen").Typegen0,
     context: {
       mainVolume: currentMix.mainVolume,
-      busVolumes: initialBusVolumes,
       volume: initialVolumes,
       pan: initialPans,
       solo: initialSolos,
       mute: initialMutes,
-      currentBusFx: currentMix.currentBusFx,
-      busPanelActive: currentMix.busPanelActive,
-      busPanelPosition: currentMix.busPanelPosition,
-      busPanelSize: currentMix.busPanelSize,
-      busFxData: {
-        reverbsBypass: currentMix.busFxData.reverbsBypass,
-        reverbsMix: currentMix.busFxData.reverbsMix,
-        reverbsPreDelay: currentMix.busFxData.reverbsPreDelay,
-        reverbsDecay: currentMix.busFxData.reverbsDecay,
-        delaysBypass: currentMix.busFxData.delaysBypass,
-        delaysMix: currentMix.busFxData.delaysMix,
-        delaysTime: currentMix.busFxData.delaysTime,
-        delaysFeedback: currentMix.busFxData.delaysFeedback,
-      },
     },
     on: {
       RESET: { actions: "reset", target: "stopped" },
@@ -61,9 +45,6 @@ export const mixerMachine = createMachine(
       FF: { actions: "fastForward" },
       CHANGE_TRACK_VOLUME: { actions: "changeTrackVolume" },
       CHANGE_MAIN_VOLUME: { actions: "changeMainVolume" },
-      CHANGE_BUS_VOLUME: { actions: "changeBusVolume" },
-      SET_BUS_FX: { actions: "setBusFx" },
-      SET_TRACK_FX: { actions: "setTrackFx" },
       CHANGE_PAN: { actions: "changePan" },
       TOGGLE_SOLO: { actions: "toggleSolo" },
       TOGGLE_MUTE: { actions: "toggleMute" },
@@ -71,66 +52,12 @@ export const mixerMachine = createMachine(
     states: {
       loading: { on: { LOADED: "stopped" } },
       playing: {
-        initial: "active",
         entry: "play",
-        states: {
-          inactive: {
-            on: {
-              TOGGLE_BUS_PANEL: {
-                target: "active",
-                actions: "toggleBusPanel",
-              },
-              TOGGLE_TRACK_PANEL: {
-                target: "active",
-                actions: "toggleTrackPanel",
-              },
-            },
-          },
-          active: {
-            on: {
-              TOGGLE_BUS_PANEL: {
-                target: "inactive",
-                actions: "toggleBusPanel",
-              },
-              TOGGLE_TRACK_PANEL: {
-                target: "inactive",
-                actions: "toggleTrackPanel",
-              },
-            },
-          },
-        },
         on: {
           PAUSE: { target: "stopped", actions: "pause" },
         },
       },
       stopped: {
-        initial: "active",
-        states: {
-          inactive: {
-            on: {
-              TOGGLE_BUS_PANEL: {
-                target: "active",
-                actions: "toggleBusPanel",
-              },
-              TOGGLE_TRACK_PANEL: {
-                target: "active",
-                actions: "toggleTrackPanel",
-              },
-            },
-          },
-          active: {
-            on: {
-              TOGGLE_BUS_PANEL: {
-                target: "inactive",
-                actions: "toggleBusPanel",
-              },
-              TOGGLE_TRACK_PANEL: {
-                target: "inactive",
-                actions: "toggleTrackPanel",
-              },
-            },
-          },
-        },
         on: {
           PLAY: { target: "playing" },
         },
@@ -143,14 +70,9 @@ export const mixerMachine = createMachine(
         | { type: "FF" }
         | { type: "CHANGE_TRACK_VOLUME" }
         | { type: "CHANGE_MAIN_VOLUME" }
-        | { type: "CHANGE_BUS_VOLUME" }
-        | { type: "SET_BUS_FX" }
-        | { type: "SET_TRACK_FX" }
         | { type: "LOADED" }
         | { type: "PAUSE" }
         | { type: "PLAY" }
-        | { type: "TOGGLE_TRACK_PANEL" }
-        | { type: "TOGGLE_BUS_PANEL" }
         | { type: "CHANGE_PAN" }
         | { type: "TOGGLE_SOLO" }
         | { type: "TOGGLE_MUTE" },
@@ -188,18 +110,6 @@ export const mixerMachine = createMachine(
         currentMix.mainVolume = value;
         localStorage.setItem("currentMix", JSON.stringify(currentMix));
         return [assign({ mainVolume: value }), volume];
-      }),
-
-      changeBusVolume: pure((context, { busIndex, value, channel }) => {
-        const scaled = dBToPercent(scale(value));
-        const volume = () => {
-          channel.volume.value = scaled;
-        };
-        const tempBusVols = context.busVolumes;
-        tempBusVols[busIndex] = value;
-        currentMix.busVolumes[busIndex] = value;
-        localStorage.setItem("currentMix", JSON.stringify(currentMix));
-        return [assign({ busVolumes: tempBusVols }), volume];
       }),
 
       changeTrackVolume: pure((context, { value, trackIndex, channel }) => {
@@ -257,36 +167,6 @@ export const mixerMachine = createMachine(
           JSON.stringify([...currentTracks])
         );
         return [assign({ solo: tempSolos }), soloChannel];
-      }),
-
-      setBusFx: assign((context, { value, busIndex, fxIndex }) => {
-        context.currentBusFx = {
-          ...context.currentBusFx,
-          [`bus${busIndex + 1}fx${fxIndex + 1}`]: value,
-        };
-        localStorage.setItem(
-          "currentMix",
-          JSON.stringify({
-            ...currentMix,
-            currentBusFx: {
-              ...context.currentBusFx,
-              [`bus${busIndex + 1}fx${fxIndex + 1}`]: value,
-            },
-          })
-        );
-      }),
-
-      toggleBusPanel: pure((context, { busIndex }) => {
-        const tempBusPanelsOpen = context.busPanelActive;
-        tempBusPanelsOpen[busIndex] = !tempBusPanelsOpen[busIndex];
-        localStorage.setItem(
-          "currentMix",
-          JSON.stringify({
-            ...currentMix,
-            busPanelActive: tempBusPanelsOpen,
-          })
-        );
-        return [assign({ busPanelActive: tempBusPanelsOpen })];
       }),
     },
   }

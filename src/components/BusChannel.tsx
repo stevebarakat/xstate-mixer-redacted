@@ -1,26 +1,19 @@
 import { useState } from "react";
-import BusFxMenu from "./BusFxMenu";
 import type { Gain } from "tone";
-import ChannelLabel from "../ChannelLabel";
-import { dBToPercent, scale } from "../../utils/scale";
-import VuMeter from "../VuMeter";
-import useVuMeter from "../../hooks/useVuMeter";
+import ChannelLabel from "./ChannelLabel";
+import VuMeter from "./VuMeter";
+import useVuMeter from "../hooks/useVuMeter";
 
 type Props = {
   busChannels: Gain[];
   busIndex: number;
-  disabled: {
-    panel1: boolean;
-    panel2: boolean;
-  };
 };
 
-function BusChannel({ busChannels, busIndex, disabled }: Props) {
+function BusChannel({ busChannels, busIndex }: Props) {
   const [busVolumes, setBusVolumes] = useState([-32, -32]);
   const meterVal = useVuMeter([busChannels[busIndex]]);
   return (
     <div>
-      <BusFxMenu busIndex={busIndex} disabled={disabled} />
       <div className="channel">
         <div className="flex-y fader-wrap">
           <div className="window">{`${busVolumes[busIndex].toFixed(

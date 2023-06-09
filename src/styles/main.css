@@ -61,7 +61,7 @@
 }
 
 .channels > div:nth-last-of-type(1),
-.channels > div:nth-last-of-type(2),
+/* .channels > div:nth-last-of-type(2), */
 .channels > div:nth-last-of-type(3) {
   display: flex;
   flex-direction: column;
