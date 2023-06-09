@@ -40,8 +40,8 @@ function BusChannel({ busChannels, busIndex, disabled }: Props) {
               value={busVolumes[busIndex]}
               onChange={(e: React.FormEvent<HTMLInputElement>): void => {
                 const value = parseFloat(e.currentTarget.value);
-                const scaled = dBToPercent(scale(value));
-                busChannels[busIndex].gain.value = scaled;
+                // const scaled = dBToPercent(scale(value));
+                busChannels[busIndex].gain.value = value;
                 busVolumes[busIndex] = value;
                 setBusVolumes([...busVolumes]);
               }}
