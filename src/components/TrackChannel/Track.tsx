@@ -26,6 +26,8 @@ type Fx = {
   2: JSX.Element;
 };
 
+type FxTypes = FeedbackDelay | Reverb | PitchShift | Gain;
+
 function TrackChannel({ track, trackIndex, channels }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
@@ -151,8 +153,6 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
 
   const [active, setActive] = useState([true, true, true, true]);
 
-  const props = useRef<React.MutableRefObject<string[]> | undefined>();
-
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
     const currentTracksString = localStorage.getItem("currentTracks");
     const currentTracks =
@@ -169,29 +169,25 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     console.log("id", id);
     switch (e.currentTarget.value) {
       case "nofx":
-        fx.current[`${id + 1}`] = <TrackSignal gain={gain.current} />;
+        fx.current[`${id + 1}` as unknown as keyof Fx] = (
+          <TrackSignal gain={gain.current} />
+        );
         break;
 
       case "reverb":
-        // channel.disconnect();
-
-        fx.current[`${id + 1}`] = (
+        fx.current[`${id + 1}` as unknown as keyof Fx] = (
           <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
         );
         break;
 
       case "delay":
-        // channel.disconnect();
-
-        fx.current[`${id + 1}`] = (
+        fx.current[`${id + 1}` as unknown as keyof Fx] = (
           <TrackDelay delay={delay.current} trackIndex={trackIndex} />
         );
         break;
 
       case "pitchShift":
-        // channel.disconnect();
-
-        fx.current[`${id + 1}`] = (
+        fx.current[`${id + 1}` as unknown as keyof Fx] = (
           <TrackPitchShifter
             pitchShift={pitchShift.current}
             trackIndex={trackIndex}
@@ -203,20 +199,15 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
         break;
     }
 
-    const ebu = Object.values(fx.current).map((fx) => fx.props);
-    console.log("ebu", ebu);
-    const abu = ebu.map((item) => Object.values(item)[0]);
-    console.log("abu", abu);
+    const fxProps = Object.values(fx.current).map((fx) => fx.props);
+    console.log("fxProps", fxProps);
+    const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
+    console.log("fxNodes", fxNodes);
     channel.disconnect();
-    abu.forEach((item) => {
-      console.log("item", item);
-      channel.chain(item);
+    fxNodes.forEach((node: FxTypes) => {
+      console.log("node", node);
+      channel.chain(node);
     });
-    // props.current = fx.current[`${id + 1}`]?.props;
-    // console.log("Object.values(props)[0]", Object.values(props.current)[0]);
-    // channel.disconnect();
-    // channel.chain(Object.values(props.current)[0]);
-    // console.log("fx.current[id].props", fx.current[`${id + 1}`].props);
   }
 
   const disabled = currentTracks[trackIndex].fxName.every(
