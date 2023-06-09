@@ -223,15 +223,10 @@ function TrackChannel({ track, trackIndex, channels }: Props) {
     (item: string) => item === "nofx"
   );
 
-  console.log("typeof fx.current", Object.values(fx.current["1"].props));
-
-  props.current = Object.values(fx.current["1"].props);
-  // console.log("props.current[0] === Gain", props.current[0]);
-
-  console.log("fx.current[1] === Gain", props.current[0] === typeof Gain);
+  const trackPanelsEmpty = ct.fxName.every((name: string) => name === "nofx");
 
   function getTrackPanels() {
-    if (!fx.current) {
+    if (trackPanelsEmpty) {
       return null;
     } else {
       return (
