@@ -12,8 +12,6 @@ type Fx = {
   2: JSX.Element;
 };
 
-type FxTypes = FeedbackDelay | Reverb | PitchShift | Gain;
-
 type Props = {
   trackIndex: number;
   fx: React.MutableRefObject<Fx>;

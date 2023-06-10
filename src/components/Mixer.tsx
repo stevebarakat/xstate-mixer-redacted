@@ -31,7 +31,6 @@ export const Mixer = ({ song }: Props) => {
 
   const [busChannels] = useBusFx();
 
-  console.log("busChannels", busChannels);
   function init() {
     const volume = currentMix.mainVolume;
     const scaled = dbToPercent(log(volume));
