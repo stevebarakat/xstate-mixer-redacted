@@ -12,7 +12,7 @@ type Props = {
   active: boolean[];
   setActive: Dispatch<SetStateAction<boolean[]>>;
 };
-function useTrackPanels({ fx, trackIndex, active, setActive }: Props) {
+function TrackPanels({ fx, trackIndex, active, setActive }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
   const ct = currentTracks[trackIndex];
@@ -34,7 +34,7 @@ function useTrackPanels({ fx, trackIndex, active, setActive }: Props) {
       );
     }
   }
-  return { getTrackPanels };
+  return getTrackPanels();
 }
 
-export default useTrackPanels;
+export default TrackPanels;

@@ -4,7 +4,7 @@ import ChannelLabel from "../ChannelLabel";
 import FxSelect from "./FxSelect";
 import useSetTrackFx from "../../hooks/useSetTrackFx";
 import useTrackFx from "../../hooks/useTrackFx";
-import useTrackPanels from "../../hooks/useTrackPanels";
+import TrackPanels from "../../hooks/TrackPanels";
 import type { SourceTrack } from "../../types/global";
 import type { Gain, Channel } from "tone";
 
@@ -34,13 +34,6 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
 
   const [active, setActive] = useState([true, true, true, true]);
 
-  const { getTrackPanels } = useTrackPanels({
-    fx,
-    trackIndex,
-    active,
-    setActive,
-  });
-
   return (
     <div className="flex-y gap2">
       <FxSelect
@@ -50,7 +43,16 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
         busChannels={busChannels}
         saveTrackFx={saveTrackFx}
       />
-      <>{active[trackIndex] && getTrackPanels()}</>
+      <>
+        {active[trackIndex] && (
+          <TrackPanels
+            fx={fx}
+            trackIndex={trackIndex}
+            active={active}
+            setActive={setActive}
+          />
+        )}
+      </>
       <div className="channel">
         <Sends
           trackIndex={trackIndex}
