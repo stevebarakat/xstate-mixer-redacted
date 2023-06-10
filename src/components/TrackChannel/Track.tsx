@@ -4,7 +4,7 @@ import ChannelLabel from "../ChannelLabel";
 import FxSelect from "./FxSelect";
 import useSetTrackFx from "../../hooks/useSetTrackFx";
 import useTrackFx from "../../hooks/useTrackFx";
-import TrackPanels from "../../hooks/TrackPanels";
+import TrackPanels from "./TrackPanels";
 import type { SourceTrack } from "../../types/global";
 import type { Gain, Channel } from "tone";
 

@@ -1,4 +1,4 @@
-import { TrackPanel } from "../components/TrackChannel";
+import { TrackPanel } from ".";
 import type { Dispatch, SetStateAction } from "react";
 
 type Fx = {
