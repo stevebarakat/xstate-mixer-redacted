@@ -8,7 +8,7 @@ type Props = {
   trackIndex: number;
 };
 
-export default function TrackPitchShifter({ pitchShift, trackIndex }: Props) {
+export default function PitchShifter({ pitchShift, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 

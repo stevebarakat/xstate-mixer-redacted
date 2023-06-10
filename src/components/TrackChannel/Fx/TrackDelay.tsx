@@ -8,7 +8,7 @@ type Props = {
   trackIndex: number;
 };
 
-export default function TrackDelay({ delay, trackIndex }: Props) {
+export default function Delay({ delay, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 

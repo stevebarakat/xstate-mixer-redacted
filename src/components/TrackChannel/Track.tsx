@@ -1,20 +1,12 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Reverb, FeedbackDelay, PitchShift, Gain } from "tone";
-import TrackPanel from "./TrackPanel";
-import TrackReverber from "./Fx/TrackReverber";
-import TrackSignal from "./Fx/TrackSignal";
-import TrackDelay from "./Fx/TrackDelay";
-import TrackPitchShifter from "./Fx/TrackPitchShifter";
+import { Reverber, PitchShifter, Delay, Signal } from "./Fx";
 import ChannelButton from "../Buttons/ChannelButton";
-import Pan from "./Pan";
-import SoloMute from "./SoloMute";
-import Sends from "./Sends";
-import Fader from "./Fader";
+import { Pan, SoloMute, Sends, Fader, TrackPanel } from "./";
 import useTrackFx from "../../hooks/useTrackFx";
 import ChannelLabel from "../ChannelLabel";
 import type { SourceTrack } from "../../types/global";
 import type { Channel } from "tone";
-import { array } from "../../utils";
 
 type Props = {
   track: SourceTrack;
@@ -31,7 +23,7 @@ type Fx = {
 type FxTypes = FeedbackDelay | Reverb | PitchShift | Gain;
 
 function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
-  const { fx, reverb, delay, pitchShift } = useTrackFx({
+  const { fx, reverb, delay, pitchShift, gain } = useTrackFx({
     channels,
     trackIndex,
   });
@@ -66,25 +58,25 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
     switch (e.currentTarget.value) {
       case "nofx":
         fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <TrackSignal gain={gain.current} />
+          <Signal gain={gain.current} />
         );
         break;
 
       case "reverb":
         fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <TrackReverber reverb={reverb.current} trackIndex={trackIndex} />
+          <Reverber reverb={reverb.current} trackIndex={trackIndex} />
         );
         break;
 
       case "delay":
         fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <TrackDelay delay={delay.current} trackIndex={trackIndex} />
+          <Delay delay={delay.current} trackIndex={trackIndex} />
         );
         break;
 
       case "pitchShift":
         fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <TrackPitchShifter
+          <PitchShifter
             pitchShift={pitchShift.current}
             trackIndex={trackIndex}
           />
@@ -139,7 +131,7 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
         {disabled ? "No" : active[trackIndex] ? "Close" : "Open"}
         FX
       </ChannelButton>
-      {array(2).map((_, fxIndex) => (
+      {busChannels.map((_, fxIndex) => (
         <select
           key={fxIndex}
           id={`track${trackIndex}fx${fxIndex}`}

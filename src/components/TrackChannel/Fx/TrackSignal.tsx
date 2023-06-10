@@ -4,7 +4,7 @@ type Props = {
   gain: Gain;
 };
 
-export default function TrackSignal({ gain }: Props) {
+export default function Signal({ gain }: Props) {
   gain;
 
   return null;

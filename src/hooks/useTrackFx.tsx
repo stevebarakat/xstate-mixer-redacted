@@ -135,7 +135,7 @@ function useTrackFx({ channels, trackIndex }: Props) {
     })()
   );
 
-  return { fx, reverb, delay, pitchShift };
+  return { fx, reverb, delay, pitchShift, gain };
 }
 
 export default useTrackFx;

@@ -8,7 +8,7 @@ type Props = {
   trackIndex: number;
 };
 
-export default function TrackReverber({ reverb, trackIndex }: Props) {
+export default function Reverber({ reverb, trackIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
