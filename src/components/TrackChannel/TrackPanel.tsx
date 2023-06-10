@@ -1,7 +1,6 @@
 import { ReactNode, useState } from "react";
 import CloseButton from "../Buttons/CloseButton";
 import { Rnd as TrackFxPanel } from "react-rnd";
-import { TrackSettings } from "../../types/global";
 
 type Props = {
   children: ReactNode;

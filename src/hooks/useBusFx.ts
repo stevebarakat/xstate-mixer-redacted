@@ -3,7 +3,7 @@ import { Destination, Gain, ScaleExp } from "tone";
 
 function useBusFx() {
   const scaleExp = useRef<ScaleExp | null>(null);
-  const busChannels = useRef<Gain[] | undefined[]>([undefined, undefined]);
+  const busChannels = useRef<BusChannel[]>([null, null]);
 
   useEffect(() => {
     scaleExp.current = new ScaleExp(0, 1, 0.5);
@@ -19,7 +19,7 @@ function useBusFx() {
     return () => {
       scaleExp.current?.dispose();
       busChannels.current.forEach((busChannel) => busChannel?.dispose());
-      busChannels.current = [undefined, undefined];
+      busChannels.current = [null, null];
     };
   }, []);
 

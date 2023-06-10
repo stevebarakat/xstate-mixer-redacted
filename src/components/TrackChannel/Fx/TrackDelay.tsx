@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Destination } from "tone";
 import { powerIcon } from "../../../assets/icons";
 import type { FeedbackDelay } from "tone";
 
@@ -42,7 +41,7 @@ export default function Delay({ delay, trackIndex }: Props) {
               if (checked) {
                 delay.disconnect();
               } else {
-                delay.connect(Destination);
+                delay.toDestination();
               }
               currentTracks[trackIndex].delaysBypass = checked;
               localStorage.setItem(

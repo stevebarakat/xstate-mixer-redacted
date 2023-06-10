@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { Destination } from "tone/build/esm/core/context/Destination";
 import type { Channel } from "tone";
 import { dbToPercent, log } from "../../utils/scale";
 import VuMeter from "../VuMeter";
@@ -7,7 +6,7 @@ import useVuMeter from "../../hooks/useVuMeter";
 
 type Props = {
   trackIndex: number;
-  channel: Channel | Destination;
+  channel: Channel;
 };
 
 function Fader({ trackIndex, channel }: Props) {

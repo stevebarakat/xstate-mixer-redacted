@@ -5,7 +5,7 @@ type Props = {
   trackIndex: number;
   active: boolean[];
   setActive: (arg: boolean[]) => void;
-  busChannels: Gain[];
+  busChannels: Gain[] | null[];
   saveTrackFx: React.ChangeEventHandler<HTMLSelectElement>;
 };
 

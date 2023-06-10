@@ -9,7 +9,6 @@ import {
 import { dbToPercent, log } from "../utils/scale";
 import { getSong } from "../utils/getSong";
 import { roxanne } from "../assets/songs";
-import type { TrackSettings } from "../types/global";
 
 const actx = getAudioContext();
 const [song, currentMix, currentTracks] = getSong(roxanne);
@@ -61,16 +60,16 @@ export const mixerMachine = createMachine(
     },
     schema: {
       events: {} as
-        | { type: "RESET" }
+        | { type: "LOADED" }
+        | { type: "PLAY" }
+        | { type: "PAUSE" }
         | { type: "REWIND" }
         | { type: "FF" }
-        | { type: "CHANGE_MAIN_VOLUME" }
-        | { type: "LOADED" }
-        | { type: "PAUSE" }
-        | { type: "PLAY" }
-        | { type: "CHANGE_PAN" }
+        | { type: "RESET" }
         | { type: "TOGGLE_SOLO" }
-        | { type: "TOGGLE_MUTE" },
+        | { type: "TOGGLE_MUTE" }
+        | { type: "CHANGE_PAN" }
+        | { type: "CHANGE_MAIN_VOLUME" },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,

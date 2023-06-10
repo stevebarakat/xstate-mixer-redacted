@@ -15,9 +15,9 @@ type Fx = {
 type Props = {
   trackIndex: number;
   fx: React.MutableRefObject<Fx>;
-  reverb: React.MutableRefObject<Reverb>;
-  delay: React.MutableRefObject<FeedbackDelay>;
-  pitchShift: React.MutableRefObject<PitchShift>;
+  reverb: React.MutableRefObject<Reverb | null>;
+  delay: React.MutableRefObject<FeedbackDelay | null>;
+  pitchShift: React.MutableRefObject<PitchShift | null>;
   gain: React.MutableRefObject<Gain>;
 };
 

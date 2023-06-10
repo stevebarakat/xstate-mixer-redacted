@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Destination } from "tone";
 import { powerIcon } from "../../../assets/icons";
 import type { PitchShift } from "tone";
 
@@ -38,7 +37,7 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
               if (checked) {
                 pitchShift.disconnect();
               } else {
-                pitchShift.connect(Destination);
+                pitchShift.toDestination();
               }
               currentTracks[trackIndex].pitchShiftsBypass = checked;
               localStorage.setItem(

@@ -9,11 +9,10 @@ import TrackChannel from "./TrackChannel/Track";
 import Main from "./Main";
 import BusChannel from "./BusChannel";
 import { MixerMachineContext } from "../App";
-import type { Song, TrackSettings } from "../types/global";
 import { log, dbToPercent } from "../utils/scale";
 
 type Props = {
-  song: Song;
+  song: SourceSong;
 };
 
 export const Mixer = ({ song }: Props) => {
@@ -80,7 +79,7 @@ export const Mixer = ({ song }: Props) => {
               />
             ))}
           </div>
-          {busChannels.current.map((_: Gain | undefined, i: number) => (
+          {busChannels.current.map((_: Gain | null, i: number) => (
             <BusChannel
               key={i}
               busChannels={busChannels.current}

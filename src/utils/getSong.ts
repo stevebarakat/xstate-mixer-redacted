@@ -8,7 +8,7 @@ export const defaultCurrentMix = {
 export function getSong(defaultSong: Song) {
   const defaultSongString = JSON.stringify(defaultSong);
   const songString = localStorage.getItem("song");
-  const parsedSong = songString && JSON.parse(songString);
+  const savedSong = songString && JSON.parse(songString);
 
   const defaultCurrentTracks = defaultSong.tracks.map((track) => ({
     name: track.name,
@@ -17,27 +17,25 @@ export function getSong(defaultSong: Song) {
     pan: 0,
     mute: false,
     solo: false,
-    fxName: ["nofx", "nofx"],
-    fxNode: [null, null],
+    fxName: ["nofx1", "nofx2"],
     sends: [false, false],
     trackPanelPosition: { x: 0, y: 0 },
     trackPanelSize: { width: "325px", height: "auto" },
-    reverbsBypass: false,
-    reverbsMix: 0.5,
-    reverbsPreDelay: 0.5,
-    reverbsDecay: 0.5,
-    delaysBypass: false,
-    delaysMix: 0.5,
-    delaysTime: 0.5,
-    delaysFeedback: 0.5,
-    pitchShiftsBypass: false,
-    pitchShiftsMix: 0.5,
-    pitchShiftsPitch: 0,
+    reverbsMix: [0.5, 0.5],
+    reverbsPreDelay: [0.5, 0.5],
+    reverbsDecay: [0.5, 0.5],
+    reverbsBypass: [false, false],
+    delaysMix: [0.5, 0.5],
+    delaysTime: [1, 1],
+    delaysFeedback: [0.5, 0.5],
+    pitchShiftsBypass: [false, false],
+    pitchShiftsMix: [0.5, 0.5],
+    pitchShiftsPitch: [5, 5],
   }));
 
   let song;
-  if (parsedSong) {
-    song = parsedSong;
+  if (savedSong) {
+    song = savedSong;
   } else {
     localStorage.setItem("song", defaultSongString);
     song = defaultSong;

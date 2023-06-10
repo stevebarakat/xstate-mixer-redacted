@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Destination } from "tone";
 import { powerIcon } from "../../../assets/icons";
 import type { Reverb } from "tone";
 
@@ -40,7 +39,7 @@ export default function Reverber({ reverb, trackIndex }: Props) {
               if (isBypassed) {
                 reverb.disconnect();
               } else {
-                reverb.connect(Destination);
+                reverb.toDestination();
               }
               currentTracks[trackIndex].reverbsBypass = checked;
               localStorage.setItem(

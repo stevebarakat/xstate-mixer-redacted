@@ -5,14 +5,13 @@ import FxSelect from "./FxSelect";
 import useSetTrackFx from "../../hooks/useSetTrackFx";
 import useTrackFx from "../../hooks/useTrackFx";
 import TrackPanels from "./TrackPanels";
-import type { SourceTrack } from "../../types/global";
-import type { Gain, Channel } from "tone";
+import type { Channel } from "tone";
 
 type Props = {
   track: SourceTrack;
   trackIndex: number;
   channels: Channel[];
-  busChannels: Gain[];
+  busChannels: BusChannel[];
 };
 
 function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {

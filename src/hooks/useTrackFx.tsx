@@ -20,27 +20,10 @@ function useTrackFx({ channels, trackIndex }: Props) {
   const ct = currentTracks[trackIndex];
   const channel = channels[trackIndex];
 
-  const gain = useRef<Gain>(new Gain().toDestination());
-  const reverb = useRef<Reverb>(
-    new Reverb({
-      wet: ct.reverbsMix,
-      preDelay: ct.reverbsPreDelay,
-      decay: ct.reverbsDecay,
-    }).toDestination()
-  );
-  const delay = useRef<FeedbackDelay>(
-    new FeedbackDelay({
-      wet: ct.delaysMix,
-      delayTime: ct.delaysTime,
-      feedback: ct.delaysFeedback,
-    }).toDestination()
-  );
-  const pitchShift = useRef<PitchShift>(
-    new PitchShift({
-      wet: ct.pitchShiftsMix,
-      pitch: ct.pitchShiftsPitch,
-    }).toDestination()
-  );
+  const gain = useRef<Gain>(new Gain(0).toDestination());
+  const reverb = useRef<Reverb | null>(null);
+  const delay = useRef<FeedbackDelay | null>(null);
+  const pitchShift = useRef<PitchShift | null>(null);
 
   const fx = useRef<{ 1: JSX.Element; 2: JSX.Element }>(
     (() => {
@@ -65,6 +48,11 @@ function useTrackFx({ channels, trackIndex }: Props) {
                 });
             break;
           case "reverb":
+            reverb.current = new Reverb({
+              wet: ct.reverbsMix[fxIndex],
+              preDelay: ct.reverbsPreDelay[fxIndex],
+              decay: ct.reverbsDecay[fxIndex],
+            }).toDestination();
             fxIndex === 0
               ? (fxComponents = {
                   ...fxComponents,
@@ -86,6 +74,11 @@ function useTrackFx({ channels, trackIndex }: Props) {
                 });
             break;
           case "delay":
+            delay.current = new FeedbackDelay({
+              wet: ct.delaysMix[fxIndex],
+              delayTime: ct.delaysTime[fxIndex],
+              feedback: ct.delaysFeedback[fxIndex],
+            }).toDestination();
             fxIndex === 0
               ? (fxComponents = {
                   ...fxComponents,
@@ -101,6 +94,10 @@ function useTrackFx({ channels, trackIndex }: Props) {
                 });
             break;
           case "pitchShift":
+            pitchShift.current = new PitchShift({
+              wet: ct.pitchShiftsMix[fxIndex],
+              pitch: ct.pitchShiftsPitch[fxIndex],
+            }).toDestination();
             fxIndex === 0
               ? (fxComponents = {
                   ...fxComponents,

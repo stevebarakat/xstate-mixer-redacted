@@ -6,7 +6,7 @@ import useVuMeter from "../hooks/useVuMeter";
 import { dbToPercent } from "../utils/scale";
 
 type Props = {
-  busChannels: Gain[];
+  busChannels: Gain[] | null[];
   busIndex: number;
 };
 

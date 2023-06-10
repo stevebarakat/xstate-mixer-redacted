@@ -1,11 +1,10 @@
 import { Fragment, useState } from "react";
-import { Destination } from "tone";
 import type { Channel, Gain } from "tone";
 
 type Props = {
   trackIndex: number;
   channels: Channel[];
-  busChannels: Gain[];
+  busChannels: Gain[] | null[];
 };
 
 function Sends({ trackIndex, channels, busChannels }: Props) {
@@ -30,7 +29,7 @@ function Sends({ trackIndex, channels, busChannels }: Props) {
                 setSends([...sends]);
               } else {
                 channels[trackIndex].disconnect();
-                channels[trackIndex].connect(Destination);
+                channels[trackIndex].toDestination();
                 sends[busIndex] = false;
                 setSends([...sends]);
               }
