@@ -2,6 +2,7 @@ import type { Song } from "../types/global";
 
 export const defaultCurrentMix = {
   mainVolume: -32,
+  busVolumes: [0.61, 0.61],
 };
 
 export function getSong(defaultSong: Song) {
@@ -19,7 +20,6 @@ export function getSong(defaultSong: Song) {
     fxName: ["nofx", "nofx"],
     fxNode: [null, null],
     sends: [false, false],
-    trackPanelActive: true,
     trackPanelPosition: { x: 0, y: 0 },
     trackPanelSize: { width: "325px", height: "auto" },
     reverbsBypass: false,
