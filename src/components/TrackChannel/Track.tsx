@@ -10,6 +10,7 @@ import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Sends from "./Sends";
 import Fader from "./Fader";
+import useTrackFx from "../../hooks/useTrackFx";
 import ChannelLabel from "../ChannelLabel";
 import type { SourceTrack } from "../../types/global";
 import type { Channel } from "tone";
@@ -30,127 +31,15 @@ type Fx = {
 type FxTypes = FeedbackDelay | Reverb | PitchShift | Gain;
 
 function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
+  const { fx, reverb, delay, pitchShift } = useTrackFx({
+    channels,
+    trackIndex,
+  });
+
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
   const ct = currentTracks[trackIndex];
   const channel = channels[trackIndex];
-
-  const gain = useRef<Gain>(new Gain().toDestination());
-  const reverb = useRef<Reverb>(
-    new Reverb({
-      wet: ct.reverbsMix,
-      preDelay: ct.reverbsPreDelay,
-      decay: ct.reverbsDecay,
-    }).toDestination()
-  );
-  const delay = useRef<FeedbackDelay>(
-    new FeedbackDelay({
-      wet: ct.delaysMix,
-      delayTime: ct.delaysTime,
-      feedback: ct.delaysFeedback,
-    }).toDestination()
-  );
-  const pitchShift = useRef<PitchShift>(
-    new PitchShift({
-      wet: ct.pitchShiftsMix,
-      pitch: ct.pitchShiftsPitch,
-    }).toDestination()
-  );
-
-  const fx = useRef<Fx>(
-    (() => {
-      const currentFx = currentTracks[trackIndex]?.fxName ?? null;
-      console.log("currentFx", currentFx);
-
-      let fxComponents = {
-        1: <TrackSignal gain={gain.current} />,
-        2: <TrackSignal gain={gain.current} />,
-      };
-      array(2).map((_, fxIndex) => {
-        switch (currentFx[fxIndex]) {
-          case "nofx":
-            fxIndex === 0
-              ? (fxComponents = {
-                  ...fxComponents,
-                  1: <TrackSignal gain={gain.current} />,
-                })
-              : (fxComponents = {
-                  ...fxComponents,
-                  2: <TrackSignal gain={gain.current} />,
-                });
-            break;
-          case "reverb":
-            fxIndex === 0
-              ? (fxComponents = {
-                  ...fxComponents,
-                  1: (
-                    <TrackReverber
-                      reverb={reverb.current}
-                      trackIndex={trackIndex}
-                    />
-                  ),
-                })
-              : (fxComponents = {
-                  ...fxComponents,
-                  2: (
-                    <TrackReverber
-                      reverb={reverb.current}
-                      trackIndex={trackIndex}
-                    />
-                  ),
-                });
-            break;
-          case "delay":
-            fxIndex === 0
-              ? (fxComponents = {
-                  ...fxComponents,
-                  1: (
-                    <TrackDelay delay={delay.current} trackIndex={trackIndex} />
-                  ),
-                })
-              : (fxComponents = {
-                  ...fxComponents,
-                  2: (
-                    <TrackDelay delay={delay.current} trackIndex={trackIndex} />
-                  ),
-                });
-            break;
-          case "pitchShift":
-            fxIndex === 0
-              ? (fxComponents = {
-                  ...fxComponents,
-                  1: (
-                    <TrackPitchShifter
-                      pitchShift={pitchShift.current}
-                      trackIndex={trackIndex}
-                    />
-                  ),
-                })
-              : (fxComponents = {
-                  ...fxComponents,
-                  2: (
-                    <TrackPitchShifter
-                      pitchShift={pitchShift.current}
-                      trackIndex={trackIndex}
-                    />
-                  ),
-                });
-            break;
-          default:
-            break;
-        }
-      });
-      const fxProps = Object.values(fxComponents).map((fx) => fx.props);
-      const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
-      channel.disconnect();
-      fxNodes.forEach((node: FxTypes) => {
-        channel.chain(node);
-      });
-      return fxComponents;
-    })()
-  );
-
-  console.log("fx.current", fx.current);
 
   const [trackFx, setTrackFx] = useState(() => {
     return (

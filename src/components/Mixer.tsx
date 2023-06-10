@@ -10,7 +10,7 @@ import Main from "./Main";
 import BusChannel from "./BusChannel";
 import { MixerMachineContext } from "../App";
 import type { Song, TrackSettings } from "../types/global";
-import { scale, dBToPercent } from "../utils/scale";
+import { log, dbToPercent } from "../utils/scale";
 
 type Props = {
   song: Song;
@@ -34,12 +34,12 @@ export const Mixer = ({ song }: Props) => {
   console.log("busChannels", busChannels);
   function init() {
     const volume = currentMix.mainVolume;
-    const scaled = dBToPercent(scale(volume));
+    const scaled = dbToPercent(log(volume));
     Destination.volume.value = scaled;
 
     currentTracks.forEach((currentTrack: TrackSettings, trackIndex: number) => {
       const value = currentTrack.volume;
-      const scaled = dBToPercent(scale(value));
+      const scaled = dbToPercent(log(value));
 
       if (channels[trackIndex]) {
         channels[trackIndex].set({ pan: currentTrack.pan });
@@ -54,7 +54,7 @@ export const Mixer = ({ song }: Props) => {
         if (send === true) {
           channels.forEach((_, i) => {
             if (!busChannels.current[i]) return;
-            channels[trackIndex].connect(busChannels.current[i]);
+            channels[trackIndex].connect(busChannels.current[i]!);
           });
         }
       });
@@ -81,7 +81,7 @@ export const Mixer = ({ song }: Props) => {
               />
             ))}
           </div>
-          {busChannels.current.map((_: Gain, i: number) => (
+          {busChannels.current.map((_: Gain | undefined, i: number) => (
             <BusChannel
               key={i}
               busChannels={busChannels.current}

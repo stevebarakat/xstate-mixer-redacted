@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Destination } from "tone/build/esm/core/context/Destination";
 import type { Channel } from "tone";
-import { dBToPercent, scale } from "../../utils/scale";
+import { dbToPercent, log } from "../../utils/scale";
 import VuMeter from "../VuMeter";
 import useVuMeter from "../../hooks/useVuMeter";
 
@@ -37,7 +37,7 @@ function Fader({ trackIndex, channel }: Props) {
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const value = parseFloat(e.currentTarget.value);
             setVolume(value);
-            const scaled = dBToPercent(scale(value));
+            const scaled = dbToPercent(log(value));
             channel.volume.value = scaled;
             currentTracks[trackIndex].volume = value;
             localStorage.setItem(

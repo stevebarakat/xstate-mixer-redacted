@@ -6,7 +6,7 @@ import {
   Destination,
   Transport as t,
 } from "tone";
-import { dBToPercent, scale } from "../utils/scale";
+import { dbToPercent, log } from "../utils/scale";
 import { getSong } from "../utils/getSong";
 import { roxanne } from "../assets/songs";
 import type { TrackSettings } from "../types/global";
@@ -103,7 +103,7 @@ export const mixerMachine = createMachine(
         (t.seconds = t.seconds > 10 + song.start ? t.seconds - 10 : song.start),
 
       changeMainVolume: pure((_, { value }) => {
-        const scaled = dBToPercent(scale(value));
+        const scaled = dbToPercent(log(value));
         const volume = () => {
           Destination.volume.value = scaled;
         };
@@ -113,7 +113,7 @@ export const mixerMachine = createMachine(
       }),
 
       changeTrackVolume: pure((context, { value, trackIndex, channel }) => {
-        const scaled = dBToPercent(scale(parseFloat(value)));
+        const scaled = dbToPercent(log(parseFloat(value)));
         const channelVolume = () => {
           channel.volume.value = scaled;
         };

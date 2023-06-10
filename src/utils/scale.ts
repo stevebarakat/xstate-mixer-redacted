@@ -2,19 +2,25 @@
 // e.g. App.util.scale(-96, -192, 0, 0, 100) to convert
 // -96 from dB (-192 - 0) to percentage (0 - 100)
 
-export const transpose = function (
+export const scale = function (
   val: number,
-  f0: number,
-  f1: number,
-  t0: number,
-  t1: number
+  from1: number,
+  from2: number,
+  to1: number,
+  to2: number
 ) {
-  return ((val - f0) * (t1 - t0)) / (f1 - f0) + t0;
+  return ((val - from1) * (to2 - to1)) / (from2 - from1) + to1;
 };
 
-export const scale = (value: number) => Math.log(value + 101) / Math.log(113);
+// make scale logarithmic
+export const log = (value: number) => Math.log(value + 101) / Math.log(113);
 
-// convert dBFS to a percentage
-export const dBToPercent = function (dB: number) {
-  return transpose(dB, 0, 1, -100, 12);
+// convert decibels to a percentage
+export const dbToPercent = function (dB: number) {
+  return scale(dB, 0, 1, -100, 12);
+};
+
+// convert normal range to decibels
+export const normalRangeToDb = function (dB: number) {
+  return scale(dB, -192, 0, 0, 1);
 };

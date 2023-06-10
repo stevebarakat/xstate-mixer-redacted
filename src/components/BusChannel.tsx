@@ -3,6 +3,7 @@ import type { Gain } from "tone";
 import ChannelLabel from "./ChannelLabel";
 import VuMeter from "./VuMeter";
 import useVuMeter from "../hooks/useVuMeter";
+import { normalRangeToDb, log, dbToPercent } from "../utils/scale";
 
 type Props = {
   busChannels: Gain[];
@@ -30,12 +31,12 @@ function BusChannel({ busChannels, busIndex }: Props) {
               min={0}
               max={1}
               step={0.001}
-              value={busVolumes[busIndex]}
+              value={busChannels[busIndex].gain.value}
               onChange={(e: React.FormEvent<HTMLInputElement>): void => {
                 const value = parseFloat(e.currentTarget.value);
-                // const scaled = dBToPercent(scale(value));
+                // const scaled = dbToPercent(log(value));
                 busChannels[busIndex].gain.value = value;
-                busVolumes[busIndex] = value;
+                busVolumes[busIndex] = dbToPercent(value);
                 setBusVolumes([...busVolumes]);
               }}
             />
