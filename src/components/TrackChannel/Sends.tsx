@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Destination } from "tone";
 import type { Channel, Gain } from "tone";
 
@@ -18,7 +18,7 @@ function Sends({ trackIndex, channels, busChannels }: Props) {
   return (
     <div className="bus-btn">
       {busChannels.map((_, busIndex) => (
-        <>
+        <Fragment key={busIndex}>
           <input
             id={`bus${busIndex + 1}fx${trackIndex + 1}`}
             type="checkbox"
@@ -34,6 +34,9 @@ function Sends({ trackIndex, channels, busChannels }: Props) {
                 sends[busIndex] = false;
                 setSends([...sends]);
               }
+              const currentTrackString = localStorage.getItem("currentTracks");
+              const currentTracks =
+                currentTrackString && JSON.parse(currentTrackString);
               currentTracks[trackIndex].sends = [...sends];
               localStorage.setItem(
                 "currentTracks",
@@ -45,7 +48,7 @@ function Sends({ trackIndex, channels, busChannels }: Props) {
           <label htmlFor={`bus${busIndex + 1}fx${trackIndex + 1}`}>
             {busIndex + 1}
           </label>
-        </>
+        </Fragment>
       ))}
     </div>
   );

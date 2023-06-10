@@ -13,9 +13,7 @@ import type { TrackSettings } from "../types/global";
 
 const actx = getAudioContext();
 const [song, currentMix, currentTracks] = getSong(roxanne);
-const initialVolumes = currentTracks.map(
-  (currentTrack: TrackSettings) => currentTrack.volume
-);
+
 const initialPans = currentTracks.map(
   (currentTrack: TrackSettings) => currentTrack.pan
 );
@@ -34,7 +32,6 @@ export const mixerMachine = createMachine(
     tsTypes: {} as import("./mixerMachine.typegen").Typegen0,
     context: {
       mainVolume: currentMix.mainVolume,
-      volume: initialVolumes,
       pan: initialPans,
       solo: initialSolos,
       mute: initialMutes,
@@ -43,7 +40,6 @@ export const mixerMachine = createMachine(
       RESET: { actions: "reset", target: "stopped" },
       REWIND: { actions: "rewind" },
       FF: { actions: "fastForward" },
-      CHANGE_TRACK_VOLUME: { actions: "changeTrackVolume" },
       CHANGE_MAIN_VOLUME: { actions: "changeMainVolume" },
       CHANGE_PAN: { actions: "changePan" },
       TOGGLE_SOLO: { actions: "toggleSolo" },
@@ -68,7 +64,6 @@ export const mixerMachine = createMachine(
         | { type: "RESET" }
         | { type: "REWIND" }
         | { type: "FF" }
-        | { type: "CHANGE_TRACK_VOLUME" }
         | { type: "CHANGE_MAIN_VOLUME" }
         | { type: "LOADED" }
         | { type: "PAUSE" }
@@ -112,22 +107,10 @@ export const mixerMachine = createMachine(
         return [assign({ mainVolume: value }), volume];
       }),
 
-      changeTrackVolume: pure((context, { value, trackIndex, channel }) => {
-        const scaled = dbToPercent(log(parseFloat(value)));
-        const channelVolume = () => {
-          channel.volume.value = scaled;
-        };
-        const tempVols = context.volume;
-        tempVols[trackIndex] = parseFloat(value);
-        currentTracks[trackIndex].volume = value;
-        localStorage.setItem(
-          "currentTracks",
-          JSON.stringify([...currentTracks])
-        );
-        return [assign({ volume: tempVols }), channelVolume];
-      }),
-
       changePan: pure((context, { value, trackIndex, channel }) => {
+        const currentTracksString = localStorage.getItem("currentTracks");
+        const currentTracks =
+          currentTracksString && JSON.parse(currentTracksString);
         const channelPan = () => {
           channel.pan.value = value;
         };
@@ -142,6 +125,9 @@ export const mixerMachine = createMachine(
       }),
 
       toggleMute: pure((context, { trackIndex, checked, channel }) => {
+        const currentTracksString = localStorage.getItem("currentTracks");
+        const currentTracks =
+          currentTracksString && JSON.parse(currentTracksString);
         const muteChannel = () => {
           channel.mute = checked;
         };
@@ -156,6 +142,9 @@ export const mixerMachine = createMachine(
       }),
 
       toggleSolo: pure((context, { trackIndex, checked, channel }) => {
+        const currentTracksString = localStorage.getItem("currentTracks");
+        const currentTracks =
+          currentTracksString && JSON.parse(currentTracksString);
         const soloChannel = () => {
           channel.solo = checked;
         };

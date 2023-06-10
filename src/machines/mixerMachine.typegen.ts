@@ -15,7 +15,6 @@ export interface Typegen0 {
   eventsCausingActions: {
     changeMainVolume: "CHANGE_MAIN_VOLUME";
     changePan: "CHANGE_PAN";
-    changeTrackVolume: "CHANGE_TRACK_VOLUME";
     fastForward: "FF";
     pause: "PAUSE";
     play: "PLAY";

@@ -35,6 +35,9 @@ function Fader({ trackIndex, channel }: Props) {
           step={0.1}
           value={volume}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            const currentTracksString = localStorage.getItem("currentTracks");
+            const currentTracks =
+              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             setVolume(value);
             const scaled = dbToPercent(log(value));
