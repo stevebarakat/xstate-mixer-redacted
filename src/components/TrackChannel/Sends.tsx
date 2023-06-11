@@ -24,7 +24,7 @@ function Sends({ trackIndex, channels, busChannels }: Props) {
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               if (e.currentTarget.checked) {
                 channels[trackIndex].disconnect();
-                channels[trackIndex].connect(busChannels[0]);
+                channels[trackIndex].connect(busChannels[busIndex]);
                 sends[busIndex] = true;
                 setSends([...sends]);
               } else {
