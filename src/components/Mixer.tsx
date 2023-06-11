@@ -48,12 +48,15 @@ export const Mixer = ({ sourceSong }: Props) => {
 
   useEffect(() => {
     currentTracks.forEach((currentTrack: TrackSettings, trackIndex: number) => {
-      currentTrack.sends?.forEach((send) => {
-        if (send === true) {
-          channels.forEach((_, i) => {
-            if (!busChannels.current[i]) return;
-            channels[trackIndex].connect(busChannels.current[i]!);
-          });
+      currentTrack.sends?.forEach((send, busIndex) => {
+        if (
+          send === true &&
+          busChannels.current[busIndex] &&
+          channels[trackIndex]
+        ) {
+          console.log("ubu");
+          channels[trackIndex].disconnect();
+          channels[trackIndex].connect(busChannels.current[busIndex]!);
         }
       });
     });
