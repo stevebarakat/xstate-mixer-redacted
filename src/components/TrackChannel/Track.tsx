@@ -5,7 +5,6 @@ import FxSelect from "./FxSelect";
 import useSetTrackFx from "../../hooks/useSetTrackFx";
 import useTrackFx from "../../hooks/useTrackFx";
 import TrackPanels from "./TrackPanels";
-import type { Channel } from "tone";
 
 type Props = {
   track: SourceTrack;

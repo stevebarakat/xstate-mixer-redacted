@@ -1,10 +1,9 @@
 import { Fragment, useState } from "react";
-import type { Channel, Gain } from "tone";
 
 type Props = {
   trackIndex: number;
   channels: Channel[];
-  busChannels: Gain[] | null[];
+  busChannels: BusChannel[];
 };
 
 function Sends({ trackIndex, channels, busChannels }: Props) {

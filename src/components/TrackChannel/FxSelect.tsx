@@ -1,11 +1,10 @@
 import ChannelButton from "../Buttons/ChannelButton";
-import type { Gain } from "tone";
 
 type Props = {
   trackIndex: number;
   active: boolean[];
   setActive: (arg: boolean[]) => void;
-  busChannels: Gain[] | null[];
+  busChannels: BusChannel[];
   saveTrackFx: React.ChangeEventHandler<HTMLSelectElement>;
 };
 

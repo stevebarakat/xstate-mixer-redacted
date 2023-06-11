@@ -12,10 +12,10 @@ import { MixerMachineContext } from "../App";
 import { log, dbToPercent } from "../utils/scale";
 
 type Props = {
-  song: SourceSong;
+  sourceSong: SourceSong;
 };
 
-export const Mixer = ({ song }: Props) => {
+export const Mixer = ({ sourceSong }: Props) => {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
@@ -25,7 +25,7 @@ export const Mixer = ({ song }: Props) => {
   const isLoading = MixerMachineContext.useSelector((state) =>
     state.matches("loading")
   );
-  const tracks = song.tracks;
+  const tracks = sourceSong.tracks;
   const { channels } = useChannelStrip({ tracks });
 
   const [busChannels] = useBusFx();
@@ -61,11 +61,11 @@ export const Mixer = ({ song }: Props) => {
 
   if (isLoading) {
     init();
-    return <Loader song={song} />;
+    return <Loader song={sourceSong} />;
   } else {
     return (
       <div className="mixer">
-        <SongInfo song={song} />
+        <SongInfo song={sourceSong} />
 
         <div className="channels">
           <div>
@@ -88,7 +88,7 @@ export const Mixer = ({ song }: Props) => {
           ))}
           <Main />
         </div>
-        <Transport song={song} />
+        <Transport song={sourceSong} />
       </div>
     );
   }

@@ -1,11 +1,9 @@
-import type { Song } from "../types/global";
-
 export const defaultCurrentMix = {
   mainVolume: -32,
   busVolumes: [0.61, 0.61],
 };
 
-export function getSong(defaultSong: Song) {
+export function getSong(defaultSong: SourceSong) {
   const defaultSongString = JSON.stringify(defaultSong);
   const songString = localStorage.getItem("song");
   const savedSong = songString && JSON.parse(songString);
@@ -37,7 +35,7 @@ export function getSong(defaultSong: Song) {
   if (savedSong) {
     song = savedSong;
   } else {
-    localStorage.setItem("song", defaultSongString);
+    localStorage.setItem("sourceSong", defaultSongString);
     song = defaultSong;
   }
 

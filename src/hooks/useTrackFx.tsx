@@ -124,7 +124,7 @@ function useTrackFx({ channels, trackIndex }: Props) {
       });
       const fxProps = Object.values(fxComponents).map((fx) => fx.props);
       const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
-      channel.disconnect();
+      // channel.disconnect();
       fxNodes.forEach((node: FxTypes) => {
         channel.chain(node);
       });

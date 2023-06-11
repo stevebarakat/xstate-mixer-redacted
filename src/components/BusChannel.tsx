@@ -1,12 +1,11 @@
 import { useState } from "react";
-import type { Gain } from "tone";
 import ChannelLabel from "./ChannelLabel";
 import VuMeter from "./VuMeter";
 import useVuMeter from "../hooks/useVuMeter";
 import { dbToPercent } from "../utils/scale";
 
 type Props = {
-  busChannels: Gain[] | null[];
+  busChannels: BusChannel[];
   busIndex: number;
 };
 
@@ -43,7 +42,7 @@ function BusChannel({ busChannels, busIndex }: Props) {
                 const currentMix =
                   currentMixString && JSON.parse(currentMixString);
                 const value = parseFloat(e.currentTarget.value);
-                busChannels[busIndex].gain.value = value;
+                busChannels[busIndex]!.gain.value = value;
                 busVolumes[busIndex] = value;
                 setBusVolumes([...busVolumes]);
                 currentMix.busVolumes[busIndex] = value;

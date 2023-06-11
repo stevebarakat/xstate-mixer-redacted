@@ -1,9 +1,10 @@
+import type { Destination } from "tone/build/esm/core/context/Destination";
 import { useEffect, useCallback, useRef, useState } from "react";
 import { Meter } from "tone";
-import type { Destination } from "tone/build/esm/core/context/Destination";
-import type { Channel, Gain } from "tone";
 
-export default function useVuMeter(channels: (Channel | Gain | Destination)[]) {
+export default function useVuMeter(
+  channels: (Destination | Channel | BusChannel)[]
+) {
   const [meterVals, setMeterVals] = useState<Float32Array>(
     () => new Float32Array(channels.length)
   );
