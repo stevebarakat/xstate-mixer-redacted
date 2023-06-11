@@ -1,5 +1,5 @@
-import { TrackPanel } from ".";
 import type { Dispatch, SetStateAction } from "react";
+import { TrackPanel } from ".";
 
 type Fx = {
   1: JSX.Element;

@@ -1,10 +1,9 @@
 import { useRef } from "react";
 import { Reverb, FeedbackDelay, PitchShift, Gain } from "tone";
 import TrackReverber from "../components/TrackChannel/Fx/TrackReverber";
-import TrackSignal from "../components/TrackChannel/Fx/TrackSignal";
+import TrackSignal from "../components/TrackChannel/Fx/NoFx";
 import TrackDelay from "../components/TrackChannel/Fx/TrackDelay";
 import TrackPitchShifter from "../components/TrackChannel/Fx/TrackPitchShifter";
-import type { Channel } from "tone";
 import { array } from "../utils";
 
 type Props = {

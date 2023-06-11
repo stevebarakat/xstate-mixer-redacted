@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { Channel } from "tone";
 import { dbToPercent, log } from "../../utils/scale";
 import VuMeter from "../VuMeter";
 import useVuMeter from "../../hooks/useVuMeter";

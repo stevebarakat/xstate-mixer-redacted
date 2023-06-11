@@ -15,7 +15,7 @@ export function getSong(defaultSong: SourceSong) {
     pan: 0,
     mute: false,
     solo: false,
-    fxName: ["nofx1", "nofx2"],
+    fxName: ["nofx", "nofx"],
     sends: [false, false],
     trackPanelPosition: { x: 0, y: 0 },
     trackPanelSize: { width: "325px", height: "auto" },

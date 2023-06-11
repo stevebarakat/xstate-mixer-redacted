@@ -4,7 +4,7 @@ import {
   Reverber,
   PitchShifter,
   Delay,
-  Signal,
+  NoFx,
 } from "../components/TrackChannel/Fx";
 
 type Fx = {
@@ -54,7 +54,7 @@ function useSetTrackFx({
     switch (e.currentTarget.value) {
       case "nofx":
         fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <Signal gain={gain.current} />
+          <NoFx gain={gain.current} />
         );
         break;
 

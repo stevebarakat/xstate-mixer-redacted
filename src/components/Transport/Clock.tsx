@@ -1,17 +1,17 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { Transport as t } from "tone";
 import { formatMilliseconds } from "../../utils";
-import type { Song } from "../../types/global";
 import "./style.css";
 
 type Props = {
-  song: Song;
+  song: SourceSong;
 };
 
 function Clock({ song }: Props) {
   const requestRef = useRef<number | null>(null);
   const [clock, setClock] = useState(formatMilliseconds(0));
 
+  // TODO - make this a guard in XState
   // make sure song starts at begining and stops at end
   if (song.end !== null && song.start !== null) {
     if (t.seconds < song.start) {

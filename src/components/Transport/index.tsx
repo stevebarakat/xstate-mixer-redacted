@@ -3,10 +3,9 @@ import Reset from "./Reset";
 import Rewind from "./Rewind";
 import { FastForward as FF } from "./FastForward";
 import Play from "./Play";
-import type { Song } from "../../types/global";
 
 type Props = {
-  song: Song;
+  song: SourceSong;
 };
 
 const Transport = ({ song }: Props) => (
