@@ -1,3 +1,5 @@
+import { localStorageGet, localStorageSet } from ".";
+
 export const defaultCurrentMix = {
   mainVolume: -32,
   busVolumes: [0.61, 0.61],
@@ -39,10 +41,8 @@ export function getSong(defaultSong: SourceSong) {
     song = defaultSong;
   }
 
-  const currentMixString = localStorage.getItem("currentMix");
-  let currentMix = currentMixString && JSON.parse(currentMixString);
-  const currentTracksString = localStorage.getItem("currentTracks");
-  let currentTracks = currentTracksString && JSON.parse(currentTracksString);
+  let currentMix = localStorageGet("currentMix");
+  let currentTracks = localStorageGet("currentTracks");
 
   if (!currentMix) {
     currentMix = defaultCurrentMix;

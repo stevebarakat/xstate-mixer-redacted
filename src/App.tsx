@@ -4,15 +4,14 @@ import { justDance, roxanne, aDayInTheLife, blueMonday } from "./assets/songs";
 import { createActorContext } from "@xstate/react";
 import { mixerMachine } from "./machines/mixerMachine";
 import { defaultCurrentMix as currentMix } from "./utils/getSong";
+import { localStorageGet, localStorageSet } from "./utils";
 
 export const MixerMachineContext = createActorContext(mixerMachine);
 
 function App() {
-  const [sourceSong, setSourceSong] = useState(() => {
-    const currentSong = localStorage.getItem("sourceSong");
-    if (currentSong === null) return;
-    return JSON.parse(currentSong);
-  });
+  const [sourceSong, setSourceSong] = useState(
+    () => localStorageGet("sourceSong") ?? roxanne
+  );
 
   function onChange(e: React.FormEvent<HTMLSelectElement>): void {
     let currentTracks = [];

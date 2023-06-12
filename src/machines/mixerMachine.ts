@@ -1,5 +1,6 @@
 import { createMachine, assign } from "xstate";
 import { pure } from "xstate/lib/actions";
+import { localStorageGet, localStorageSet } from "../utils";
 import {
   start as initializeAudio,
   getContext as getAudioContext,
@@ -7,15 +8,68 @@ import {
   Transport as t,
 } from "tone";
 import { dbToPercent, log } from "../utils/scale";
-import { getSong } from "../utils/getSong";
 import { roxanne } from "../assets/songs";
 
-const actx = getAudioContext();
-const [song, currentMix, currentTracks] = getSong(roxanne);
+const audioContext = getAudioContext();
 
-const initialPans = currentTracks.map(
-  (currentTrack: TrackSettings) => currentTrack.pan
-);
+const defaultCurrentMix = {
+  mainVolume: -32,
+  busVolumes: [0.61, 0.61],
+};
+
+const getSourceSong = () => {
+  const sourceSong = localStorageGet("sourceSong");
+  if (!sourceSong) {
+    localStorageSet("sourceSong", roxanne);
+    window.location.reload();
+  }
+  return sourceSong;
+};
+
+const getCurrentMix = () => {
+  const currentMix = localStorageGet("currentMix");
+  if (!currentMix) {
+    localStorageSet("currentMix", defaultCurrentMix);
+  }
+  return currentMix;
+};
+
+const sourceSong = getSourceSong();
+
+const getCurrentTracks = () => {
+  const defaultCurrentTracks = sourceSong.tracks.map((track) => ({
+    name: track.name,
+    path: track.path,
+    volume: -32,
+    pan: 0,
+    mute: false,
+    solo: false,
+    fxName: ["nofx", "nofx"],
+    sends: [false, false],
+    trackPanelPosition: { x: 0, y: 0 },
+    trackPanelSize: { width: "325px", height: "auto" },
+    reverbsMix: [0.5, 0.5],
+    reverbsPreDelay: [0.5, 0.5],
+    reverbsDecay: [0.5, 0.5],
+    reverbsBypass: [false, false],
+    delaysMix: [0.5, 0.5],
+    delaysTime: [1, 1],
+    delaysFeedback: [0.5, 0.5],
+    pitchShiftsBypass: [false, false],
+    pitchShiftsMix: [0.5, 0.5],
+    pitchShiftsPitch: [5, 5],
+  }));
+  localStorageSet("currentTracks", defaultCurrentTracks);
+  return defaultCurrentTracks;
+};
+// localStorageGet("currentTracks") ?? window.location.reload();
+
+const currentMix = getCurrentMix();
+const currentTracks = getCurrentTracks();
+
+const initialPans =
+  currentTracks &&
+  currentTracks.map((currentTrack: TrackSettings) => currentTrack.pan);
 const initialMutes = currentTracks.map(
   (currentTrack: TrackSettings) => currentTrack.mute
 );
@@ -78,7 +132,7 @@ export const mixerMachine = createMachine(
   {
     actions: {
       play: () => {
-        if (actx.state === "suspended") {
+        if (audioContext.state === "suspended") {
           initializeAudio();
           t.start();
         } else {
@@ -88,13 +142,18 @@ export const mixerMachine = createMachine(
       pause: () => t.pause(),
       reset: () => {
         t.stop();
-        t.seconds = song.start ?? 0;
+        t.seconds = sourceSong.start ?? 0;
       },
       fastForward: () =>
         (t.seconds =
-          t.seconds < song.end - 10 ? t.seconds + 10 : (t.seconds = song.end)),
+          t.seconds < sourceSong.end - 10
+            ? t.seconds + 10
+            : (t.seconds = sourceSong.end)),
       rewind: () =>
-        (t.seconds = t.seconds > 10 + song.start ? t.seconds - 10 : song.start),
+        (t.seconds =
+          t.seconds > 10 + sourceSong.start
+            ? t.seconds - 10
+            : sourceSong.start),
 
       changeMainVolume: pure((_, { value }) => {
         const scaled = dbToPercent(log(value));
