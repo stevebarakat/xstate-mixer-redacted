@@ -37,28 +37,30 @@ const getCurrentMix = () => {
 const sourceSong = getSourceSong();
 
 const getCurrentTracks = () => {
-  const defaultCurrentTracks = sourceSong.tracks.map((track) => ({
-    name: track.name,
-    path: track.path,
-    volume: -32,
-    pan: 0,
-    mute: false,
-    solo: false,
-    fxName: ["nofx", "nofx"],
-    sends: [false, false],
-    trackPanelPosition: { x: 0, y: 0 },
-    trackPanelSize: { width: "325px", height: "auto" },
-    reverbsMix: [0.5, 0.5],
-    reverbsPreDelay: [0.5, 0.5],
-    reverbsDecay: [0.5, 0.5],
-    reverbsBypass: [false, false],
-    delaysMix: [0.5, 0.5],
-    delaysTime: [1, 1],
-    delaysFeedback: [0.5, 0.5],
-    pitchShiftsBypass: [false, false],
-    pitchShiftsMix: [0.5, 0.5],
-    pitchShiftsPitch: [5, 5],
-  }));
+  const defaultCurrentTracks = sourceSong.tracks.map(
+    (track: TrackSettings) => ({
+      id: crypto.randomUUID(),
+      name: track.name,
+      volume: -32,
+      pan: 0,
+      mute: false,
+      solo: false,
+      fxName: ["nofx", "nofx"],
+      sends: [false, false],
+      trackPanelPosition: { x: 0, y: 0 },
+      trackPanelSize: { width: "325px", height: "auto" },
+      reverbsMix: [0.5, 0.5],
+      reverbsPreDelay: [0.5, 0.5],
+      reverbsDecay: [0.5, 0.5],
+      reverbsBypass: [false, false],
+      delaysMix: [0.5, 0.5],
+      delaysTime: [1, 1],
+      delaysFeedback: [0.5, 0.5],
+      pitchShiftsBypass: [false, false],
+      pitchShiftsMix: [0.5, 0.5],
+      pitchShiftsPitch: [5, 5],
+    })
+  );
   localStorageSet("currentTracks", defaultCurrentTracks);
   return defaultCurrentTracks;
 };

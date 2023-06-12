@@ -57,6 +57,7 @@ declare global {
 
   type TrackSettings = {
     id: string;
+    name: string;
     volume: number;
     solo: boolean;
     mute: boolean;
