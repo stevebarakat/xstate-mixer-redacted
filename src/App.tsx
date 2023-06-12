@@ -14,39 +14,26 @@ function App() {
   );
 
   function onChange(e: React.FormEvent<HTMLSelectElement>): void {
-    let currentTracks = [];
     switch (e.currentTarget.value) {
       case "roxanne":
-        localStorage.setItem("sourceSong", JSON.stringify(roxanne));
-        currentMix;
-        localStorage.setItem("currentMix", JSON.stringify(currentMix));
-        currentTracks = roxanne.tracks;
-        localStorage.setItem("currentTracks", JSON.stringify(currentTracks));
-        window.location.reload();
         setSourceSong(roxanne);
+        localStorage.setItem("sourceSong", JSON.stringify(roxanne));
+        window.location.reload();
         break;
       case "aDayInTheLife":
-        localStorage.setItem("sourceSong", JSON.stringify(aDayInTheLife));
-        currentMix;
-        currentTracks = aDayInTheLife.tracks;
-        localStorage.setItem("currentTracks", JSON.stringify(currentTracks));
-        window.location.reload();
         setSourceSong(aDayInTheLife);
+        localStorage.setItem("sourceSong", JSON.stringify(aDayInTheLife));
+        window.location.reload();
         break;
       case "blueMonday":
-        localStorage.setItem("sourceSong", JSON.stringify(blueMonday));
-        currentMix;
-        currentTracks = blueMonday.tracks;
-        window.location.reload();
         setSourceSong(blueMonday);
+        localStorage.setItem("sourceSong", JSON.stringify(blueMonday));
+        window.location.reload();
         break;
       case "justDance":
-        localStorage.setItem("sourceSong", JSON.stringify(justDance));
-        currentMix;
-        currentTracks = justDance.tracks;
-        localStorage.setItem("currentTracks", JSON.stringify(currentTracks));
-        window.location.reload();
         setSourceSong(justDance);
+        localStorage.setItem("sourceSong", JSON.stringify(justDance));
+        window.location.reload();
         break;
 
       default:
