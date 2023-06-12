@@ -2,7 +2,7 @@ import { useState } from "react";
 import ChannelLabel from "./ChannelLabel";
 import VuMeter from "./VuMeter";
 import useVuMeter from "../hooks/useVuMeter";
-import { dbToPercent } from "../utils/scale";
+import { dbToPercent, localStorageGet, localStorageSet } from "../utils/";
 
 type Props = {
   busChannels: BusChannel[];
@@ -38,15 +38,13 @@ function BusChannel({ busChannels, busIndex }: Props) {
               step={0.001}
               value={busVolumes[busIndex]}
               onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-                const currentMixString = localStorage.getItem("currentMix");
-                const currentMix =
-                  currentMixString && JSON.parse(currentMixString);
+                const currentMix = localStorageGet("currentMix");
                 const value = parseFloat(e.currentTarget.value);
                 busChannels[busIndex]!.gain.value = value;
                 busVolumes[busIndex] = value;
                 setBusVolumes([...busVolumes]);
                 currentMix.busVolumes[busIndex] = value;
-                localStorage.setItem("currentMix", JSON.stringify(currentMix));
+                localStorageSet("currentMix", currentMix);
               }}
             />
           </div>
