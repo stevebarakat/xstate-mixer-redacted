@@ -20,7 +20,7 @@ const greenOff = "hsla(330, 100%, 70%, 0.5)";
 type MeterProps = {
   width: number;
   height: number;
-  meterValue: Float32Array;
+  meterValue: Float32Array | undefined;
 };
 
 function VuMeter({ meterValue, height, width }: MeterProps) {
@@ -103,7 +103,7 @@ function VuMeter({ meterValue, height, width }: MeterProps) {
 
   useEffect(() => {
     invariant(stage.current, "canvas not initiated");
-    stage.current.dataset.volume = meterValue.toString();
+    stage.current.dataset.volume = meterValue?.toString();
   }, [meterValue]);
 
   return (

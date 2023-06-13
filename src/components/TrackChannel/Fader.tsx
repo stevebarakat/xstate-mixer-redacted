@@ -1,21 +1,23 @@
 import { useState } from "react";
+import { localStorageGet, localStorageSet } from "../../utils";
 import { dbToPercent, log } from "../../utils/scale";
 import VuMeter from "../VuMeter";
 import useVuMeter from "../../hooks/useVuMeter";
+import type { Meter } from "tone";
 
 type Props = {
   trackIndex: number;
-  channel: Channel;
+  channels: Channel[];
+  meters: Meter[];
 };
 
-function Fader({ trackIndex, channel }: Props) {
-  const currentTracksString = localStorage.getItem("currentTracks");
-  const currentTracks = currentTracksString && JSON.parse(currentTracksString);
+function Fader({ trackIndex, channels, meters }: Props) {
+  const currentTracks = localStorageGet("currentTracks");
 
   const [volume, setVolume] = useState(
     () => currentTracks[trackIndex]?.volume ?? -32
   );
-  const meterVal = useVuMeter([channel]);
+  const meterVal = useVuMeter({ channels, meters });
 
   return (
     <div className="fader-wrap">
@@ -33,18 +35,13 @@ function Fader({ trackIndex, channel }: Props) {
           step={0.1}
           value={volume}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            const currentTracksString = localStorage.getItem("currentTracks");
-            const currentTracks =
-              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             setVolume(value);
             const scaled = dbToPercent(log(value));
-            channel.volume.value = scaled;
+            channels[trackIndex].volume.value = scaled;
+            const currentTracks = localStorageGet("currentTracks");
             currentTracks[trackIndex].volume = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify([...currentTracks])
-            );
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>

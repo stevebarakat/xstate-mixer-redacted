@@ -30,6 +30,7 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
   const ct = currentTracks[trackIndex];
   const channel = channels[trackIndex];
+  const meters = useRef<Meter[]>([]);
 
   const nofx = useRef<Gain | null>(new Gain().toDestination());
   const reverb = useRef<Reverb | null>(null);
@@ -257,23 +258,6 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
     (item: string) => item === "nofx"
   );
 
-  const trackPanelsEmpty = ct.fxName.every((name: string) => name === "nofx");
-
-  function getTrackPanels() {
-    // if (trackPanelsEmpty) {
-    //   return null;
-    // } else {
-    return (
-      <TrackPanels
-        fx={fx}
-        trackIndex={trackIndex}
-        active={active}
-        setActive={setActive}
-      />
-    );
-    // }
-  }
-
   return (
     <div className="flex-y gap2">
       <ChannelButton
@@ -316,7 +300,11 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
           busChannels={busChannels}
         />
         <Pan trackIndex={trackIndex} channel={channel} />
-        <Fader trackIndex={trackIndex} channel={channel} />
+        <Fader
+          trackIndex={trackIndex}
+          channels={channels}
+          meters={meters.current}
+        />
         <SoloMute trackIndex={trackIndex} channel={channel} />
         <ChannelLabel channelName={track.name} />
       </div>
