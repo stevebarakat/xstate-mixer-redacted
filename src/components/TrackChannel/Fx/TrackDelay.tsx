@@ -25,7 +25,7 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
   const [feedback, setFeedback] = useState(
     currentTracks[trackIndex].delaysFeedback || [0.5, 0.5]
   );
-  console.log("isBypassed[busIndex]", isBypassed[busIndex]);
+
   return (
     <div>
       <div className="flex gap12">

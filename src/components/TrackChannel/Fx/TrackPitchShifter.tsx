@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { localStorageGet, localStorageSet } from "../../../utils";
 import { powerIcon } from "../../../assets/icons";
 import type { PitchShift } from "tone";
 
@@ -16,8 +17,8 @@ export default function PitchShifter({
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  const [bypass, setBypass] = useState(
-    currentTracks[trackIndex].pitchShiftsBypass || [false, false]
+  const [isBypassed, setBypass] = useState(
+    currentTracks[trackIndex].delaysBypass[busIndex] || [false, false]
   );
   const [mix, setMix] = useState(
     currentTracks[trackIndex].pitchShiftsMix || [0.5, 0.5]
@@ -25,8 +26,6 @@ export default function PitchShifter({
   const [pitch, setPitch] = useState(
     currentTracks[trackIndex].pitchShiftsPitch || [5, 5]
   );
-
-  const disabled = bypass;
 
   return (
     <div>
@@ -38,19 +37,18 @@ export default function PitchShifter({
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               const checked = e.currentTarget.checked;
-              setBypass((checked: boolean) => checked);
+              isBypassed[busIndex] = checked;
+              setBypass([...isBypassed]);
               if (checked) {
                 pitchShift?.disconnect();
               } else {
                 pitchShift?.toDestination();
               }
+              const currentTracks = localStorageGet("currentTracks");
               currentTracks[trackIndex].pitchShiftsBypass[busIndex] = checked;
-              localStorage.setItem(
-                "currentTracks",
-                JSON.stringify(currentTracks)
-              );
+              localStorageSet("currentTracks", currentTracks);
             }}
-            checked={bypass}
+            checked={isBypassed[busIndex]}
           />
           <label htmlFor={`bus${trackIndex}pitchShiftBypass`}>
             {powerIcon}
@@ -66,18 +64,17 @@ export default function PitchShifter({
           min={0}
           max={1}
           step={0.01}
-          disabled={disabled}
-          value={mix}
+          disabled={isBypassed[busIndex]}
+          value={mix[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             if (!pitchShift) return;
             const value = parseFloat(e.currentTarget.value);
             pitchShift.wet.value = value;
-            setMix(value);
+            mix[busIndex] = value;
+            setMix([...mix]);
+            const currentTracks = localStorageGet("currentTracks");
             currentTracks[trackIndex].pitchShiftsMix[busIndex] = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify(currentTracks)
-            );
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
@@ -90,18 +87,17 @@ export default function PitchShifter({
           min={-24}
           max={24}
           step={0.1}
-          disabled={disabled}
-          value={pitch}
+          disabled={isBypassed[busIndex]}
+          value={pitch[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             if (!pitchShift) return;
             const value = parseFloat(e.currentTarget.value);
             pitchShift.pitch = value;
-            setPitch(value);
+            pitch[busIndex] = value;
+            setMix([...mix]);
+            const currentTracks = localStorageGet("currentTracks");
             currentTracks[trackIndex].pitchShiftsPitch[busIndex] = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify(currentTracks)
-            );
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
