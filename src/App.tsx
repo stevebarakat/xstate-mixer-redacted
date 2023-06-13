@@ -3,7 +3,6 @@ import { Mixer } from "./components/Mixer";
 import { justDance, roxanne, aDayInTheLife, blueMonday } from "./assets/songs";
 import { createActorContext } from "@xstate/react";
 import { mixerMachine } from "./machines/mixerMachine";
-import { defaultCurrentMix as currentMix } from "./utils/getSong";
 import { localStorageGet, localStorageSet } from "./utils";
 
 export const MixerMachineContext = createActorContext(mixerMachine);
@@ -17,22 +16,22 @@ function App() {
     switch (e.currentTarget.value) {
       case "roxanne":
         setSourceSong(roxanne);
-        localStorage.setItem("sourceSong", JSON.stringify(roxanne));
+        localStorageSet("sourceSong", roxanne);
         window.location.reload();
         break;
       case "aDayInTheLife":
         setSourceSong(aDayInTheLife);
-        localStorage.setItem("sourceSong", JSON.stringify(aDayInTheLife));
+        localStorageSet("sourceSong", aDayInTheLife);
         window.location.reload();
         break;
       case "blueMonday":
         setSourceSong(blueMonday);
-        localStorage.setItem("sourceSong", JSON.stringify(blueMonday));
+        localStorageSet("sourceSong", blueMonday);
         window.location.reload();
         break;
       case "justDance":
         setSourceSong(justDance);
-        localStorage.setItem("sourceSong", JSON.stringify(justDance));
+        localStorageSet("sourceSong", justDance);
         window.location.reload();
         break;
 
