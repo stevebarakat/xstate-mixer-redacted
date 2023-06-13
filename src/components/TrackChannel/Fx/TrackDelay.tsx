@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { localStorageGet, localStorageSet } from "../../../utils";
 import { powerIcon } from "../../../assets/icons";
 import type { FeedbackDelay } from "tone";
 
@@ -34,23 +35,19 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
             id={`track${trackIndex}delayBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              const currentTracksString = localStorage.getItem("currentTracks");
-              const currentTracks =
-                currentTracksString && JSON.parse(currentTracksString);
               const checked = e.currentTarget.checked;
-              setBypass((checked: boolean) => !checked);
+              isBypassed[busIndex] = checked;
+              setBypass([...isBypassed]);
               if (checked) {
                 delay.disconnect();
               } else {
                 delay.toDestination();
               }
+              const currentTracks = localStorageGet("currentTracks");
               currentTracks[trackIndex].delaysBypass[busIndex] = checked;
-              localStorage.setItem(
-                "currentTracks",
-                JSON.stringify(currentTracks)
-              );
+              localStorageSet("currentTracks", currentTracks);
             }}
-            checked={isBypassed}
+            defaultChecked={isBypassed[busIndex]}
           />
           <label htmlFor={`track${trackIndex}delayBypass`}>{powerIcon}</label>
         </div>
@@ -64,21 +61,16 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={isBypassed}
-          value={mix}
+          disabled={isBypassed[busIndex]}
+          defaultValue={mix[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            const currentTracksString = localStorage.getItem("currentTracks");
-            const currentTracks =
-              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             delay.wet.value = value;
             mix[busIndex] = value;
-            setMix(mix);
+            setMix([...mix]);
+            const currentTracks = localStorageGet("currentTracks");
             currentTracks[trackIndex].delaysMix[busIndex] = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify(currentTracks)
-            );
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
@@ -91,20 +83,16 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={isBypassed}
-          value={delayTime}
+          disabled={isBypassed[busIndex]}
+          defaultValue={delayTime[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            const currentTracksString = localStorage.getItem("currentTracks");
-            const currentTracks =
-              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             delay.delayTime.value = value;
-            setDelayTime(value);
+            delayTime[busIndex] = value;
+            setDelayTime([...delayTime]);
+            const currentTracks = localStorageGet("currentTracks");
             currentTracks[trackIndex].delaysTime[busIndex] = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify([...currentTracks])
-            );
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
@@ -117,20 +105,16 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={isBypassed}
-          value={feedback}
+          disabled={isBypassed[busIndex]}
+          defaultValue={feedback[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            const currentTracksString = localStorage.getItem("currentTracks");
-            const currentTracks =
-              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             delay.feedback.value = value;
-            setFeedback(value);
+            feedback[busIndex] = value;
+            setFeedback([...feedback]);
+            const currentTracks = localStorageGet("currentTracks");
             currentTracks[trackIndex].delaysFeedback[busIndex] = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify([...currentTracks])
-            );
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
