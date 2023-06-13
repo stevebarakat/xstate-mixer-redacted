@@ -41,7 +41,7 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
   });
 
   const fx = (() => {
-    const currentFx = currentTracks[trackIndex]?.fxName ?? null;
+    const currentFx = ct.fxName ?? null;
 
     array(2).map((_, fxIndex) => {
       switch (currentFx[fxIndex]) {

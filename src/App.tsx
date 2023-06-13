@@ -17,21 +17,25 @@ function App() {
       case "roxanne":
         setSourceSong(roxanne);
         localStorageSet("sourceSong", roxanne);
+        localStorageSet("currentTracks", roxanne.tracks);
         window.location.reload();
         break;
       case "aDayInTheLife":
         setSourceSong(aDayInTheLife);
         localStorageSet("sourceSong", aDayInTheLife);
+        localStorageSet("currentTracks", aDayInTheLife.tracks);
         window.location.reload();
         break;
       case "blueMonday":
         setSourceSong(blueMonday);
         localStorageSet("sourceSong", blueMonday);
+        localStorageSet("currentTracks", blueMonday.tracks);
         window.location.reload();
         break;
       case "justDance":
         setSourceSong(justDance);
         localStorageSet("sourceSong", justDance);
+        localStorageSet("currentTracks", justDance.tracks);
         window.location.reload();
         break;
 

@@ -37,32 +37,9 @@ const getCurrentMix = () => {
 const sourceSong = getSourceSong();
 
 const getCurrentTracks = () => {
-  let defaultCurrentTracks;
-  const ubu = localStorageGet("currentTracks");
-  if (!ubu) {
-    defaultCurrentTracks = sourceSong.tracks.map((track: TrackSettings) => ({
-      id: crypto.randomUUID(),
-      name: track.name,
-      volume: -32,
-      pan: 0,
-      mute: false,
-      solo: false,
-      fxName: ["nofx", "nofx"],
-      sends: [false, false],
-      trackPanelPosition: { x: 0, y: 0 },
-      trackPanelSize: { width: "325px", height: "auto" },
-      reverbsMix: [0.5, 0.5],
-      reverbsPreDelay: [0.5, 0.5],
-      reverbsDecay: [0.5, 0.5],
-      reverbsBypass: [false, false],
-      delaysMix: [0.5, 0.5],
-      delaysTime: [1, 1],
-      delaysFeedback: [0.5, 0.5],
-      delaysBypass: [false, false],
-      pitchShiftsBypass: [false, false],
-      pitchShiftsMix: [0.5, 0.5],
-      pitchShiftsPitch: [5, 5],
-    }));
+  const currentTracks = localStorageGet("currentTracks");
+  if (!currentTracks) {
+    const defaultCurrentTracks = sourceSong.tracks;
     localStorageSet("currentTracks", defaultCurrentTracks);
     return defaultCurrentTracks;
   }
@@ -71,15 +48,9 @@ const getCurrentTracks = () => {
 const currentMix = localStorageGet("currentMix") ?? getCurrentMix();
 const currentTracks = localStorageGet("currentTracks") ?? getCurrentTracks();
 
-const initialPans =
-  // currentTracks ??
-  currentTracks.map((currentTrack: TrackSettings) => currentTrack.pan);
-const initialMutes =
-  // currentTracks ??
-  currentTracks.map((currentTrack: TrackSettings) => currentTrack.mute);
-const initialSolos =
-  // currentTracks ??
-  currentTracks.map((currentTrack: TrackSettings) => currentTrack.solo);
+const initialPans = currentTracks.map((ct: TrackSettings) => ct.pan);
+const initialMutes = currentTracks.map((ct: TrackSettings) => ct.mute);
+const initialSolos = currentTracks.map((ct: TrackSettings) => ct.solo);
 
 export const mixerMachine = createMachine(
   {
