@@ -7,7 +7,7 @@ type Fx = {
 };
 
 type Props = {
-  fx: React.MutableRefObject<Fx>;
+  fx: Fx;
   trackIndex: number;
   active: boolean[];
   setActive: Dispatch<SetStateAction<boolean[]>>;
@@ -29,8 +29,8 @@ function TrackPanels({ fx, trackIndex, active, setActive }: Props) {
           active={active}
           setActive={setActive}
         >
-          {fx.current["1"]}
-          {fx.current["2"]}
+          {fx["1"]}
+          {fx["2"]}
         </TrackPanel>
       );
     }

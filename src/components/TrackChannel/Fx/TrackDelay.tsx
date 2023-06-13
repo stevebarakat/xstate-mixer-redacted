@@ -4,7 +4,7 @@ import { powerIcon } from "../../../assets/icons";
 import type { FeedbackDelay } from "tone";
 
 type Props = {
-  delay: FeedbackDelay;
+  delay: FeedbackDelay | null;
   trackIndex: number;
   busIndex: number;
 };
@@ -25,7 +25,7 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
   const [feedback, setFeedback] = useState(
     currentTracks[trackIndex].delaysFeedback || [0.5, 0.5]
   );
-
+  console.log("isBypassed[busIndex]", isBypassed[busIndex]);
   return (
     <div>
       <div className="flex gap12">
@@ -39,15 +39,15 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
               isBypassed[busIndex] = checked;
               setBypass([...isBypassed]);
               if (checked) {
-                delay.disconnect();
+                delay?.disconnect();
               } else {
-                delay.toDestination();
+                delay?.toDestination();
               }
               const currentTracks = localStorageGet("currentTracks");
               currentTracks[trackIndex].delaysBypass[busIndex] = checked;
               localStorageSet("currentTracks", currentTracks);
             }}
-            defaultChecked={isBypassed[busIndex]}
+            checked={isBypassed[busIndex]}
           />
           <label htmlFor={`track${trackIndex}delayBypass`}>{powerIcon}</label>
         </div>
@@ -62,8 +62,9 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
           max={1}
           step={0.01}
           disabled={isBypassed[busIndex]}
-          defaultValue={mix[busIndex]}
+          value={mix[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!delay) return;
             const value = parseFloat(e.currentTarget.value);
             delay.wet.value = value;
             mix[busIndex] = value;
@@ -84,8 +85,9 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
           max={1}
           step={0.01}
           disabled={isBypassed[busIndex]}
-          defaultValue={delayTime[busIndex]}
+          value={delayTime[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!delay) return;
             const value = parseFloat(e.currentTarget.value);
             delay.delayTime.value = value;
             delayTime[busIndex] = value;
@@ -106,8 +108,9 @@ export default function Delay({ delay, trackIndex, busIndex }: Props) {
           max={1}
           step={0.01}
           disabled={isBypassed[busIndex]}
-          defaultValue={feedback[busIndex]}
+          value={feedback[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!delay) return;
             const value = parseFloat(e.currentTarget.value);
             delay.feedback.value = value;
             feedback[busIndex] = value;

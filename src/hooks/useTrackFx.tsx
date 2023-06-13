@@ -25,7 +25,6 @@ function useTrackFx({ channels, trackIndex }: Props) {
   const fx = useRef<{ 1: JSX.Element; 2: JSX.Element }>(
     (() => {
       const currentFx = currentTracks[trackIndex]?.fxName ?? null;
-      console.log("currentFx", currentFx);
 
       let fxComponents = {
         1: <TrackSignal gain={gain.current} />,

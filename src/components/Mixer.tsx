@@ -54,7 +54,6 @@ export const Mixer = ({ sourceSong }: Props) => {
           busChannels.current[busIndex] &&
           channels[trackIndex]
         ) {
-          console.log("ubu");
           channels[trackIndex].disconnect();
           channels[trackIndex].connect(busChannels.current[busIndex]!);
         }

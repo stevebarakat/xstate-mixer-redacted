@@ -31,159 +31,161 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
   const ct = currentTracks[trackIndex];
   const channel = channels[trackIndex];
 
-  const gain = useRef<Gain>(new Gain().toDestination());
+  const nofx = useRef<Gain | null>(new Gain().toDestination());
   const reverb = useRef<Reverb | null>(null);
   const delay = useRef<FeedbackDelay | null>(null);
   const pitchShift = useRef<PitchShift | null>(null);
+  const fxComponents = useRef({
+    1: <NoFx nofx={nofx.current} />,
+    2: <NoFx nofx={nofx.current} />,
+  });
 
-  const fx = useRef<Fx>(
-    (() => {
-      const currentFx = currentTracks[trackIndex]?.fxName ?? null;
-      console.log("currentFx", currentFx);
+  const fx = (() => {
+    const currentFx = currentTracks[trackIndex]?.fxName ?? null;
 
-      let fxComponents = {
-        1: <NoFx gain={gain.current} />,
-        2: <NoFx gain={gain.current} />,
-      };
-      array(2).map((_, fxIndex) => {
-        switch (currentFx[fxIndex]) {
-          case "nofx":
-            fxIndex === 0
-              ? (fxComponents = {
-                  ...fxComponents,
-                  1: <NoFx gain={gain.current} />,
-                })
-              : (fxComponents = {
-                  ...fxComponents,
-                  2: <NoFx gain={gain.current} />,
-                });
-            break;
-          case "reverb":
-            if (fxIndex === 0) {
-              reverb.current = new Reverb({
-                wet: ct.reverbsMix[0],
-                preDelay: ct.reverbsPreDelay[0],
-                decay: ct.reverbsDecay[0],
-              }).toDestination();
+    array(2).map((_, fxIndex) => {
+      switch (currentFx[fxIndex]) {
+        case "nofx":
+          if (fxIndex === 0) {
+            nofx.current = new Gain().toDestination();
 
-              fxComponents = {
-                ...fxComponents,
-                1: (
-                  <Reverber
-                    reverb={reverb.current}
-                    trackIndex={trackIndex}
-                    busIndex={0}
-                  />
-                ),
-              };
-            } else {
-              reverb.current = new Reverb({
-                wet: ct.reverbsMix[1],
-                preDelay: ct.reverbsPreDelay[1],
-                decay: ct.reverbsDecay[1],
-              }).toDestination();
+            fxComponents.current = {
+              ...fxComponents.current,
+              1: <NoFx nofx={nofx.current} />,
+            };
+          } else {
+            nofx.current = new Gain().toDestination();
 
-              fxComponents = {
-                ...fxComponents,
-                2: (
-                  <Reverber
-                    reverb={reverb.current}
-                    trackIndex={trackIndex}
-                    busIndex={1}
-                  />
-                ),
-              };
-            }
+            fxComponents.current = {
+              ...fxComponents.current,
+              2: <NoFx nofx={nofx.current} />,
+            };
+          }
+          break;
+        case "reverb":
+          if (fxIndex === 0) {
+            reverb.current = new Reverb({
+              wet: ct.reverbsMix[0],
+              preDelay: ct.reverbsPreDelay[0],
+              decay: ct.reverbsDecay[0],
+            }).toDestination();
 
-            break;
-          case "delay":
-            if (fxIndex === 0) {
-              delay.current = new FeedbackDelay({
-                wet: ct.delaysMix[0],
-                delayTime: ct.delaysTime[0],
-                feedback: ct.delaysFeedback[0],
-              }).toDestination();
+            fxComponents.current = {
+              ...fxComponents.current,
+              1: (
+                <Reverber
+                  reverb={reverb.current}
+                  trackIndex={trackIndex}
+                  busIndex={0}
+                />
+              ),
+            };
+          } else {
+            reverb.current = new Reverb({
+              wet: ct.reverbsMix[1],
+              preDelay: ct.reverbsPreDelay[1],
+              decay: ct.reverbsDecay[1],
+            }).toDestination();
 
-              fxComponents = {
-                ...fxComponents,
-                1: (
-                  <Delay
-                    delay={delay.current}
-                    trackIndex={trackIndex}
-                    busIndex={0}
-                  />
-                ),
-              };
-            } else {
-              delay.current = new FeedbackDelay({
-                wet: ct.delaysMix[1],
-                delayTime: ct.delaysTime[1],
-                feedback: ct.delaysFeedback[1],
-              }).toDestination();
+            fxComponents.current = {
+              ...fxComponents.current,
+              2: (
+                <Reverber
+                  reverb={reverb.current}
+                  trackIndex={trackIndex}
+                  busIndex={1}
+                />
+              ),
+            };
+          }
 
-              fxComponents = {
-                ...fxComponents,
-                2: (
-                  <Delay
-                    delay={delay.current}
-                    trackIndex={trackIndex}
-                    busIndex={1}
-                  />
-                ),
-              };
-            }
-            break;
-          case "pitchShift":
-            if (fxIndex === 0) {
-              pitchShift.current = new PitchShift({
-                wet: ct.pitchShiftsMix[0],
-                pitch: ct.pitchShiftsPitch[0],
-              }).toDestination();
+          break;
+        case "delay":
+          if (fxIndex === 0) {
+            delay.current = new FeedbackDelay({
+              wet: ct.delaysMix[0],
+              delayTime: ct.delaysTime[0],
+              feedback: ct.delaysFeedback[0],
+            }).toDestination();
 
-              fxComponents = {
-                ...fxComponents,
-                1: (
-                  <PitchShifter
-                    pitchShift={pitchShift.current}
-                    trackIndex={trackIndex}
-                    busIndex={0}
-                  />
-                ),
-              };
-            } else {
-              pitchShift.current = new PitchShift({
-                wet: ct.pitchShiftsMix[1],
-                pitch: ct.pitchShiftsPitch[1],
-              }).toDestination();
+            fxComponents.current = {
+              ...fxComponents.current,
+              1: (
+                <Delay
+                  delay={delay.current}
+                  trackIndex={trackIndex}
+                  busIndex={0}
+                />
+              ),
+            };
+          } else {
+            delay.current = new FeedbackDelay({
+              wet: ct.delaysMix[1],
+              delayTime: ct.delaysTime[1],
+              feedback: ct.delaysFeedback[1],
+            }).toDestination();
 
-              fxComponents = {
-                ...fxComponents,
-                2: (
-                  <PitchShifter
-                    pitchShift={pitchShift.current}
-                    trackIndex={trackIndex}
-                    busIndex={1}
-                  />
-                ),
-              };
-            }
+            fxComponents.current = {
+              ...fxComponents.current,
+              2: (
+                <Delay
+                  delay={delay.current}
+                  trackIndex={trackIndex}
+                  busIndex={1}
+                />
+              ),
+            };
+          }
+          break;
+        case "pitchShift":
+          if (fxIndex === 0) {
+            pitchShift.current = new PitchShift({
+              wet: ct.pitchShiftsMix[0],
+              pitch: ct.pitchShiftsPitch[0],
+            }).toDestination();
 
-            break;
-          default:
-            break;
-        }
-      });
-      const fxProps = Object.values(fxComponents).map((fx) => fx.props);
-      const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
-      channel.disconnect();
-      fxNodes.forEach((node: FxTypes) => {
-        channel.chain(node);
-      });
-      return fxComponents;
-    })()
-  );
+            fxComponents.current = {
+              ...fxComponents.current,
+              1: (
+                <PitchShifter
+                  pitchShift={pitchShift.current}
+                  trackIndex={trackIndex}
+                  busIndex={0}
+                />
+              ),
+            };
+          } else {
+            pitchShift.current = new PitchShift({
+              wet: ct.pitchShiftsMix[1],
+              pitch: ct.pitchShiftsPitch[1],
+            }).toDestination();
 
-  console.log("fx.current", fx.current);
+            fxComponents.current = {
+              ...fxComponents.current,
+              2: (
+                <PitchShifter
+                  pitchShift={pitchShift.current}
+                  trackIndex={trackIndex}
+                  busIndex={1}
+                />
+              ),
+            };
+          }
+
+          break;
+        default:
+          break;
+      }
+    });
+    const fxProps = Object.values(fxComponents.current).map((fx) => fx.props);
+    const fxNodes = fxProps.map((prop, i) => Object.values(prop)[0]);
+    console.log("fxNodes", fxNodes);
+    channel.disconnect();
+    fxNodes.forEach((node: FxTypes) => {
+      channel.chain(node);
+    });
+    return fxComponents.current;
+  })();
 
   const [trackFx, setTrackFx] = useState(() => {
     return (
@@ -206,31 +208,33 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
     currentTracks[trackIndex].fxName[id] = e.currentTarget.value;
     localStorage.setItem("currentTracks", JSON.stringify([...currentTracks]));
 
-    console.log("id", id);
     switch (e.currentTarget.value) {
       case "nofx":
-        fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <NoFx gain={gain.current} />
-        );
+        fx[`${id + 1}` as unknown as keyof Fx] = <NoFx nofx={nofx.current} />;
         break;
 
       case "reverb":
-        fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <Reverber reverb={reverb.current} trackIndex={trackIndex} />
+        fx[`${id + 1}` as unknown as keyof Fx] = (
+          <Reverber
+            reverb={reverb.current}
+            trackIndex={trackIndex}
+            busIndex={id}
+          />
         );
         break;
 
       case "delay":
-        fx.current[`${id + 1}` as unknown as keyof Fx] = (
-          <Delay delay={delay.current} trackIndex={trackIndex} />
+        fx[`${id + 1}` as unknown as keyof Fx] = (
+          <Delay delay={delay.current} trackIndex={trackIndex} busIndex={id} />
         );
         break;
 
       case "pitchShift":
-        fx.current[`${id + 1}` as unknown as keyof Fx] = (
+        fx[`${id + 1}` as unknown as keyof Fx] = (
           <PitchShifter
             pitchShift={pitchShift.current}
             trackIndex={trackIndex}
+            busIndex={id}
           />
         );
         break;
@@ -239,11 +243,13 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
         break;
     }
 
-    const fxProps = Object.values(fx.current).map((fx) => fx.props);
+    const fxProps = Object.values(fx).map((fx) => fx.props);
     const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
-    channel.disconnect();
-    fxNodes.forEach((node: FxTypes) => {
-      channel.chain(node);
+    fxNodes.map((node: FxTypes) => {
+      console.log("node", node);
+      if (!node) return;
+      channel?.disconnect();
+      return channel?.connect(node);
     });
   }
 

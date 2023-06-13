@@ -4,7 +4,7 @@ import { powerIcon } from "../../../assets/icons";
 import type { Reverb } from "tone";
 
 type Props = {
-  reverb: Reverb;
+  reverb: Reverb | null;
   trackIndex: number;
   busIndex: number;
 };
@@ -26,6 +26,8 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
     currentTracks[trackIndex].reverbsDecay || [0.5, 0.5]
   );
 
+  console.log("reverb", reverb);
+
   return (
     <div>
       <div className="flex gap12">
@@ -39,9 +41,9 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
               isBypassed[busIndex] = checked;
               setBypass([...isBypassed]);
               if (checked) {
-                reverb.disconnect();
+                reverb?.disconnect();
               } else {
-                reverb.toDestination();
+                reverb?.toDestination();
               }
               const currentTracks = localStorageGet("currentTracks");
               currentTracks[trackIndex].reverbsBypass[busIndex] = checked;
@@ -64,6 +66,7 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
           disabled={isBypassed[busIndex]}
           defaultValue={mix[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!reverb) return;
             const value = parseFloat(e.currentTarget.value);
             reverb.wet.value = value;
             mix[busIndex] = value;
@@ -86,6 +89,7 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
           disabled={isBypassed[busIndex]}
           defaultValue={preDelay[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!reverb) return;
             const value = parseFloat(e.currentTarget.value);
             reverb.preDelay = value;
             preDelay[busIndex] = value;
@@ -108,6 +112,7 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
           disabled={isBypassed[busIndex]}
           defaultValue={decay[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!reverb) return;
             const value = parseFloat(e.currentTarget.value);
             reverb.decay = value;
             decay[busIndex] = value;

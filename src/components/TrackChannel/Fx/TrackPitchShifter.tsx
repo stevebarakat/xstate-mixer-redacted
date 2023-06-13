@@ -3,7 +3,7 @@ import { powerIcon } from "../../../assets/icons";
 import type { PitchShift } from "tone";
 
 type Props = {
-  pitchShift: PitchShift;
+  pitchShift: PitchShift | null;
   trackIndex: number;
   busIndex: number;
 };
@@ -40,9 +40,9 @@ export default function PitchShifter({
               const checked = e.currentTarget.checked;
               setBypass((checked: boolean) => checked);
               if (checked) {
-                pitchShift.disconnect();
+                pitchShift?.disconnect();
               } else {
-                pitchShift.toDestination();
+                pitchShift?.toDestination();
               }
               currentTracks[trackIndex].pitchShiftsBypass[busIndex] = checked;
               localStorage.setItem(
@@ -69,6 +69,7 @@ export default function PitchShifter({
           disabled={disabled}
           value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!pitchShift) return;
             const value = parseFloat(e.currentTarget.value);
             pitchShift.wet.value = value;
             setMix(value);
@@ -92,6 +93,7 @@ export default function PitchShifter({
           disabled={disabled}
           value={pitch}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+            if (!pitchShift) return;
             const value = parseFloat(e.currentTarget.value);
             pitchShift.pitch = value;
             setPitch(value);

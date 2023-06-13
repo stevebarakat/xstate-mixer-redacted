@@ -13,7 +13,7 @@ function Sends({ trackIndex, channels, busChannels }: Props) {
   const [sends, setSends] = useState(
     currentTracks[trackIndex]?.sends ?? [false, false, false, false]
   );
-  console.log("busChannels", busChannels);
+
   return (
     <div className="bus-btn">
       {busChannels.map((_, busIndex) => (
