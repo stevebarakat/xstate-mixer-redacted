@@ -1,9 +1,7 @@
 import { useRef } from "react";
 import { Reverb, FeedbackDelay, PitchShift, Gain } from "tone";
-import TrackReverber from "../components/TrackChannel/Fx/TrackReverber";
+import { Reverber, Delay, PitchShifter } from "../components/TrackChannel/Fx";
 import TrackSignal from "../components/TrackChannel/Fx/NoFx";
-import TrackDelay from "../components/TrackChannel/Fx/TrackDelay";
-import TrackPitchShifter from "../components/TrackChannel/Fx/TrackPitchShifter";
 import { array } from "../utils";
 
 type Props = {
@@ -56,19 +54,13 @@ function useTrackFx({ channels, trackIndex }: Props) {
               ? (fxComponents = {
                   ...fxComponents,
                   1: (
-                    <TrackReverber
-                      reverb={reverb.current}
-                      trackIndex={trackIndex}
-                    />
+                    <Reverber reverb={reverb.current} trackIndex={trackIndex} />
                   ),
                 })
               : (fxComponents = {
                   ...fxComponents,
                   2: (
-                    <TrackReverber
-                      reverb={reverb.current}
-                      trackIndex={trackIndex}
-                    />
+                    <Reverber reverb={reverb.current} trackIndex={trackIndex} />
                   ),
                 });
             break;
@@ -81,15 +73,11 @@ function useTrackFx({ channels, trackIndex }: Props) {
             fxIndex === 0
               ? (fxComponents = {
                   ...fxComponents,
-                  1: (
-                    <TrackDelay delay={delay.current} trackIndex={trackIndex} />
-                  ),
+                  1: <Delay delay={delay.current} trackIndex={trackIndex} />,
                 })
               : (fxComponents = {
                   ...fxComponents,
-                  2: (
-                    <TrackDelay delay={delay.current} trackIndex={trackIndex} />
-                  ),
+                  2: <Delay delay={delay.current} trackIndex={trackIndex} />,
                 });
             break;
           case "pitchShift":
@@ -101,7 +89,7 @@ function useTrackFx({ channels, trackIndex }: Props) {
               ? (fxComponents = {
                   ...fxComponents,
                   1: (
-                    <TrackPitchShifter
+                    <PitchShifter
                       pitchShift={pitchShift.current}
                       trackIndex={trackIndex}
                     />
@@ -110,7 +98,7 @@ function useTrackFx({ channels, trackIndex }: Props) {
               : (fxComponents = {
                   ...fxComponents,
                   2: (
-                    <TrackPitchShifter
+                    <PitchShifter
                       pitchShift={pitchShift.current}
                       trackIndex={trackIndex}
                     />
