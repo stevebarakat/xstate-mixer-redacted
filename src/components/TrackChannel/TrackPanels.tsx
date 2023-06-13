@@ -19,8 +19,6 @@ function TrackPanels({ fx, trackIndex, active, setActive }: Props) {
 
   const trackPanelsEmpty = ct.fxName.every((name: string) => name === "nofx");
 
-  console.log("trackPanelsEmpty", trackPanelsEmpty);
-
   function getTrackPanels() {
     if (trackPanelsEmpty) {
       return null;
