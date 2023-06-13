@@ -47,7 +47,7 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
               currentTracks[trackIndex].reverbsBypass[busIndex] = checked;
               localStorageSet("currentTracks", currentTracks);
             }}
-            checked={isBypassed[busIndex]}
+            defaultChecked={isBypassed[busIndex]}
           />
           <label htmlFor={`track${trackIndex}reverbBypass`}>{powerIcon}</label>
         </div>
@@ -62,7 +62,7 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
           max={1}
           step={0.001}
           disabled={isBypassed[busIndex]}
-          value={mix[busIndex]}
+          defaultValue={mix[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const value = parseFloat(e.currentTarget.value);
             reverb.wet.value = value;
@@ -84,7 +84,7 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
           max={1}
           step={0.001}
           disabled={isBypassed[busIndex]}
-          value={preDelay[busIndex]}
+          defaultValue={preDelay[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const value = parseFloat(e.currentTarget.value);
             reverb.preDelay = value;
@@ -106,7 +106,7 @@ export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
           max={12.5}
           step={0.1}
           disabled={isBypassed[busIndex]}
-          value={decay[busIndex]}
+          defaultValue={decay[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const value = parseFloat(e.currentTarget.value);
             reverb.decay = value;
