@@ -20,7 +20,7 @@ const greenOff = "hsla(330, 100%, 70%, 0.5)";
 type MeterProps = {
   width: number;
   height: number;
-  meterValue: Float32Array | undefined;
+  meterValue: Float32Array | null;
 };
 
 function VuMeter({ meterValue, height, width }: MeterProps) {

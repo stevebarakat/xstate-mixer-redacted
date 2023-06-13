@@ -1,4 +1,5 @@
-import { MixerMachineContext } from "../../App";
+import { useState } from "react";
+import { localStorageGet, localStorageSet } from "../../utils";
 
 type Props = {
   trackIndex: number;
@@ -6,8 +7,9 @@ type Props = {
 };
 
 function Pan({ trackIndex, channel }: Props) {
-  const [state, send] = MixerMachineContext.useActor();
-  const pan = parseFloat(state.context.pan[trackIndex]);
+  const currentTracks = localStorageGet("currentTracks");
+
+  const [pan, setPan] = useState(() => currentTracks[trackIndex].pan);
 
   return (
     <>
@@ -20,12 +22,12 @@ function Pan({ trackIndex, channel }: Props) {
         step={0.01}
         value={pan}
         onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-          send({
-            type: "CHANGE_PAN",
-            value: parseFloat(e.currentTarget.value),
-            trackIndex,
-            channel,
-          });
+          const value = parseFloat(e.currentTarget.value);
+          setPan(value);
+          channel.pan.value = value;
+          const currentTracks = localStorageGet("currentTracks");
+          currentTracks[trackIndex].pan = value;
+          localStorageSet("currentTracks", currentTracks);
         }}
       />
     </>
