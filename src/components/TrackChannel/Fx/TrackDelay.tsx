@@ -5,24 +5,25 @@ import type { FeedbackDelay } from "tone";
 type Props = {
   delay: FeedbackDelay;
   trackIndex: number;
+  busIndex: number;
 };
 
-export default function Delay({ delay, trackIndex }: Props) {
+export default function Delay({ delay, trackIndex, busIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
-  const [bypass, setBypass] = useState(
-    currentTracks[trackIndex].delaysBypass || false
+  const [isBypassed, setBypass] = useState(
+    currentTracks[trackIndex].delaysBypass[busIndex] || [false, false]
   );
-  const [mix, setMix] = useState(currentTracks[trackIndex].delaysMix || 0.5);
+  const [mix, setMix] = useState(
+    currentTracks[trackIndex].delaysMix || [0.5, 0.5]
+  );
   const [delayTime, setDelayTime] = useState(
-    currentTracks[trackIndex].delaysTime || 0.5
+    currentTracks[trackIndex].delaysTime || [0.5, 0.5]
   );
   const [feedback, setFeedback] = useState(
-    currentTracks[trackIndex].delaysFeedback || 0.5
+    currentTracks[trackIndex].delaysFeedback || [0.5, 0.5]
   );
-
-  const disabled = bypass;
 
   return (
     <div>
@@ -37,19 +38,19 @@ export default function Delay({ delay, trackIndex }: Props) {
               const currentTracks =
                 currentTracksString && JSON.parse(currentTracksString);
               const checked = e.currentTarget.checked;
-              setBypass(checked);
+              setBypass((checked: boolean) => !checked);
               if (checked) {
                 delay.disconnect();
               } else {
                 delay.toDestination();
               }
-              currentTracks[trackIndex].delaysBypass = checked;
+              currentTracks[trackIndex].delaysBypass[busIndex] = checked;
               localStorage.setItem(
                 "currentTracks",
                 JSON.stringify(currentTracks)
               );
             }}
-            checked={bypass}
+            checked={isBypassed}
           />
           <label htmlFor={`track${trackIndex}delayBypass`}>{powerIcon}</label>
         </div>
@@ -63,7 +64,7 @@ export default function Delay({ delay, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={disabled}
+          disabled={isBypassed}
           value={mix}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
@@ -71,8 +72,9 @@ export default function Delay({ delay, trackIndex }: Props) {
               currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             delay.wet.value = value;
-            setMix(value);
-            currentTracks[trackIndex].delaysMix = value;
+            mix[busIndex] = value;
+            setMix(mix);
+            currentTracks[trackIndex].delaysMix[busIndex] = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify(currentTracks)
@@ -89,7 +91,7 @@ export default function Delay({ delay, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={disabled}
+          disabled={isBypassed}
           value={delayTime}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
@@ -98,7 +100,7 @@ export default function Delay({ delay, trackIndex }: Props) {
             const value = parseFloat(e.currentTarget.value);
             delay.delayTime.value = value;
             setDelayTime(value);
-            currentTracks[trackIndex].delaysTime = value;
+            currentTracks[trackIndex].delaysTime[busIndex] = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify([...currentTracks])
@@ -115,7 +117,7 @@ export default function Delay({ delay, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.01}
-          disabled={disabled}
+          disabled={isBypassed}
           value={feedback}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
             const currentTracksString = localStorage.getItem("currentTracks");
@@ -124,7 +126,7 @@ export default function Delay({ delay, trackIndex }: Props) {
             const value = parseFloat(e.currentTarget.value);
             delay.feedback.value = value;
             setFeedback(value);
-            currentTracks[trackIndex].delaysFeedback = value;
+            currentTracks[trackIndex].delaysFeedback[busIndex] = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify([...currentTracks])

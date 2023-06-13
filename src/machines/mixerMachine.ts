@@ -58,6 +58,7 @@ const getCurrentTracks = () => {
       delaysMix: [0.5, 0.5],
       delaysTime: [1, 1],
       delaysFeedback: [0.5, 0.5],
+      delaysBypass: [false, false],
       pitchShiftsBypass: [false, false],
       pitchShiftsMix: [0.5, 0.5],
       pitchShiftsPitch: [5, 5],

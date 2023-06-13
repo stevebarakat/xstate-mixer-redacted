@@ -5,20 +5,25 @@ import type { PitchShift } from "tone";
 type Props = {
   pitchShift: PitchShift;
   trackIndex: number;
+  busIndex: number;
 };
 
-export default function PitchShifter({ pitchShift, trackIndex }: Props) {
+export default function PitchShifter({
+  pitchShift,
+  trackIndex,
+  busIndex,
+}: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
   const [bypass, setBypass] = useState(
-    currentTracks[trackIndex].pitchShiftsBypass || false
+    currentTracks[trackIndex].pitchShiftsBypass || [false, false]
   );
   const [mix, setMix] = useState(
-    currentTracks[trackIndex].pitchShiftsMix || 0.5
+    currentTracks[trackIndex].pitchShiftsMix || [0.5, 0.5]
   );
   const [pitch, setPitch] = useState(
-    currentTracks[trackIndex].pitchShiftsPitch || 5
+    currentTracks[trackIndex].pitchShiftsPitch || [5, 5]
   );
 
   const disabled = bypass;
@@ -33,13 +38,13 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
               const checked = e.currentTarget.checked;
-              setBypass(checked);
+              setBypass((checked: boolean) => checked);
               if (checked) {
                 pitchShift.disconnect();
               } else {
                 pitchShift.toDestination();
               }
-              currentTracks[trackIndex].pitchShiftsBypass = checked;
+              currentTracks[trackIndex].pitchShiftsBypass[busIndex] = checked;
               localStorage.setItem(
                 "currentTracks",
                 JSON.stringify(currentTracks)
@@ -67,7 +72,7 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
             const value = parseFloat(e.currentTarget.value);
             pitchShift.wet.value = value;
             setMix(value);
-            currentTracks[trackIndex].pitchShiftsMix = value;
+            currentTracks[trackIndex].pitchShiftsMix[busIndex] = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify(currentTracks)
@@ -90,7 +95,7 @@ export default function PitchShifter({ pitchShift, trackIndex }: Props) {
             const value = parseFloat(e.currentTarget.value);
             pitchShift.pitch = value;
             setPitch(value);
-            currentTracks[trackIndex].pitchShiftsPitch = value;
+            currentTracks[trackIndex].pitchShiftsPitch[busIndex] = value;
             localStorage.setItem(
               "currentTracks",
               JSON.stringify(currentTracks)

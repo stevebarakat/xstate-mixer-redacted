@@ -68,7 +68,13 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
 
               fxComponents = {
                 ...fxComponents,
-                1: <Reverber reverb={reverb.current} trackIndex={trackIndex} />,
+                1: (
+                  <Reverber
+                    reverb={reverb.current}
+                    trackIndex={trackIndex}
+                    busIndex={0}
+                  />
+                ),
               };
             } else {
               reverb.current = new Reverb({
@@ -79,7 +85,13 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
 
               fxComponents = {
                 ...fxComponents,
-                2: <Reverber reverb={reverb.current} trackIndex={trackIndex} />,
+                2: (
+                  <Reverber
+                    reverb={reverb.current}
+                    trackIndex={trackIndex}
+                    busIndex={1}
+                  />
+                ),
               };
             }
 
@@ -94,7 +106,13 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
 
               fxComponents = {
                 ...fxComponents,
-                1: <Delay delay={delay.current} trackIndex={trackIndex} />,
+                1: (
+                  <Delay
+                    delay={delay.current}
+                    trackIndex={trackIndex}
+                    busIndex={0}
+                  />
+                ),
               };
             } else {
               delay.current = new FeedbackDelay({
@@ -105,7 +123,13 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
 
               fxComponents = {
                 ...fxComponents,
-                2: <Delay delay={delay.current} trackIndex={trackIndex} />,
+                2: (
+                  <Delay
+                    delay={delay.current}
+                    trackIndex={trackIndex}
+                    busIndex={1}
+                  />
+                ),
               };
             }
             break;
@@ -122,6 +146,7 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
                   <PitchShifter
                     pitchShift={pitchShift.current}
                     trackIndex={trackIndex}
+                    busIndex={0}
                   />
                 ),
               };
@@ -137,6 +162,7 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
                   <PitchShifter
                     pitchShift={pitchShift.current}
                     trackIndex={trackIndex}
+                    busIndex={1}
                   />
                 ),
               };

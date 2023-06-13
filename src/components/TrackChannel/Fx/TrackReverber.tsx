@@ -1,25 +1,29 @@
 import { useState } from "react";
+import { localStorageGet, localStorageSet } from "../../../utils";
 import { powerIcon } from "../../../assets/icons";
 import type { Reverb } from "tone";
 
 type Props = {
   reverb: Reverb;
   trackIndex: number;
+  busIndex: number;
 };
 
-export default function Reverber({ reverb, trackIndex }: Props) {
+export default function Reverber({ reverb, trackIndex, busIndex }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
 
   const [isBypassed, setBypass] = useState(
-    currentTracks[trackIndex].reverbsBypass || false
+    currentTracks[trackIndex].reverbsBypass || [true, true]
   );
-  const [mix, setMix] = useState(currentTracks[trackIndex].reverbsMix || 0.5);
+  const [mix, setMix] = useState(
+    currentTracks[trackIndex].reverbsMix || [0.5, 0.5]
+  );
   const [preDelay, setPreDelay] = useState(
-    currentTracks[trackIndex].reverbsPreDelay || 0.5
+    currentTracks[trackIndex].reverbsPreDelay || [0.5, 0.5]
   );
   const [decay, setDecay] = useState(
-    currentTracks[trackIndex].reverbsDecay || 0.5
+    currentTracks[trackIndex].reverbsDecay || [0.5, 0.5]
   );
 
   return (
@@ -31,23 +35,19 @@ export default function Reverber({ reverb, trackIndex }: Props) {
             id={`track${trackIndex}reverbBypass`}
             type="checkbox"
             onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-              const currentTracksString = localStorage.getItem("currentTracks");
-              const currentTracks =
-                currentTracksString && JSON.parse(currentTracksString);
               const checked = e.currentTarget.checked;
-              setBypass(checked);
-              if (isBypassed) {
+              isBypassed[busIndex] = checked;
+              setBypass([...isBypassed]);
+              if (checked) {
                 reverb.disconnect();
               } else {
                 reverb.toDestination();
               }
-              currentTracks[trackIndex].reverbsBypass = checked;
-              localStorage.setItem(
-                "currentTracks",
-                JSON.stringify(currentTracks)
-              );
+              const currentTracks = localStorageGet("currentTracks");
+              currentTracks[trackIndex].reverbsBypass[busIndex] = checked;
+              localStorageSet("currentTracks", currentTracks);
             }}
-            checked={isBypassed}
+            checked={isBypassed[busIndex]}
           />
           <label htmlFor={`track${trackIndex}reverbBypass`}>{powerIcon}</label>
         </div>
@@ -61,20 +61,16 @@ export default function Reverber({ reverb, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.001}
-          disabled={isBypassed}
-          value={mix}
+          disabled={isBypassed[busIndex]}
+          value={mix[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            const currentTracksString = localStorage.getItem("currentTracks");
-            const currentTracks =
-              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             reverb.wet.value = value;
-            setMix(value);
-            currentTracks[trackIndex].reverbsMix = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify(currentTracks)
-            );
+            mix[busIndex] = value;
+            setMix([...mix]);
+            const currentTracks = localStorageGet("currentTracks");
+            currentTracks[trackIndex].reverbsMix[busIndex] = value;
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
@@ -87,20 +83,16 @@ export default function Reverber({ reverb, trackIndex }: Props) {
           min={0}
           max={1}
           step={0.001}
-          disabled={isBypassed}
-          value={preDelay}
+          disabled={isBypassed[busIndex]}
+          value={preDelay[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            const currentTracksString = localStorage.getItem("currentTracks");
-            const currentTracks =
-              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             reverb.preDelay = value;
-            setPreDelay(value);
-            currentTracks[trackIndex].reverbsPreDelay = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify([...currentTracks])
-            );
+            preDelay[busIndex] = value;
+            setPreDelay([...preDelay]);
+            const currentTracks = localStorageGet("currentTracks");
+            currentTracks[trackIndex].reverbsPreDelay[busIndex] = value;
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
@@ -113,20 +105,16 @@ export default function Reverber({ reverb, trackIndex }: Props) {
           min={0.5}
           max={12.5}
           step={0.1}
-          disabled={isBypassed}
-          value={decay}
+          disabled={isBypassed[busIndex]}
+          value={decay[busIndex]}
           onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-            const currentTracksString = localStorage.getItem("currentTracks");
-            const currentTracks =
-              currentTracksString && JSON.parse(currentTracksString);
             const value = parseFloat(e.currentTarget.value);
             reverb.decay = value;
-            setDecay(value);
-            currentTracks[trackIndex].reverbsDecay = value;
-            localStorage.setItem(
-              "currentTracks",
-              JSON.stringify([...currentTracks])
-            );
+            decay[busIndex] = value;
+            setDecay([...decay]);
+            const currentTracks = localStorageGet("currentTracks");
+            currentTracks[trackIndex].reverbsDecay[busIndex] = value;
+            localStorageSet("currentTracks", currentTracks);
           }}
         />
       </div>
