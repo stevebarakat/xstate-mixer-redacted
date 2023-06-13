@@ -220,14 +220,12 @@ function TrackChannel({ track, trackIndex, channels, busChannels }: Props) {
           <option value={"pitchShift"}>Pitch Shift</option>
         </select>
       ))}
-      <>
-        <TrackPanels
-          fx={fx}
-          trackIndex={trackIndex}
-          active={active}
-          setActive={setActive}
-        />
-      </>
+      <TrackPanels
+        fx={fx}
+        trackIndex={trackIndex}
+        active={active}
+        setActive={setActive}
+      />
       <div className="channel">
         <Sends
           trackIndex={trackIndex}
