@@ -16,7 +16,10 @@ function TrackPanels({ fx, trackIndex, active, setActive }: Props) {
   const currentTracksString = localStorage.getItem("currentTracks");
   const currentTracks = currentTracksString && JSON.parse(currentTracksString);
   const ct = currentTracks[trackIndex];
+
   const trackPanelsEmpty = ct.fxName.every((name: string) => name === "nofx");
+
+  console.log("trackPanelsEmpty", trackPanelsEmpty);
 
   function getTrackPanels() {
     if (trackPanelsEmpty) {
